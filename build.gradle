@@ -107,7 +107,7 @@ task deployNodes(type: net.corda.plugins.Dockerform, dependsOn: ['jar']) {
         //it to false for quicker project compiling time.
     }
     node {
-        name "O=Notary,L=London,C=GB"
+        name "O=Notary,L=Munich,C=DE"
         notary = [validating : false]
         p2pPort 10002
         rpcSettings {
@@ -118,7 +118,7 @@ task deployNodes(type: net.corda.plugins.Dockerform, dependsOn: ['jar']) {
         sshdPort 2222
     }
     node {
-        name "O=PartyA,L=London,C=GB"
+        name "O=Auditor,L=Hamburg,C=DE"
         p2pPort 10005
         rpcSettings {
             address("localhost:10006")
@@ -128,7 +128,7 @@ task deployNodes(type: net.corda.plugins.Dockerform, dependsOn: ['jar']) {
         sshdPort 2223
     }
     node {
-        name "O=PartyB,L=New York,C=US"
+        name "O=Supervisory Authority,L=Berlin,C=DE"
         p2pPort 10008
         rpcSettings {
             address("localhost:10009")
@@ -136,5 +136,27 @@ task deployNodes(type: net.corda.plugins.Dockerform, dependsOn: ['jar']) {
         }
         rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
         sshdPort 2224
+    }
+
+    node {
+        name "O=Brain Finance,L=Dortmund,C=DE"
+        p2pPort 10011
+        rpcSettings {
+            address("localhost:10009")
+            adminAddress("localhost:10049")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        sshdPort 2225
+    }
+
+    node {
+        name "O=Capitals Holding,L=Duesseldorf,C=DE"
+        p2pPort 10014
+        rpcSettings {
+            address("localhost:10009")
+            adminAddress("localhost:10049")
+        }
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        sshdPort 2226
     }
 }
