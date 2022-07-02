@@ -36,7 +36,7 @@ public class CreateAndSendClaim {
 
             TransactionBuilder txBuilder = new TransactionBuilder(notary)
                     .addOutputState(newClaim)
-                    .addCommand(new ClaimContract.Commands.SendClaim()),
+                    .addCommand(new ClaimContract.Commands.SendClaim(),
                             Arrays.asList(getOurIdentity().getOwningKey(),supervisorAuthority.getOwningKey()));
 
             // Verify that the transaction is valid.
@@ -46,7 +46,7 @@ public class CreateAndSendClaim {
             final SignedTransaction partSignedTx = getServiceHub().signInitialTransaction(txBuilder);
 
             // Send the state to the counterparty, and receive it back with their signature.
-            FlowSession otherPartySession = initiateFlow(holder);
+            FlowSession otherPartySession = initiateFlow(supervisorAuthority);
             final SignedTransaction fullySignedTx = subFlow(
                     new CollectSignaturesFlow(partSignedTx, Arrays.asList(otherPartySession)));
 

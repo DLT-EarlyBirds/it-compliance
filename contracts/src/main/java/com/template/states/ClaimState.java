@@ -1,11 +1,14 @@
 package com.template.states;
 
-import com.template.contracts.TemplateContract;
+import com.template.contracts.ClaimContract;
 import net.corda.core.contracts.BelongsToContract;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.identity.AbstractParty;
 import net.corda.core.identity.Party;
+import net.corda.core.serialization.ConstructorForDeserialization;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,22 +26,15 @@ public class ClaimState implements ContractState {
 
     /* Constructor of your Corda state */
     @ConstructorForDeserialization
-    public TemplateState(String hashValue, Party financialServiceProvider, Party supervisorAuthority) {
+    public ClaimState(String hashValue, Party financialServiceProvider, Party supervisorAuthority) {
         this.financialServiceProvider = financialServiceProvider;
         this.supervisorAuthority = supervisorAuthority;
         this.hashValue = hashValue;
         
         this.participants = new ArrayList<AbstractParty>();
-        this.participants.add(issuer);
-        this.participants.add(holder);
+        this.participants.add(financialServiceProvider);
+        this.participants.add(supervisorAuthority);
 
-    }
-
-    /* This method will indicate who are the participants and required signers when
-     * this state is used in a transaction. */
-    @Override
-    public List<AbstractParty> getParticipants() {
-        return Arrays.asList(sender,receiver);
     }
 
     @NotNull
