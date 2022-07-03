@@ -5,6 +5,8 @@ import net.corda.core.contracts.CommandData;
 import net.corda.core.contracts.Contract;
 import net.corda.core.transactions.LedgerTransaction;
 
+import java.util.Objects;
+
 import static net.corda.core.contracts.ContractsDSL.requireThat;
 
 // ************
@@ -12,7 +14,7 @@ import static net.corda.core.contracts.ContractsDSL.requireThat;
 // ************
 public class RegulationContract implements Contract {
     // This is used to identify our contract when building a transaction.
-    public static final String ID = "com.template.contracts.RegulationGraphContract";
+    public static final String ID = "com.template.contracts.RegulationContract";
 
     // A transaction is valid if the verify() function of the contract of all the transaction's input and output states
     // does not throw an exception.
@@ -30,6 +32,16 @@ public class RegulationContract implements Contract {
 
             //No verification required!
             requireThat(require -> {
+                require.using("The regulation is not empty", !Objects.equals(output.getName(), "") && !Objects.equals(output.getDescription(), ""));
+                return null;
+            });
+        } else if (commandData instanceof Commands.UpdateRegulation) {
+            Regulation output = tx.outputsOfType(Regulation.class).get(0);
+            Regulation input = tx.inputsOfType(Regulation.class).get(0);
+
+            requireThat(require -> {
+                require.using("The transaction is only allowed to modify the input regulation", output.getLinearId().equals(input.getLinearId()));
+                require.using("The regulation is not empty", !Objects.equals(output.getName(), "") && !Objects.equals(output.getDescription(), ""));
                 return null;
             });
         }
@@ -37,7 +49,10 @@ public class RegulationContract implements Contract {
 
     // Used to indicate the transaction's intent.
     public interface Commands extends CommandData {
-        //In our hello-world app, We will only have one command.
-        class CreateRegulation implements Commands {}
+        class CreateRegulation implements Commands {
+        }
+
+        class UpdateRegulation implements Commands {
+        }
     }
 }
