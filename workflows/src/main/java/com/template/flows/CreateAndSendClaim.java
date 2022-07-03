@@ -1,15 +1,13 @@
 package com.template.flows;
 
 import co.paralleluniverse.fibers.Suspendable;
-import com.template.contracts.ClaimContract;
-import com.template.states.ClaimState;
-import net.corda.core.contracts.UniqueIdentifier;
+import com.template.contracts.SpecificClaimContract;
+import com.template.states.SpecificClaim;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class CreateAndSendClaim {
@@ -32,11 +30,11 @@ public class CreateAndSendClaim {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0); 
 
-            ClaimState newClaim = new ClaimState(this.hashValue,this.getOurIdentity(),this.supervisorAuthority);
+            SpecificClaim newClaim = new SpecificClaim(this.hashValue,this.getOurIdentity(),this.supervisorAuthority);
 
             TransactionBuilder txBuilder = new TransactionBuilder(notary)
                     .addOutputState(newClaim)
-                    .addCommand(new ClaimContract.Commands.SendClaim(),
+                    .addCommand(new SpecificClaimContract.Commands.SendClaim(),
                             Arrays.asList(getOurIdentity().getOwningKey(),supervisorAuthority.getOwningKey()));
 
             // Verify that the transaction is valid.
