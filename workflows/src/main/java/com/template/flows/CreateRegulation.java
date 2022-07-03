@@ -23,15 +23,16 @@ public class CreateRegulation {
     @InitiatingFlow
     @StartableByRPC
     public static class CreateRegulationInitiator extends FlowLogic<SignedTransaction>{
-
-        //private variables
-        private String description;
-        private Party supervisoryAuthority;
+        // Private variables
+        private final String name;
+        private final String description;
+        private final Party supervisoryAuthority;
 
         //public constructor
-        public CreateRegulationInitiator(String description, Party supervisoryAuthority) {
+        public CreateRegulationInitiator(String name, String description, Party supervisoryAuthority) {
             this.supervisoryAuthority = supervisoryAuthority;
             this.description = description;
+            this.name = name;
         }
 
         @Override
@@ -40,7 +41,7 @@ public class CreateRegulation {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
-            final Regulation output = new Regulation(description, supervisoryAuthority);
+            final Regulation output = new Regulation(name, description, supervisoryAuthority);
 
             final TransactionBuilder builder = new TransactionBuilder(notary);
 
@@ -57,7 +58,7 @@ public class CreateRegulation {
 
             List<Party> otherParties = output.getParticipants().stream().map(el -> (Party)el).collect(Collectors.toList());
             otherParties.remove(getOurIdentity());
-            List<FlowSession> sessions = otherParties.stream().map(el -> initiateFlow(el)).collect(Collectors.toList());
+            List<FlowSession> sessions = otherParties.stream().map(this::initiateFlow).collect(Collectors.toList());
 
             SignedTransaction stx = subFlow(new CollectSignaturesFlow(signedTransaction, sessions));
 
@@ -68,7 +69,7 @@ public class CreateRegulation {
     @InitiatedBy(CreateRegulationInitiator.class)
     public static class CreateRegulationResponder extends FlowLogic<Void>{
         //private variable
-        private FlowSession counterpartySession;
+        private final FlowSession counterpartySession;
 
         //Constructor
         public CreateRegulationResponder(FlowSession counterpartySession) {
@@ -89,12 +90,10 @@ public class CreateRegulation {
                      * or we’re not happy with the transaction’s structure? checkTransaction
                      * allows us to define these additional checks. If any of these conditions are not met,
                      * we will not sign the transaction - even if the transaction and its signatures are contractually valid.
-                     * ----------
-                     * For this hello-world cordapp, we will not implement any aditional checks.
                      * */
                 }
             });
-            //Stored the transaction into data base.
+            // Stored the transaction into database.
             subFlow(new ReceiveFinalityFlow(counterpartySession, signedTransaction.getId()));
             return null;
         }
