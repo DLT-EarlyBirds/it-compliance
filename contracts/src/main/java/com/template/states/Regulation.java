@@ -1,6 +1,6 @@
 package com.template.states;
 
-import com.template.contracts.RegulationGraphContract;
+import com.template.contracts.RegulationContract;
 import net.corda.core.contracts.BelongsToContract;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.identity.AbstractParty;
@@ -9,28 +9,27 @@ import net.corda.core.serialization.ConstructorForDeserialization;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 // *********
 // * State *
 // *********
-@BelongsToContract(RegulationGraphContract.class)
-public class RegulationGraph implements ContractState {
+@BelongsToContract(RegulationContract.class)
+public class Regulation implements ContractState {
 
     //private variables
 
-    //Graph as a json string i.e: {regulation_1: {rule_1:{claim_template_1:""}, rule_2:...}}
-    private String graph;
+    //Description as a string
+    private String Description;
     private Party supervisoryAuthority;
 
     private List<AbstractParty> participants;
 
 
-    /* Constructor of RegulationGraph */
+    /* Constructor of RegulationDescription */
     @ConstructorForDeserialization
-    public RegulationGraph(String graph, Party supervisoryAuthority) {
-        this.graph = graph;
+    public Regulation(String Description, Party supervisoryAuthority) {
+        this.Description = Description;
         this.supervisoryAuthority = supervisoryAuthority;
 
         this.participants = new ArrayList<AbstractParty>();
@@ -38,8 +37,8 @@ public class RegulationGraph implements ContractState {
     }
 
     //getters
-    public String getgraph() { return graph; }
-    public Party getsupervisoryAuthority() { return supervisoryAuthority; }
+    public String getDescription() { return Description; }
+    public Party getSupervisoryAuthority() { return supervisoryAuthority; }
 
     @NotNull
     @Override

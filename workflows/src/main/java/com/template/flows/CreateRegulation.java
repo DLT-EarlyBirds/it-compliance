@@ -1,8 +1,8 @@
 package com.template.flows;
 
 import co.paralleluniverse.fibers.Suspendable;
-import com.template.contracts.RegulationGraphContract;
-import com.template.states.RegulationGraph;
+import com.template.contracts.RegulationContract;
+import com.template.states.Regulation;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
@@ -13,25 +13,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 //Initiate this flow:
-//flow start CreateRegulationGraph graph: "test_graph", supervisoryAuthority: Supervisory Authority
+//flow start CreateRegulation description: "test_description", supervisoryAuthority: Supervisory Authority
 
 //Check if added to ledger:
-//run vaultQuery contractStateType: com.template.states.RegulationGraph
+//run vaultQuery contractStateType: com.template.states.Regulation
 
-public class CreateRegulationGraph {
+public class CreateRegulation {
 
     @InitiatingFlow
     @StartableByRPC
-    public static class CreateRegulationGraphInitiator extends FlowLogic<SignedTransaction>{
+    public static class CreateRegulationInitiator extends FlowLogic<SignedTransaction>{
 
         //private variables
-        private String graph;
+        private String description;
         private Party supervisoryAuthority;
 
         //public constructor
-        public CreateRegulationGraphInitiator(String graph, Party supervisoryAuthority) {
+        public CreateRegulationInitiator(String description, Party supervisoryAuthority) {
             this.supervisoryAuthority = supervisoryAuthority;
-            this.graph = graph;
+            this.description = description;
         }
 
         @Override
@@ -40,12 +40,12 @@ public class CreateRegulationGraph {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
-            final RegulationGraph output = new RegulationGraph(graph, supervisoryAuthority);
+            final Regulation output = new Regulation(description, supervisoryAuthority);
 
             final TransactionBuilder builder = new TransactionBuilder(notary);
 
             builder.addOutputState(output);
-            builder.addCommand(new RegulationGraphContract.Commands.CreateRegulationGraph(),
+            builder.addCommand(new RegulationContract.Commands.CreateRegulation(),
                     Arrays.asList(getOurIdentity().getOwningKey(), this.supervisoryAuthority.getOwningKey()));
 
 
@@ -65,13 +65,13 @@ public class CreateRegulationGraph {
         }
     }
 
-    @InitiatedBy(CreateRegulationGraphInitiator.class)
-    public static class CreateRegulationGraphResponder extends FlowLogic<Void>{
+    @InitiatedBy(CreateRegulationInitiator.class)
+    public static class CreateRegulationResponder extends FlowLogic<Void>{
         //private variable
         private FlowSession counterpartySession;
 
         //Constructor
-        public CreateRegulationGraphResponder(FlowSession counterpartySession) {
+        public CreateRegulationResponder(FlowSession counterpartySession) {
             this.counterpartySession = counterpartySession;
         }
 

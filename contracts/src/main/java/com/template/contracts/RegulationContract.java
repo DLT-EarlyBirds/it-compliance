@@ -1,19 +1,16 @@
 package com.template.contracts;
 
-import com.template.states.RegulationGraph;
+import com.template.states.Regulation;
 import net.corda.core.contracts.CommandData;
-import net.corda.core.contracts.CommandWithParties;
 import net.corda.core.contracts.Contract;
 import net.corda.core.transactions.LedgerTransaction;
 
-import static net.corda.core.contracts.ContractsDSL.requireSingleCommand;
 import static net.corda.core.contracts.ContractsDSL.requireThat;
-import java.util.List;
 
 // ************
 // * Contract *
 // ************
-public class RegulationGraphContract implements Contract {
+public class RegulationContract implements Contract {
     // This is used to identify our contract when building a transaction.
     public static final String ID = "com.template.contracts.RegulationGraphContract";
 
@@ -27,11 +24,11 @@ public class RegulationGraphContract implements Contract {
         //final CommandWithParties<Commands> command = requireSingleCommand(tx.getCommands(), Commands.class);
         final CommandData commandData = tx.getCommands().get(0).getValue();
 
-        if (commandData instanceof Commands.CreateRegulationGraph) {
+        if (commandData instanceof Commands.CreateRegulation) {
             //Retrieve the output state of the transaction
-            RegulationGraph output = tx.outputsOfType(RegulationGraph.class).get(0);
+            Regulation output = tx.outputsOfType(Regulation.class).get(0);
 
-            //Reference state transaction --> No verrification required!
+            //No verification required!
             requireThat(require -> {
                 return null;
             });
@@ -41,6 +38,6 @@ public class RegulationGraphContract implements Contract {
     // Used to indicate the transaction's intent.
     public interface Commands extends CommandData {
         //In our hello-world app, We will only have one command.
-        class CreateRegulationGraph implements Commands {}
+        class CreateRegulation implements Commands {}
     }
 }
