@@ -10,6 +10,7 @@ import net.corda.core.serialization.ConstructorForDeserialization;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 // *********
@@ -28,7 +29,12 @@ public class Regulation implements LinearState {
     // A brief description of the regulation
     @NotNull
     private final String description;
-
+    // The version of the regulation
+    @NotNull
+    private final String version;
+    // The release date of the regulation
+    @NotNull
+    private final Date releaseDate;
     // The issuer who submits the regulation
     @NotNull
     private final Party issuer;
@@ -37,16 +43,20 @@ public class Regulation implements LinearState {
 
     /* Constructor of RegulationDescription */
     @ConstructorForDeserialization
-    public Regulation(@NotNull UniqueIdentifier linearId, @NotNull String name, @NotNull String description, @NotNull Party issuer) {
+    public Regulation(@NotNull UniqueIdentifier linearId, @NotNull String name, @NotNull String description, @NotNull String version, @NotNull Date releaseDate, @NotNull Party issuer) {
         this.linearId = linearId;
         this.name = name;
         this.description = description;
+        this.version = version;
+        this.releaseDate = releaseDate;
         this.issuer = issuer;
         this.participants = new ArrayList<>();
         this.participants.add(issuer);
     }
 
-    public Regulation(@NotNull String name, @NotNull String description, @NotNull Party issuer) {
+    public Regulation(@NotNull String name, @NotNull String description, @NotNull String version, @NotNull Date releaseDate, @NotNull Party issuer) {
+        this.version = version;
+        this.releaseDate = releaseDate;
         this.linearId = new UniqueIdentifier();
         this.name = name;
         this.description = description;
@@ -81,5 +91,15 @@ public class Regulation implements LinearState {
     @Override
     public UniqueIdentifier getLinearId() {
         return this.linearId;
+    }
+
+    @NotNull
+    public String getVersion() {
+        return version;
+    }
+
+    @NotNull
+    public Date getReleaseDate() {
+        return releaseDate;
     }
 }

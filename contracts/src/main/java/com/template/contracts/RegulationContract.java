@@ -32,7 +32,10 @@ public class RegulationContract implements Contract {
 
             //No verification required!
             requireThat(require -> {
-                require.using("The regulation is not empty", !Objects.equals(output.getName(), "") && !Objects.equals(output.getDescription(), ""));
+                require.using(
+                        "The regulation is not empty",
+                        !Objects.equals(output.getName(), "") && !Objects.equals(output.getDescription(), "")
+                );
                 return null;
             });
         } else if (commandData instanceof Commands.UpdateRegulation) {
@@ -40,8 +43,21 @@ public class RegulationContract implements Contract {
             Regulation input = tx.inputsOfType(Regulation.class).get(0);
 
             requireThat(require -> {
-                require.using("The transaction is only allowed to modify the input regulation", output.getLinearId().equals(input.getLinearId()));
-                require.using("The regulation is not empty", !Objects.equals(output.getName(), "") && !Objects.equals(output.getDescription(), ""));
+                require.using(
+                        "The transaction is only allowed to modify the input regulation",
+                        output.getLinearId().equals(input.getLinearId())
+                );
+                require.using(
+                        "The regulation is not empty",
+                        !Objects.equals(output.getName(), "") && !Objects.equals(output.getDescription(), "")
+                );
+                return null;
+            });
+        } else if (commandData instanceof Commands.DeprecateRegulation) {
+            Regulation input = tx.inputsOfType(Regulation.class).get(0);
+
+            requireThat(require -> {
+
                 return null;
             });
         }
@@ -49,10 +65,17 @@ public class RegulationContract implements Contract {
 
     // Used to indicate the transaction's intent.
     public interface Commands extends CommandData {
+        // Newly submit a regulation that doesn't exist so far
         class CreateRegulation implements Commands {
         }
 
+        // Update an existing regulation e.g. add a new version or description
         class UpdateRegulation implements Commands {
+        }
+
+        // Deprecate an existing regulation
+        class DeprecateRegulation implements Commands {
+
         }
     }
 }

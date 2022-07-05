@@ -9,6 +9,7 @@ import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,10 +27,14 @@ public class CreateRegulation {
         // Private variables
         private final String name;
         private final String description;
+        private final String version;
+        private final Date releaseDate;
         private final Party supervisoryAuthority;
 
         //public constructor
-        public CreateRegulationInitiator(String name, String description, Party supervisoryAuthority) {
+        public CreateRegulationInitiator(String name, String description, String version, Date releaseDate, Party supervisoryAuthority) {
+            this.version = version;
+            this.releaseDate = releaseDate;
             this.supervisoryAuthority = supervisoryAuthority;
             this.description = description;
             this.name = name;
@@ -41,7 +46,7 @@ public class CreateRegulation {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
-            final Regulation output = new Regulation(name, description, supervisoryAuthority);
+            final Regulation output = new Regulation(name, description, version, releaseDate, supervisoryAuthority);
 
             final TransactionBuilder builder = new TransactionBuilder(notary);
 
