@@ -35,7 +35,6 @@ public class RuleContract implements Contract {
         StateAndRef<Regulation> parentRegulation =  output.getParentRegulation().resolve(tx);
 
         if (commandData instanceof Commands.CreateRule) {
-            //No verification required!
             requireThat(require -> {
                 require.using("The rule is not empty", !Objects.equals(output.getName(), "") && !Objects.equals(output.getRuleSpecification(), ""));
                 require.using("The rule needs a parent regulation", !parentRegulation.getState().component1().getName().equals(""));
