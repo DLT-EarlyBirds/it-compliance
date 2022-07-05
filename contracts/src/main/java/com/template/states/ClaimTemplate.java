@@ -2,6 +2,7 @@ package com.template.states;
 
 import com.template.contracts.RegulationContract;
 import net.corda.core.contracts.BelongsToContract;
+import net.corda.core.contracts.LinearPointer;
 import net.corda.core.contracts.LinearState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.AbstractParty;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 // *********
 // * State *
@@ -35,26 +37,42 @@ public class ClaimTemplate implements LinearState {
     private final Party approver;
     private final List<AbstractParty> participants;
 
+    // A reference to the rule that is fulfilled by a claim implementing this template.
+    private final LinearPointer<Rule> rule;
+
+    // References to other claim templates that can be proven when this claim template is implemented.
+    private final List<LinearPointer<ClaimTemplate>> supportedClaimtenmplates;
+
 
     /* Constructor of RegulationDescription */
     @ConstructorForDeserialization
-    public ClaimTemplate(@NotNull UniqueIdentifier linearId, String name, String description, Party issuer, Party approver) {
+    public ClaimTemplate(@NotNull UniqueIdentifier linearId, String name, String description, Party issuer, Party approver, UniqueIdentifier ruleLinearId, List<UniqueIdentifier> supportedClaimTemplates) {
         this.linearId = linearId;
         this.name = name;
         this.templateDescription = description;
         this.issuer = issuer;
         this.approver = approver;
+        this.rule = new LinearPointer<>(ruleLinearId, Rule.class);
+        this.supportedClaimtenmplates = supportedClaimTemplates.stream().map(claimLinearId -> {
+            return new LinearPointer<>(claimLinearId, ClaimTemplate.class);
+        }).collect(Collectors.toList());
+
         this.participants = new ArrayList<AbstractParty>();
         this.participants.add(issuer);
         this.participants.add(approver);
     }
 
-    public ClaimTemplate(String name, String templateDescription, Party issuer, Party approver) {
+    public ClaimTemplate(String name, String templateDescription, Party issuer, Party approver, UniqueIdentifier ruleLinearId, List<UniqueIdentifier> supportedClaimTemplates) {
         this.linearId = new UniqueIdentifier();
         this.name = name;
         this.templateDescription = templateDescription;
         this.issuer = issuer;
         this.approver = approver;
+        this.rule = new LinearPointer<>(ruleLinearId, Rule.class);
+        this.supportedClaimtenmplates = supportedClaimTemplates.stream().map(claimLinearId -> {
+            return new LinearPointer<>(claimLinearId, ClaimTemplate.class);
+        }).collect(Collectors.toList());
+
         this.participants = new ArrayList<>();
         this.participants.add(issuer);
         this.participants.add(approver);
@@ -87,5 +105,13 @@ public class ClaimTemplate implements LinearState {
 
     public Party getApprover() {
         return approver;
+    }
+
+    public LinearPointer<Rule> getRule() {
+        return rule;
+    }
+
+    public List<LinearPointer<ClaimTemplate>> getSupportedClaimtenmplates() {
+        return supportedClaimtenmplates;
     }
 }
