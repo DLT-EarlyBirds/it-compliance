@@ -1,6 +1,6 @@
 package com.template.states;
 
-import com.template.contracts.RegulationContract;
+import com.template.contracts.RuleContract;
 import net.corda.core.contracts.BelongsToContract;
 import net.corda.core.contracts.LinearState;
 import net.corda.core.contracts.UniqueIdentifier;
@@ -15,7 +15,7 @@ import java.util.List;
 // *********
 // * State *
 // *********
-@BelongsToContract(RegulationContract.class)
+@BelongsToContract(RuleContract.class)
 public class Rule implements LinearState {
 
     // Private variables
