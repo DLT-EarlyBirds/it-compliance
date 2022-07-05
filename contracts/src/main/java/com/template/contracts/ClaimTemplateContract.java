@@ -2,11 +2,15 @@ package com.template.contracts;
 
 import com.template.states.ClaimTemplate;
 import com.template.states.Regulation;
+import com.template.states.Rule;
 import net.corda.core.contracts.CommandData;
 import net.corda.core.contracts.Contract;
+import net.corda.core.contracts.StateAndRef;
 import net.corda.core.transactions.LedgerTransaction;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static net.corda.core.contracts.ContractsDSL.requireThat;
 
@@ -27,17 +31,20 @@ public class ClaimTemplateContract implements Contract {
         //final CommandWithParties<Commands> command = requireSingleCommand(tx.getCommands(), Commands.class);
         final CommandData commandData = tx.getCommands().get(0).getValue();
 
-        if (commandData instanceof Commands.CreateClaimTemplate) {
-            //Retrieve the output state of the transaction
-            ClaimTemplate output = tx.outputsOfType(ClaimTemplate.class).get(0);
+        //Retrieve the output state of the transaction
+        ClaimTemplate output = tx.outputsOfType(ClaimTemplate.class).get(0);
+        StateAndRef<Rule> rule = output.getRule().resolve(tx);
+        List<StateAndRef<ClaimTemplate>> supportedClaimTemplates = output.getSupportedClaimtenmplates().stream().map(claimTemplateLinearPointer -> {
+            return claimTemplateLinearPointer.resolve(tx);
+        }).collect(Collectors.toList());
 
-            //No verification required!
+        if (commandData instanceof Commands.CreateClaimTemplate) {
+
             requireThat(require -> {
                 require.using("The regulation is not empty", !Objects.equals(output.getName(), "") && !Objects.equals(output.getTemplateDescription(), ""));
                 return null;
             });
         } else if (commandData instanceof Commands.UpdateClaimTemplate) {
-            ClaimTemplate output = tx.outputsOfType(ClaimTemplate.class).get(0);
             ClaimTemplate input = tx.inputsOfType(ClaimTemplate.class).get(0);
 
             requireThat(require -> {
