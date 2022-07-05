@@ -84,4 +84,8 @@ public class Rule implements LinearState {
     public UniqueIdentifier getLinearId() {
         return this.linearId;
     }
+
+    public LinearPointer<Regulation> getParentRegulation() {
+        return parentRegulation;
+    }
 }
