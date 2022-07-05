@@ -34,9 +34,6 @@ public class ClaimTemplateContract implements Contract {
         //Retrieve the output state of the transaction
         ClaimTemplate output = tx.outputsOfType(ClaimTemplate.class).get(0);
         StateAndRef<Rule> rule = output.getRule().resolve(tx);
-        List<StateAndRef<ClaimTemplate>> supportedClaimTemplates = output.getSupportedClaimtenmplates().stream().map(claimTemplateLinearPointer -> {
-            return claimTemplateLinearPointer.resolve(tx);
-        }).collect(Collectors.toList());
 
         if (commandData instanceof Commands.CreateClaimTemplate) {
 
