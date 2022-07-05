@@ -40,7 +40,7 @@ public class SpecificClaimContract implements Contract {
             // Using Corda DSL function requireThat to replicate conditions-checks
             requireThat(require -> {
                 require.using("The transaction should have exactly one Claim as output", tx.getOutputs().size() == 1);
-                require.using("The output of Claim must have a hash value", !output.getHashValue().equals(""));
+                require.using("The output of Claim must have a name value", !output.getName().equals(""));
                 return null;
             });
         } else if (commandData instanceof Commands.AddEvidence) {

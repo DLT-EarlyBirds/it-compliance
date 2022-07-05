@@ -20,7 +20,7 @@ public class CreateSpecificClaim {
     @StartableByRPC
     public static class CreateSpecificClaimInitiator extends FlowLogic<SignedTransaction> {
 
-        private final String hashValue;
+        private final String name;
         private final Party supervisorAuthority;
 
         private final UniqueIdentifier claimTemplateLinearId;
@@ -28,13 +28,13 @@ public class CreateSpecificClaim {
         private final List<UniqueIdentifier> supportingClaimsLinearIds;
 
         public CreateSpecificClaimInitiator(
-                String hashValue,
-                Party supervisorAuthority,
+                String name,
+                Party supervisoryAuthority,
                 UniqueIdentifier claimTemplateLinearId,
                 List<UniqueIdentifier> supportingClaimsLinearIds
         ) {
-            this.hashValue = hashValue;
-            this.supervisorAuthority = supervisorAuthority;
+            this.name = name;
+            this.supervisorAuthority = supervisoryAuthority;
             this.claimTemplateLinearId = claimTemplateLinearId;
             this.supportingClaimsLinearIds = supportingClaimsLinearIds;
         }
@@ -46,7 +46,7 @@ public class CreateSpecificClaim {
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
             SpecificClaim newClaim = new SpecificClaim(
-                    this.hashValue,
+                    this.name,
                     this.getOurIdentity(),
                     this.supervisorAuthority,
                     this.claimTemplateLinearId,

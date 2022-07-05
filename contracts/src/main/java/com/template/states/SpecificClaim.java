@@ -24,7 +24,7 @@ public class SpecificClaim implements LinearState {
     // Linear ID is used to track the evolution of the state over multiple transactions
     @NotNull
     private final UniqueIdentifier linearId;
-    private final String hashValue;
+    private final String name;
 
     @NotNull
     private final Party financialServiceProvider;
@@ -42,11 +42,11 @@ public class SpecificClaim implements LinearState {
 
     /* Constructor of your Corda state */
     @ConstructorForDeserialization
-    public SpecificClaim(String hashValue, @NotNull Party financialServiceProvider, @NotNull Party supervisorAuthority, UniqueIdentifier claimTemplateLinearId, List<UniqueIdentifier> supportingClaimsLinearIds) {
+    public SpecificClaim(String name, @NotNull Party financialServiceProvider, @NotNull Party supervisorAuthority, UniqueIdentifier claimTemplateLinearId, List<UniqueIdentifier> supportingClaimsLinearIds) {
         this.linearId = new UniqueIdentifier();
         this.financialServiceProvider = financialServiceProvider;
         this.supervisorAuthority = supervisorAuthority;
-        this.hashValue = hashValue;
+        this.name = name;
         this.claimTemplate = new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class);
         this.supportingClaims = supportingClaimsLinearIds.stream().map(claimLinearId -> {
             return new LinearPointer<>(claimLinearId, SpecificClaim.class);
@@ -58,9 +58,9 @@ public class SpecificClaim implements LinearState {
         this.participants.add(supervisorAuthority);
     }
 
-    public SpecificClaim(@NotNull UniqueIdentifier linearId, String hashValue, @NotNull Party financialServiceProvider, @NotNull Party supervisorAuthority, UniqueIdentifier claimTemplateLinearId, List<UniqueIdentifier> supportedClaimsLinearIds) {
+    public SpecificClaim(@NotNull UniqueIdentifier linearId, String name, @NotNull Party financialServiceProvider, @NotNull Party supervisorAuthority, UniqueIdentifier claimTemplateLinearId, List<UniqueIdentifier> supportedClaimsLinearIds) {
         this.linearId = linearId;
-        this.hashValue = hashValue;
+        this.name = name;
         this.financialServiceProvider = financialServiceProvider;
         this.supervisorAuthority = supervisorAuthority;
         this.claimTemplate = new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class);
@@ -81,8 +81,8 @@ public class SpecificClaim implements LinearState {
     }
 
     //Getters
-    public String getHashValue() {
-        return hashValue;
+    public String getName() {
+        return name;
     }
 
     @NotNull
