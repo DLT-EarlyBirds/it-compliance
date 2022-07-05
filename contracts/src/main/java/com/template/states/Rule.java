@@ -2,6 +2,7 @@ package com.template.states;
 
 import com.template.contracts.RuleContract;
 import net.corda.core.contracts.BelongsToContract;
+import net.corda.core.contracts.LinearPointer;
 import net.corda.core.contracts.LinearState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.AbstractParty;
@@ -31,23 +32,29 @@ public class Rule implements LinearState {
     private final Party issuer;
     private final List<AbstractParty> participants;
 
+    private final LinearPointer<Regulation> parentRegulation;
+
 
     /* Constructor of RegulationDescription */
     @ConstructorForDeserialization
-    public Rule(@NotNull UniqueIdentifier linearId, String name, String description, @NotNull Party issuer) {
+    public Rule(@NotNull UniqueIdentifier linearId, String name, String description, @NotNull Party issuer, UniqueIdentifier parentRegulationLinearId) {
         this.linearId = linearId;
         this.name = name;
         this.ruleSpecification = description;
         this.issuer = issuer;
+        this.parentRegulation = new LinearPointer<>(parentRegulationLinearId, Regulation.class);
+
         this.participants = new ArrayList<>();
         this.participants.add(issuer);
     }
 
-    public Rule(String name, String ruleSpecification, @NotNull Party issuer) {
+    public Rule(String name, String ruleSpecification, @NotNull Party issuer,  UniqueIdentifier parentRegulationLinearId) {
         this.linearId = new UniqueIdentifier();
         this.name = name;
         this.ruleSpecification = ruleSpecification;
         this.issuer = issuer;
+        this.parentRegulation = new LinearPointer<>(parentRegulationLinearId, Regulation.class);
+
         this.participants = new ArrayList<>();
         this.participants.add(issuer);
     }
