@@ -12,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 // *********
 // * State *
@@ -40,38 +39,29 @@ public class ClaimTemplate implements LinearState {
     // A reference to the rule that is fulfilled by a claim implementing this template.
     private final LinearPointer<Rule> rule;
 
-    // References to other claim templates that can be proven when this claim template is implemented.
-    private final List<LinearPointer<ClaimTemplate>> supportedClaimtenmplates;
-
 
     /* Constructor of RegulationDescription */
     @ConstructorForDeserialization
-    public ClaimTemplate(@NotNull UniqueIdentifier linearId, String name, String description, Party issuer, Party approver, UniqueIdentifier ruleLinearId, List<UniqueIdentifier> supportedClaimTemplates) {
+    public ClaimTemplate(@NotNull UniqueIdentifier linearId, String name, String description, Party issuer, Party approver, UniqueIdentifier ruleLinearId) {
         this.linearId = linearId;
         this.name = name;
         this.templateDescription = description;
         this.issuer = issuer;
         this.approver = approver;
         this.rule = new LinearPointer<>(ruleLinearId, Rule.class);
-        this.supportedClaimtenmplates = supportedClaimTemplates.stream().map(claimLinearId -> {
-            return new LinearPointer<>(claimLinearId, ClaimTemplate.class);
-        }).collect(Collectors.toList());
 
         this.participants = new ArrayList<AbstractParty>();
         this.participants.add(issuer);
         this.participants.add(approver);
     }
 
-    public ClaimTemplate(String name, String templateDescription, Party issuer, Party approver, UniqueIdentifier ruleLinearId, List<UniqueIdentifier> supportedClaimTemplates) {
+    public ClaimTemplate(String name, String templateDescription, Party issuer, Party approver, UniqueIdentifier ruleLinearId) {
         this.linearId = new UniqueIdentifier();
         this.name = name;
         this.templateDescription = templateDescription;
         this.issuer = issuer;
         this.approver = approver;
         this.rule = new LinearPointer<>(ruleLinearId, Rule.class);
-        this.supportedClaimtenmplates = supportedClaimTemplates.stream().map(claimLinearId -> {
-            return new LinearPointer<>(claimLinearId, ClaimTemplate.class);
-        }).collect(Collectors.toList());
 
         this.participants = new ArrayList<>();
         this.participants.add(issuer);
@@ -109,9 +99,5 @@ public class ClaimTemplate implements LinearState {
 
     public LinearPointer<Rule> getRule() {
         return rule;
-    }
-
-    public List<LinearPointer<ClaimTemplate>> getSupportedClaimtenmplates() {
-        return supportedClaimtenmplates;
     }
 }
