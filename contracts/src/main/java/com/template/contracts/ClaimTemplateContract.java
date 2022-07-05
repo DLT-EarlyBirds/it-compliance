@@ -31,22 +31,32 @@ public class ClaimTemplateContract implements Contract {
         //final CommandWithParties<Commands> command = requireSingleCommand(tx.getCommands(), Commands.class);
         final CommandData commandData = tx.getCommands().get(0).getValue();
 
-        //Retrieve the output state of the transaction
-        ClaimTemplate output = tx.outputsOfType(ClaimTemplate.class).get(0);
-        StateAndRef<Rule> rule = output.getRule().resolve(tx);
+
 
         if (commandData instanceof Commands.CreateClaimTemplate) {
-
+            //Retrieve the output state of the transaction
+            ClaimTemplate output = tx.outputsOfType(ClaimTemplate.class).get(0);
+            StateAndRef<Rule> rule = output.getRule().resolve(tx);
             requireThat(require -> {
                 require.using("The regulation is not empty", !Objects.equals(output.getName(), "") && !Objects.equals(output.getTemplateDescription(), ""));
                 return null;
             });
         } else if (commandData instanceof Commands.UpdateClaimTemplate) {
+            //Retrieve the output state of the transaction
+            ClaimTemplate output = tx.outputsOfType(ClaimTemplate.class).get(0);
+            StateAndRef<Rule> rule = output.getRule().resolve(tx);
             ClaimTemplate input = tx.inputsOfType(ClaimTemplate.class).get(0);
 
             requireThat(require -> {
                 require.using("The transaction is only allowed to modify the input claim template", output.getLinearId().equals(input.getLinearId()));
                 require.using("The claim template is not empty", !Objects.equals(output.getName(), "") && !Objects.equals(output.getTemplateDescription(), ""));
+                return null;
+            });
+        } else if (commandData instanceof Commands.DeprecateClaimTemplate) {
+            ClaimTemplate input = tx.inputsOfType(ClaimTemplate.class).get(0);
+
+            requireThat(require -> {
+
                 return null;
             });
         }
@@ -56,8 +66,10 @@ public class ClaimTemplateContract implements Contract {
     public interface Commands extends CommandData {
         class CreateClaimTemplate implements Commands {
         }
-
         class UpdateClaimTemplate implements Commands {
+        }
+        class DeprecateClaimTemplate implements Commands {
+
         }
     }
 }

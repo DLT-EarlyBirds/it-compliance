@@ -37,11 +37,25 @@ public class SpecificClaimContract implements Contract {
 
 
         if (commandData instanceof Commands.CreateClaim) {
-
             // Using Corda DSL function requireThat to replicate conditions-checks
             requireThat(require -> {
                 require.using("The transaction should have exactly one Claim as output", tx.getOutputs().size() == 1);
                 require.using("The output of Claim must have a hash value", !output.getHashValue().equals(""));
+                return null;
+            });
+        } else if (commandData instanceof Commands.AddEvidence) {
+
+            requireThat(require -> {
+                return null;
+            });
+        } else if (commandData instanceof Commands.AddSupportingClaim) {
+
+            requireThat(require -> {
+                return null;
+            });
+        } else if (commandData instanceof Commands.ResubmitClaim) {
+
+            requireThat(require -> {
                 return null;
             });
         }
@@ -52,10 +66,11 @@ public class SpecificClaimContract implements Contract {
         //In our hello-world app, We will only have one command.
         class CreateClaim implements Commands {
         }
-
         class AddEvidence implements Commands {
         }
+        class AddSupportingClaim implements  Commands {
 
+        }
         class ResubmitClaim implements Commands {
         }
     }
