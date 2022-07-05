@@ -50,7 +50,7 @@ public class ClaimTemplate implements LinearState {
         this.approver = approver;
         this.rule = new LinearPointer<>(ruleLinearId, Rule.class);
 
-        this.participants = new ArrayList<AbstractParty>();
+        this.participants = new ArrayList<>();
         this.participants.add(issuer);
         this.participants.add(approver);
     }
