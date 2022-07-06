@@ -56,13 +56,13 @@ public class UpdateRegulation {
                     .withStatus(Vault.StateStatus.UNCONSUMED)
                     .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
 
-            final List<StateAndRef<Regulation>> input = getServiceHub().getVaultService().queryBy(Regulation.class, inputCriteria).getStates();
+            final StateAndRef<Regulation> input = getServiceHub().getVaultService().queryBy(Regulation.class, inputCriteria).getStates().get(0);
 
             final TransactionBuilder builder = new TransactionBuilder(notary);
 
+            builder.addInputState(input);
             builder.addOutputState(output);
             builder.addCommand(new RegulationContract.Commands.CreateRegulation(), getOurIdentity().getOwningKey());
-
 
             // Verify that the transaction is valid.
             builder.verify(getServiceHub());
