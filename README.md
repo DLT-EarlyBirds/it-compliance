@@ -23,3 +23,16 @@ ssh -p <NODE_PORT> localhost -l user1
 ```
 Replace `<NODE_PORT>` with the port of the node you want to connect to. You can find the respective nodes in the `build.gradle` file located at `it-compliance/build.gradle`. 
 The username is already provided with `user1`, the respective password is `test`.
+
+
+# Issuing flows
+
+## Regulation Flow
+`flow start CreateRegulation name: Regulation, description: Some Description, version: 0.1, releaseDate: 2022-03-22`
+
+`run vaultQuery contractStateType: com.template.states.Regulation`
+
+## Rule Flow 
+`flow start CreateRule name: NewRule, ruleSpecification: new Description, parentRegulationLinearId: <RegulationLinearId>`
+
+`run vaultQuery contractStateType: com.template.states.Rule`
