@@ -30,12 +30,11 @@ public class RuleContract implements Contract {
         final CommandData commandData = tx.getCommands().get(0).getValue();
 
 
-
         if (commandData instanceof Commands.CreateRule) {
             // Retrieve the output state of the transaction
             Rule output = tx.outputsOfType(Rule.class).get(0);
             // Fetch the parent regulation via the linear pointer.
-            StateAndRef<Regulation> parentRegulation =  output.getParentRegulation().resolve(tx);
+            StateAndRef<Regulation> parentRegulation = output.getParentRegulation().resolve(tx);
 
             requireThat(require -> {
                 require.using("The rule is not empty", !Objects.equals(output.getName(), "") && !Objects.equals(output.getRuleSpecification(), ""));

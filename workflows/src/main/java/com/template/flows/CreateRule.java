@@ -6,6 +6,7 @@ import com.template.states.Rule;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
+import net.corda.core.node.NodeInfo;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 
@@ -59,9 +60,16 @@ public class CreateRule {
 
             final SignedTransaction signedTransaction = getServiceHub().signInitialTransaction(builder);
 
-
+            // Broadcast transaction to all parties in the network for signing.
             List<Party> otherParties = output.getParticipants().stream().map(el -> (Party)el).collect(Collectors.toList());
+
+            // Add all parties in the network
+            otherParties.addAll(getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList()));
+            // Remove yourself
             otherParties.remove(getOurIdentity());
+            // Remove notaries
+            otherParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
+
             List<FlowSession> sessions = otherParties.stream().map(this::initiateFlow).collect(Collectors.toList());
 
             SignedTransaction stx = subFlow(new CollectSignaturesFlow(signedTransaction, sessions));

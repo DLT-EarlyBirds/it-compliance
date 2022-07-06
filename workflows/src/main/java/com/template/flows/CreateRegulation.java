@@ -9,6 +9,7 @@ import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,10 +33,10 @@ public class CreateRegulation {
         private final Party supervisoryAuthority;
 
         //public constructor
-        public CreateRegulationInitiator(String name, String description, String version, Date releaseDate, Party supervisoryAuthority) {
+        public CreateRegulationInitiator(String name, String description, String version, Date releaseDate) {
             this.version = version;
             this.releaseDate = releaseDate;
-            this.supervisoryAuthority = supervisoryAuthority;
+            this.supervisoryAuthority = this.getOurIdentity();
             this.description = description;
             this.name = name;
         }
@@ -51,8 +52,7 @@ public class CreateRegulation {
             final TransactionBuilder builder = new TransactionBuilder(notary);
 
             builder.addOutputState(output);
-            builder.addCommand(new RegulationContract.Commands.CreateRegulation(),
-                    Arrays.asList(getOurIdentity().getOwningKey(), this.supervisoryAuthority.getOwningKey()));
+            builder.addCommand(new RegulationContract.Commands.CreateRegulation(), getOurIdentity().getOwningKey());
 
 
             // Verify that the transaction is valid.
@@ -60,47 +60,7 @@ public class CreateRegulation {
 
             final SignedTransaction signedTransaction = getServiceHub().signInitialTransaction(builder);
 
-
-            List<Party> otherParties = output.getParticipants().stream().map(el -> (Party)el).collect(Collectors.toList());
-            otherParties.remove(getOurIdentity());
-            List<FlowSession> sessions = otherParties.stream().map(this::initiateFlow).collect(Collectors.toList());
-
-            SignedTransaction stx = subFlow(new CollectSignaturesFlow(signedTransaction, sessions));
-
-            return subFlow(new FinalityFlow(stx, sessions));
-        }
-    }
-
-    @InitiatedBy(CreateRegulationInitiator.class)
-    public static class CreateRegulationResponder extends FlowLogic<Void>{
-        //private variable
-        private final FlowSession counterpartySession;
-
-        //Constructor
-        public CreateRegulationResponder(FlowSession counterpartySession) {
-            this.counterpartySession = counterpartySession;
-        }
-
-        @Suspendable
-        @Override
-        public Void call() throws FlowException {
-            SignedTransaction signedTransaction = subFlow(new SignTransactionFlow(counterpartySession) {
-                @Suspendable
-                @Override
-                protected void checkTransaction(SignedTransaction stx) throws FlowException {
-                    /*
-                     * SignTransactionFlow will automatically verify the transaction and its signatures before signing it.
-                     * However, just because a transaction is contractually valid doesn’t mean we necessarily want to sign.
-                     * What if we don’t want to deal with the counterparty in question, or the value is too high,
-                     * or we’re not happy with the transaction’s structure? checkTransaction
-                     * allows us to define these additional checks. If any of these conditions are not met,
-                     * we will not sign the transaction - even if the transaction and its signatures are contractually valid.
-                     * */
-                }
-            });
-            // Stored the transaction into database.
-            subFlow(new ReceiveFinalityFlow(counterpartySession, signedTransaction.getId()));
-            return null;
+            return subFlow(new FinalityFlow(signedTransaction, Collections.emptyList()));
         }
     }
 
