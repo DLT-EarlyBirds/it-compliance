@@ -65,7 +65,6 @@ public class CreateRule {
                     involvedParties.stream().map(Party::getOwningKey).collect(Collectors.toList())
             );
 
-
             // Verify that the transaction is valid.
             builder.verify(getServiceHub());
 

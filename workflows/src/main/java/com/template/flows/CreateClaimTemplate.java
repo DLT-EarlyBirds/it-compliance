@@ -2,15 +2,17 @@ package com.template.flows;
 
 import co.paralleluniverse.fibers.Suspendable;
 import com.template.contracts.ClaimTemplateContract;
-import com.template.contracts.RuleContract;
 import com.template.states.ClaimTemplate;
+import com.template.states.Rule;
+import net.corda.core.contracts.LinearPointer;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
+import net.corda.core.node.NodeInfo;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,14 +30,10 @@ public class CreateClaimTemplate {
         // Private variables
         private final String name;
         private final String templateDescription;
-        private final Party issuer;
-        private final Party approver;
         private final UniqueIdentifier ruleLinearId;
 
         //public constructor
-        public CreateClaimTemplateInitiator(String name, String description, Party issuer, Party approver, UniqueIdentifier ruleLinearId) {
-            this.issuer = issuer;
-            this.approver = approver;
+        public CreateClaimTemplateInitiator(String name, String description, UniqueIdentifier ruleLinearId) {
             this.templateDescription = description;
             this.name = name;
             this.ruleLinearId = ruleLinearId;
@@ -47,20 +45,32 @@ public class CreateClaimTemplate {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
+            // Add all parties in the network
+            final List<Party> involvedParties = new ArrayList<>(getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList()));
+            // Remove yourself
+            involvedParties.remove(getOurIdentity());
+            // Remove notaries
+            involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
+
+
             final ClaimTemplate output = new ClaimTemplate(
+                    new UniqueIdentifier(),
                     name,
                     templateDescription,
-                    issuer,
-                    approver,
-                    ruleLinearId
+                    this.getOurIdentity(),
+                    involvedParties,
+                    new LinearPointer<Rule>(ruleLinearId, Rule.class)
             );
 
             final TransactionBuilder builder = new TransactionBuilder(notary);
 
             builder.addOutputState(output);
-            builder.addCommand(new ClaimTemplateContract.Commands.CreateClaimTemplate(),
-                    Arrays.asList(getOurIdentity().getOwningKey(), this.issuer.getOwningKey()));
 
+            // Reuse involved parties list for signing
+            involvedParties.add(getOurIdentity());
+            builder.addCommand(new ClaimTemplateContract.Commands.CreateClaimTemplate(),
+                    involvedParties.stream().map(Party::getOwningKey).collect(Collectors.toList())
+            );
 
             // Verify that the transaction is valid.
             builder.verify(getServiceHub());
@@ -69,7 +79,9 @@ public class CreateClaimTemplate {
 
 
             List<Party> otherParties = output.getParticipants().stream().map(el -> (Party) el).collect(Collectors.toList());
+
             otherParties.remove(getOurIdentity());
+
             List<FlowSession> sessions = otherParties.stream().map(this::initiateFlow).collect(Collectors.toList());
 
             SignedTransaction stx = subFlow(new CollectSignaturesFlow(signedTransaction, sessions));

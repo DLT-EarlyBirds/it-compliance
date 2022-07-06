@@ -31,8 +31,6 @@ public class ClaimTemplateContract implements Contract {
         //final CommandWithParties<Commands> command = requireSingleCommand(tx.getCommands(), Commands.class);
         final CommandData commandData = tx.getCommands().get(0).getValue();
 
-
-
         if (commandData instanceof Commands.CreateClaimTemplate) {
             //Retrieve the output state of the transaction
             ClaimTemplate output = tx.outputsOfType(ClaimTemplate.class).get(0);

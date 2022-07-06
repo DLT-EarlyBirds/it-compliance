@@ -32,8 +32,9 @@ public class ClaimTemplate implements LinearState {
 
     // The issuer who submits the claim template
     private final Party issuer;
-    // The party that approves the submission of the claim template, usually the supervisory authority
-    private final Party approver;
+
+    private final List<Party> involvedParties;
+
     private final List<AbstractParty> participants;
 
     // A reference to the rule that is fulfilled by a claim implementing this template.
@@ -42,33 +43,27 @@ public class ClaimTemplate implements LinearState {
 
     /* Constructor of RegulationDescription */
     @ConstructorForDeserialization
-    public ClaimTemplate(@NotNull UniqueIdentifier linearId, String name, String description, Party issuer, Party approver, UniqueIdentifier ruleLinearId) {
+    public ClaimTemplate(@NotNull UniqueIdentifier linearId, String name, String templateDescription, Party issuer, List<Party> involvedParties, LinearPointer<Rule> rule) {
         this.linearId = linearId;
-        this.name = name;
-        this.templateDescription = description;
-        this.issuer = issuer;
-        this.approver = approver;
-        this.rule = new LinearPointer<>(ruleLinearId, Rule.class);
-
-        this.participants = new ArrayList<>();
-        this.participants.add(issuer);
-        this.participants.add(approver);
-    }
-
-    public ClaimTemplate(String name, String templateDescription, Party issuer, Party approver, UniqueIdentifier ruleLinearId) {
-        this.linearId = new UniqueIdentifier();
         this.name = name;
         this.templateDescription = templateDescription;
         this.issuer = issuer;
-        this.approver = approver;
-        this.rule = new LinearPointer<>(ruleLinearId, Rule.class);
+        this.involvedParties = involvedParties;
+        this.rule = rule;
 
         this.participants = new ArrayList<>();
         this.participants.add(issuer);
-        this.participants.add(approver);
+        this.participants.addAll(involvedParties);
     }
 
     // Getters
+
+    @Override
+    @NotNull
+    public UniqueIdentifier getLinearId() {
+        return linearId;
+    }
+
     public String getName() {
         return name;
     }
@@ -81,20 +76,14 @@ public class ClaimTemplate implements LinearState {
         return issuer;
     }
 
+    public List<Party> getInvolvedParties() {
+        return involvedParties;
+    }
+
     @NotNull
     @Override
     public List<AbstractParty> getParticipants() {
-        return this.participants;
-    }
-
-    @Override
-    @NotNull
-    public UniqueIdentifier getLinearId() {
-        return linearId;
-    }
-
-    public Party getApprover() {
-        return approver;
+        return participants;
     }
 
     public LinearPointer<Rule> getRule() {
