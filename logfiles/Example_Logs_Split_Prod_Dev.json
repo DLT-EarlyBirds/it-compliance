@@ -1,8 +1,10 @@
 [
   {
     "labels": "development",
+    "OriginSystem": "WindowsEventLog",
     "_time": "2022-06-10T19:32:51.000+0200",
     "name": "A repository was accessed",
+    "description": "",
     "result": "Commit",
     "app": "gitlab",
     "action": "success",
@@ -11,13 +13,14 @@
     "SubjectUserName": "maxmueller",
     "PrivilegeList": "",
     "Computer": "SRV100124.grenkeleasing.com",
-    "DisplayName": "[ad-maxmueller]",
     "CategoryString": "DevelopmentSystems"
   },
   {
     "labels": "development",
+    "OriginSystem": "WindowsEventLog",
     "_time": "2022-06-10T16:32:49.000+0200",
     "name": "A repository was accessed",
+    "description": "",
     "result": "Commit",
     "app": "gitlab",
     "action": "success",
@@ -26,13 +29,14 @@
     "SubjectUserName": "samirkhan",
     "PrivilegeList": "",
     "Computer": "srv001072.grenkeleasing.com",
-    "DisplayName": "[ad-samirkhan]",
     "CategoryString": "DevelopmentSystems"
   },
   {
     "labels": "development",
+    "OriginSystem": "WindowsEventLog",
     "_time": "2022-06-10T15:32:46.000+0200",
     "name": "A repository was accessed",
+    "description": "",
     "result": "Commit",
     "app": "gitlab",
     "action": "success",
@@ -41,13 +45,14 @@
     "SubjectUserName": "samirkhan",
     "PrivilegeList": "",
     "Computer": "srv001072.grenkeleasing.com",
-    "DisplayName": "[ad-samirkhan]",
     "CategoryString": "DevelopmentSystems"
   },
   {
     "labels": "production",
+    "OriginSystem": "WindowsEventLog",
     "_time": "2022-06-09T19:32:51.000+0200",
     "name": "A production system was accessed",
+    "description": "",
     "result": "",
     "app": "server",
     "action": "success",
@@ -56,13 +61,14 @@
     "SubjectUserName": "lisaholz",
     "PrivilegeList": "",
     "Computer": "SRV100214.grenkeleasing.com",
-    "DisplayName": "[ad-lisaholz]",
     "CategoryString": "ProductionSystems"
   },
   {
     "labels": "production",
+    "OriginSystem": "WindowsEventLog",
     "_time": "2022-06-09T16:32:49.000+0200",
     "name": "A production system was accessed",
+    "description": "",
     "result": "",
     "app": "server",
     "action": "success",
@@ -71,13 +77,14 @@
     "SubjectUserName": "lisaholz",
     "PrivilegeList": "",
     "Computer": "SRV100214.grenkeleasing.com",
-    "DisplayName": "[ad-lisaholz]",
     "CategoryString": "ProductionSystems"
   },
   {
     "labels": "production",
+    "OriginSystem": "WindowsEventLog",
     "_time": "2022-06-09T15:32:46.000+0200",
     "name": "A production system was accessed",
+    "description": "",
     "result": "",
     "app": "server",
     "action": "success",
@@ -86,7 +93,6 @@
     "SubjectUserName": "michaelkopka",
     "PrivilegeList": "",
     "Computer": "SRV100214.grenkeleasing.com",
-    "DisplayName": "[ad-michaelkopka]",
     "CategoryString": "ProductionSystems"
   }
 ]
