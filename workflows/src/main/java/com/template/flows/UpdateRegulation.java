@@ -13,10 +13,7 @@ import net.corda.core.node.services.vault.QueryCriteria;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 //Initiate this flow:
 //flow start CreateRegulation description: "test_description", supervisoryAuthority: Supervisory Authority
@@ -59,7 +56,7 @@ public class UpdateRegulation {
                     .withStatus(Vault.StateStatus.UNCONSUMED)
                     .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
 
-            final StateAndRef<Regulation> input = getServiceHub().getVaultService().queryBy(Regulation.class, inputCriteria).getStates();
+            final List<StateAndRef<Regulation>> input = getServiceHub().getVaultService().queryBy(Regulation.class, inputCriteria).getStates();
 
             final TransactionBuilder builder = new TransactionBuilder(notary);
 
