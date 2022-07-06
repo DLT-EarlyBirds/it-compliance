@@ -30,6 +30,7 @@ public class Rule implements LinearState {
     // The issuer who submits the rule, usually the supervisory authority or part of the regulatory body
     @NotNull
     private final Party issuer;
+    private final List<Party> involvedParties;
     private final List<AbstractParty> participants;
 
     private final LinearPointer<Regulation> parentRegulation;
@@ -37,27 +38,19 @@ public class Rule implements LinearState {
 
     /* Constructor of RegulationDescription */
     @ConstructorForDeserialization
-    public Rule(@NotNull UniqueIdentifier linearId, String name, String description, @NotNull Party issuer, UniqueIdentifier parentRegulationLinearId) {
+    public Rule(@NotNull UniqueIdentifier linearId, String name, String ruleSpecification, @NotNull Party issuer, List<Party> involvedParties, LinearPointer<Regulation> parentRegulation) {
         this.linearId = linearId;
-        this.name = name;
-        this.ruleSpecification = description;
-        this.issuer = issuer;
-        this.parentRegulation = new LinearPointer<>(parentRegulationLinearId, Regulation.class);
-
-        this.participants = new ArrayList<>();
-        this.participants.add(issuer);
-    }
-
-    public Rule(String name, String ruleSpecification, @NotNull Party issuer,  UniqueIdentifier parentRegulationLinearId) {
-        this.linearId = new UniqueIdentifier();
         this.name = name;
         this.ruleSpecification = ruleSpecification;
         this.issuer = issuer;
-        this.parentRegulation = new LinearPointer<>(parentRegulationLinearId, Regulation.class);
+        this.parentRegulation = parentRegulation;
 
         this.participants = new ArrayList<>();
         this.participants.add(issuer);
+        this.participants.addAll(involvedParties);
+        this.involvedParties = involvedParties;
     }
+
 
     // Getters
     public String getName() {
@@ -88,4 +81,8 @@ public class Rule implements LinearState {
     public LinearPointer<Regulation> getParentRegulation() {
         return parentRegulation;
     }
+    public List<Party> getInvolvedParties() {
+        return involvedParties;
+    }
+
 }

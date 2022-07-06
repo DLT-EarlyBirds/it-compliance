@@ -2,7 +2,9 @@ package com.template.flows;
 
 import co.paralleluniverse.fibers.Suspendable;
 import com.template.contracts.RuleContract;
+import com.template.states.Regulation;
 import com.template.states.Rule;
+import net.corda.core.contracts.LinearPointer;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
@@ -10,6 +12,7 @@ import net.corda.core.node.NodeInfo;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,19 +27,16 @@ public class CreateRule {
 
     @InitiatingFlow
     @StartableByRPC
-    public static class CreateRuleInitiator extends FlowLogic<SignedTransaction>{
+    public static class CreateRuleInitiator extends FlowLogic<SignedTransaction> {
         // Private variables
         private final String name;
         private final String ruleSpecification;
-        private final Party issuer;
-
         private final UniqueIdentifier parentRegulationLinearId;
 
         //public constructor
-        public CreateRuleInitiator(String name, String description, Party issuer, UniqueIdentifier parentRegulationLinearId) {
-            this.issuer = issuer;
-            this.ruleSpecification = description;
+        public CreateRuleInitiator(String name, String ruleSpecification, UniqueIdentifier parentRegulationLinearId) {
             this.name = name;
+            this.ruleSpecification = ruleSpecification;
             this.parentRegulationLinearId = parentRegulationLinearId;
         }
 
@@ -46,13 +46,24 @@ public class CreateRule {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
-            final Rule output = new Rule(name, ruleSpecification, issuer, parentRegulationLinearId);
+            // Add all parties in the network
+            final List<Party> involvedParties = new ArrayList<>(getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList()));
+            // Remove yourself
+            involvedParties.remove(getOurIdentity());
+            // Remove notaries
+            involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
+
+            final Rule output = new Rule(new UniqueIdentifier(), name, ruleSpecification, this.getOurIdentity(), involvedParties, new LinearPointer<>(parentRegulationLinearId, Regulation.class));
 
             final TransactionBuilder builder = new TransactionBuilder(notary);
 
             builder.addOutputState(output);
+
+            // Reuse involved parties list for signing
+            involvedParties.add(getOurIdentity());
             builder.addCommand(new RuleContract.Commands.CreateRule(),
-                    Arrays.asList(getOurIdentity().getOwningKey(), this.issuer.getOwningKey()));
+                    involvedParties.stream().map(Party::getOwningKey).collect(Collectors.toList())
+            );
 
 
             // Verify that the transaction is valid.
@@ -61,14 +72,10 @@ public class CreateRule {
             final SignedTransaction signedTransaction = getServiceHub().signInitialTransaction(builder);
 
             // Broadcast transaction to all parties in the network for signing.
-            List<Party> otherParties = output.getParticipants().stream().map(el -> (Party)el).collect(Collectors.toList());
+            List<Party> otherParties = output.getParticipants().stream().map(el -> (Party) el).collect(Collectors.toList());
 
-            // Add all parties in the network
-            otherParties.addAll(getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList()));
             // Remove yourself
             otherParties.remove(getOurIdentity());
-            // Remove notaries
-            otherParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
 
             List<FlowSession> sessions = otherParties.stream().map(this::initiateFlow).collect(Collectors.toList());
 
@@ -79,7 +86,7 @@ public class CreateRule {
     }
 
     @InitiatedBy(CreateRuleInitiator.class)
-    public static class CreateRuleResponder extends FlowLogic<Void>{
+    public static class CreateRuleResponder extends FlowLogic<Void> {
         //private variable
         private final FlowSession counterpartySession;
 
