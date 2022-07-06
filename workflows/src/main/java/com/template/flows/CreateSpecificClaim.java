@@ -2,7 +2,9 @@ package com.template.flows;
 
 import co.paralleluniverse.fibers.Suspendable;
 import com.template.contracts.SpecificClaimContract;
+import com.template.states.ClaimTemplate;
 import com.template.states.SpecificClaim;
+import net.corda.core.contracts.LinearPointer;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
@@ -13,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CreateSpecificClaim {
 
@@ -49,8 +52,8 @@ public class CreateSpecificClaim {
                     this.name,
                     this.getOurIdentity(),
                     this.supervisorAuthority,
-                    this.claimTemplateLinearId,
-                    this.supportingClaimsLinearIds
+                    new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class),
+                    this.supportingClaimsLinearIds.stream().map(claimLinearId -> new LinearPointer<>(claimLinearId, SpecificClaim.class)).collect(Collectors.toList())
             );
 
             TransactionBuilder txBuilder = new TransactionBuilder(notary)

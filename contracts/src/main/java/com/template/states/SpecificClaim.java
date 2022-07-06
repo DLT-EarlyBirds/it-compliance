@@ -28,7 +28,6 @@ public class SpecificClaim implements LinearState {
 
     @NotNull
     private final Party financialServiceProvider;
-
     @NotNull
     private final Party supervisorAuthority;
     private final List<AbstractParty> participants;
@@ -42,47 +41,32 @@ public class SpecificClaim implements LinearState {
 
     /* Constructor of your Corda state */
     @ConstructorForDeserialization
-    public SpecificClaim(String name, @NotNull Party financialServiceProvider, @NotNull Party supervisorAuthority, UniqueIdentifier claimTemplateLinearId, List<UniqueIdentifier> supportingClaimsLinearIds) {
+    public SpecificClaim(String name, @NotNull Party financialServiceProvider, @NotNull Party supervisorAuthority, LinearPointer<ClaimTemplate> claimTemplate, List<LinearPointer<SpecificClaim>> supportingClaims) {
         this.linearId = new UniqueIdentifier();
         this.financialServiceProvider = financialServiceProvider;
         this.supervisorAuthority = supervisorAuthority;
         this.name = name;
-        this.claimTemplate = new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class);
-        this.supportingClaims = supportingClaimsLinearIds.stream().map(claimLinearId -> {
-            return new LinearPointer<>(claimLinearId, SpecificClaim.class);
-        }).collect(Collectors.toList());
-
+        this.claimTemplate = claimTemplate;
+        this.supportingClaims = supportingClaims;
 
         this.participants = new ArrayList<>();
         this.participants.add(financialServiceProvider);
         this.participants.add(supervisorAuthority);
     }
 
-    public SpecificClaim(@NotNull UniqueIdentifier linearId, String name, @NotNull Party financialServiceProvider, @NotNull Party supervisorAuthority, UniqueIdentifier claimTemplateLinearId, List<UniqueIdentifier> supportedClaimsLinearIds) {
-        this.linearId = linearId;
-        this.name = name;
-        this.financialServiceProvider = financialServiceProvider;
-        this.supervisorAuthority = supervisorAuthority;
-        this.claimTemplate = new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class);
-        this.supportingClaims = supportedClaimsLinearIds.stream().map(claimLinearId -> {
-            return new LinearPointer<>(claimLinearId, SpecificClaim.class);
-        }).collect(Collectors.toList());
+    @Override
+    @NotNull
+    public UniqueIdentifier getLinearId() {
+        return linearId;
+    }
 
-        this.participants = new ArrayList<>();
-        this.participants.add(financialServiceProvider);
-        this.participants.add(supervisorAuthority);
-
+    public String getName() {
+        return name;
     }
 
     @NotNull
-    @Override
-    public List<AbstractParty> getParticipants() {
-        return this.participants;
-    }
-
-    //Getters
-    public String getName() {
-        return name;
+    public Party getFinancialServiceProvider() {
+        return financialServiceProvider;
     }
 
     @NotNull
@@ -92,13 +76,8 @@ public class SpecificClaim implements LinearState {
 
     @NotNull
     @Override
-    public UniqueIdentifier getLinearId() {
-        return this.linearId;
-    }
-
-    @NotNull
-    public Party getFinancialServiceProvider() {
-        return financialServiceProvider;
+    public List<AbstractParty> getParticipants() {
+        return participants;
     }
 
     public LinearPointer<ClaimTemplate> getClaimTemplate() {
