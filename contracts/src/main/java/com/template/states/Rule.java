@@ -38,8 +38,24 @@ public class Rule implements LinearState {
 
     /* Constructor of RegulationDescription */
     @ConstructorForDeserialization
-    public Rule(@NotNull UniqueIdentifier linearId, String name, String ruleSpecification, @NotNull Party issuer, List<Party> involvedParties, LinearPointer<Regulation> parentRegulation) {
+    public Rule(@NotNull UniqueIdentifier linearId, String name, String ruleSpecification, @NotNull Party issuer,
+                List<Party> involvedParties, LinearPointer<Regulation> parentRegulation) {
         this.linearId = linearId;
+        this.name = name;
+        this.ruleSpecification = ruleSpecification;
+        this.issuer = issuer;
+        this.parentRegulation = parentRegulation;
+
+        this.participants = new ArrayList<>();
+        this.participants.add(issuer);
+        this.participants.addAll(involvedParties);
+        this.involvedParties = involvedParties;
+    }
+
+    // TODO [MOH - 08.07.2022]: Why do we have involvedParties here but not in Regulation?
+    public Rule(String name, String ruleSpecification, @NotNull Party issuer,
+                List<Party> involvedParties, LinearPointer<Regulation> parentRegulation) {
+        this.linearId = new UniqueIdentifier();
         this.name = name;
         this.ruleSpecification = ruleSpecification;
         this.issuer = issuer;

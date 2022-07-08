@@ -58,6 +58,11 @@ public class SpecificClaimContract implements Contract {
             requireThat(require -> {
                 return null;
             });
+        } else if (commandData instanceof Commands.UpdateSpecificClaim) {
+
+            requireThat(require -> {
+                return null;
+            });
         }
     }
 
@@ -72,6 +77,8 @@ public class SpecificClaimContract implements Contract {
 
         }
         class ResubmitClaim implements Commands {
+        }
+        class UpdateSpecificClaim implements Commands {
         }
     }
 }

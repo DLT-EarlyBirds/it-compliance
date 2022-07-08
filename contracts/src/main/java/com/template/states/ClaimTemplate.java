@@ -56,6 +56,19 @@ public class ClaimTemplate implements LinearState {
         this.participants.addAll(involvedParties);
     }
 
+    public ClaimTemplate(String name, String templateDescription, Party issuer, List<Party> involvedParties, LinearPointer<Rule> rule) {
+        this.linearId = new UniqueIdentifier();
+        this.name = name;
+        this.templateDescription = templateDescription;
+        this.issuer = issuer;
+        this.involvedParties = involvedParties;
+        this.rule = rule;
+
+        this.participants = new ArrayList<>();
+        this.participants.add(issuer);
+        this.participants.addAll(involvedParties);
+    }
+
     // Getters
 
     @Override
