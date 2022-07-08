@@ -64,7 +64,7 @@ The username is already provided with `user1`, the respective password is `test`
 `run uploadAttachmentWithMetadata   jar: path\to\attachment.zip, uploader: Peter, filename: test.zip`
 
 ### Download an attachment:
-`run openAttachment id: <attachmentID`
+`run openAttachment id: <attachmentID>`
 
 `path\to\save\attachment.zip`
 
