@@ -55,15 +55,15 @@ The username is already provided with `user1`, the respective password is `test`
 `run vaultQuery contractStateType: com.template.states.SpecificClaim`
 
 
-## Handling Attachments
+# Handling Attachments
 
-### Add an attachment to a node:
+## Add an attachment to a node:
 `run uploadAttachment   jar: path\to\attachment.zip`
 
-### Add an attachment with meta data:
+## Add an attachment with meta data:
 `run uploadAttachmentWithMetadata   jar: path\to\attachment.zip, uploader: Peter, filename: test.zip`
 
-### Download an attachment:
+## Download an attachment:
 `run openAttachment id: <attachmentID>`
 
 `path\to\save\attachment.zip`
