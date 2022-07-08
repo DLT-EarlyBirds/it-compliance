@@ -60,6 +60,8 @@ The username is already provided with `user1`, the respective password is `test`
 ## Add an attachment to a node:
 `run uploadAttachment   jar: path\to\attachment.zip`
 
+`attachments trustInfo`
+
 ## Add an attachment with meta data:
 `run uploadAttachmentWithMetadata   jar: path\to\attachment.zip, uploader: Peter, filename: test.zip`
 
