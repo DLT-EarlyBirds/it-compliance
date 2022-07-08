@@ -36,3 +36,40 @@ The username is already provided with `user1`, the respective password is `test`
 `flow start CreateRule name: NewRule, ruleSpecification: new Description, parentRegulationLinearId: <RegulationLinearId>`
 
 `run vaultQuery contractStateType: com.template.states.Rule`
+
+## ClaimTemplate Flow 
+`flow start CreateClaimTemplate name: NewClameTemplate, description: new Description, ruleLinearId: <RuleLinearId>`
+
+`run vaultQuery contractStateType: com.template.states.ClaimTemplate`
+
+## SpecificClaim Flow 
+
+### Without referencing an attachment:
+`flow start CreateSpecificClaim name: SpecificClaim, supervisoryAuthority: Supervisory Authority, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: []`
+
+`run vaultQuery contractStateType: com.template.states.SpecificClaim`
+
+### With referencing an attachment:
+`flow start CreateSpecificClaim name: SpecificClaim, supervisoryAuthority: Supervisory Authority, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: [], attachmentID: <attachmentID>`
+
+`run vaultQuery contractStateType: com.template.states.SpecificClaim`
+
+
+## Handling Attachments
+
+### Add an attachment to a node:
+`run uploadAttachment   jar: path\to\attachment.zip`
+
+### Add an attachment with meta data:
+`run uploadAttachmentWithMetadata   jar: path\to\attachment.zip, uploader: Peter, filename: test.zip`
+
+### Download an attachment:
+`run openAttachment id: <attachmentID`
+
+`path\to\save\attachment.zip`
+
+
+
+
+
+
