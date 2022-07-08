@@ -70,13 +70,26 @@ The username is already provided with `user1`, the respective password is `test`
 
 `path\to\save\attachment.zip`
 
-## Copying files to a docker container:
+## Copying files to a docker container from the host server:
 If the nodes are running in docker containers then you can't just copy files from the host server to the Corda attachments pool. The files must be copied to the container file system first:
-
 
 `docker cp path\on\host_server\attachment.zip node_container_id:path/in/container/attachment.zip`
 
+Then from there upload the attachment to Corda:
 
+`run uploadAttachment   jar: path/in/container/attachment.zip`
+
+
+## Copying files from a docker container to the host server:
+First download the attachment to the container file system:
+
+`run openAttachment id: <attachmentID>`
+
+`path/in/container/attachment.zip`
+
+Then copy it to the host server:
+
+`docker cp node_container_id:path/in/container/attachment.zip path\on\host_server\attachment.zip`
 
 
 
