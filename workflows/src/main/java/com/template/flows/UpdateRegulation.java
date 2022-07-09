@@ -36,7 +36,7 @@ public class UpdateRegulation {
         private final boolean isDeprecated;
 
         //public constructor
-        public UpdateRegulationInitiator(UniqueIdentifier linearId, String name, String description, String version, Date releaseDate, isDeprecated) {
+        public UpdateRegulationInitiator(UniqueIdentifier linearId, String name, String description, String version, Date releaseDate, boolean isDeprecated) {
             this.linearId = linearId;
             this.version = version;
             this.releaseDate = releaseDate;
