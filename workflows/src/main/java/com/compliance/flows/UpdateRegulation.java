@@ -48,7 +48,7 @@ public class UpdateRegulation {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
-            final Regulation output = new Regulation(name, description, version, releaseDate, this.getOurIdentity());
+            final Regulation output = new Regulation(linearId, name, description, version, releaseDate, this.getOurIdentity());
 
             QueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria()
                     .withUuid(Collections.singletonList(UUID.fromString(linearId.toString())))
