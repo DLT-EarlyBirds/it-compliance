@@ -12,7 +12,7 @@ import javax.annotation.PreDestroy;
 
 /**
  * Wraps an RPC connection to a Corda node.
- *
+ * <p>
  * The RPC connection is configured using command line arguments.
  */
 @Component
@@ -31,7 +31,7 @@ public class NodeRPCConnection implements AutoCloseable {
     private int rpcPort;
 
     private CordaRPCConnection rpcConnection;
-    CordaRPCOps proxy;
+    public CordaRPCOps proxy;
 
     @PostConstruct
     public void initialiseNodeRPCConnection() {
