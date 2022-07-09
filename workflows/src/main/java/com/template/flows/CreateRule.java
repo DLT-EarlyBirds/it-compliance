@@ -32,14 +32,12 @@ public class CreateRule {
         private final String name;
         private final String ruleSpecification;
         private final UniqueIdentifier parentRegulationLinearId;
-        private final boolean isDeprecated;
 
         //public constructor
-        public CreateRuleInitiator(String name, String ruleSpecification, UniqueIdentifier parentRegulationLinearId, boolean isDeprecated) {
+        public CreateRuleInitiator(String name, String ruleSpecification, UniqueIdentifier parentRegulationLinearId) {
             this.name = name;
             this.ruleSpecification = ruleSpecification;
             this.parentRegulationLinearId = parentRegulationLinearId;
-            this.isDeprecated = isDeprecated;
         }
 
         @Override
@@ -55,7 +53,7 @@ public class CreateRule {
             // Remove notaries
             involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
 
-            final Rule output = new Rule(new UniqueIdentifier(), name, ruleSpecification, this.getOurIdentity(), involvedParties, new LinearPointer<>(parentRegulationLinearId, Regulation.class), isDeprecated);
+            final Rule output = new Rule(new UniqueIdentifier(), name, ruleSpecification, this.getOurIdentity(), involvedParties, new LinearPointer<>(parentRegulationLinearId, Regulation.class), false);
 
             final TransactionBuilder builder = new TransactionBuilder(notary);
 
