@@ -1,22 +1,51 @@
-import logo from "./logo.svg";
+import { Routes, Route } from "react-router-dom";
+import Home from "./screens/Home";
+import ClaimTemplate from "./screens/ClaimTemplate";
+import Regulation from "./screens/Regulation";
+import RegulationGraph from "./screens/RegulationGraph";
 import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          IT compliance
-        </a>
-      </header>
-    </div>
-  );
-}
+import { Breadcrumb, Layout, Menu } from "antd";
+import React from "react";
+const { Content, Footer, Header } = Layout;
+
+const App = () => (
+  <React.Fragment>
+    <Layout>
+      <Header
+        style={{
+          position: "fixed",
+          zIndex: 1,
+          width: "100%",
+        }}
+      >
+        <Menu mode="horizontal" defaultSelectedKeys={["mail"]}>
+          <Menu.Item key="mail">Navigation One</Menu.Item>
+        </Menu>
+      </Header>
+      <Content
+        className="site-layout"
+        style={{
+          padding: "0 50px",
+          marginTop: 64,
+        }}
+      >
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/regulations" element={<Regulation />} />
+          <Route path="/claim-template" element={<ClaimTemplate />} />
+          <Route path="/regulation-graph" element={<RegulationGraph />} />
+        </Routes>
+      </Content>
+      <Footer
+        style={{
+          textAlign: "center",
+        }}
+      >
+        It compliance
+      </Footer>
+    </Layout>
+  </React.Fragment>
+);
 
 export default App;
