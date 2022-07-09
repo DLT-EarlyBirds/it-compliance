@@ -19,7 +19,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  * Define your API endpoints here.
  */
 @RestController
-@RequestMapping("/claimtemplate") // The paths for HTTP requests are relative to this base path.
+@RequestMapping("/claimtemplates") // The paths for HTTP requests are relative to this base path.
 public class ClaimTemplateController {
     private final CordaRPCOps proxy;
     private final CordaX500Name me;
@@ -30,8 +30,8 @@ public class ClaimTemplateController {
         this.me = proxy.nodeInfo().getLegalIdentities().get(0).getName();
     }
 
-    @GetMapping(value = "/claimtemplates", produces = APPLICATION_JSON_VALUE)
-    private List<StateAndRef<ClaimTemplate>> claimTemplates() {
+    @GetMapping(value = "/", produces = APPLICATION_JSON_VALUE)
+    private List<StateAndRef<ClaimTemplate>> getAll() {
         return proxy.vaultQuery(ClaimTemplate.class).getStates();
     }
 }

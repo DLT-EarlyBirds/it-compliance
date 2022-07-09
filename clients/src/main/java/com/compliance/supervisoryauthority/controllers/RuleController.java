@@ -18,7 +18,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  * Define your API endpoints here.
  */
 @RestController
-@RequestMapping("/rule") // The paths for HTTP requests are relative to this base path.
+@RequestMapping("/rules") // The paths for HTTP requests are relative to this base path.
 public class RuleController {
     private final CordaRPCOps proxy;
     private final CordaX500Name me;
@@ -29,8 +29,8 @@ public class RuleController {
         this.me = proxy.nodeInfo().getLegalIdentities().get(0).getName();
     }
 
-    @GetMapping(value = "/rules", produces = APPLICATION_JSON_VALUE)
-    private List<StateAndRef<Rule>> rules() {
+    @GetMapping(value = "/", produces = APPLICATION_JSON_VALUE)
+    private List<StateAndRef<Rule>> getAll() {
         return proxy.vaultQuery(Rule.class).getStates();
     }
 
