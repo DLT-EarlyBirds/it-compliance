@@ -59,14 +59,14 @@ public class Regulation implements LinearState {
         this.participants.add(issuer);
     }
 
-    public Regulation(@NotNull String name, @NotNull String description, @NotNull String version, @NotNull Date releaseDate, @NotNull Party issuer, @NotNull boolean isDeprecated) {
+    public Regulation(@NotNull String name, @NotNull String description, @NotNull String version, @NotNull Date releaseDate, @NotNull Party issuer) {
         this.version = version;
         this.releaseDate = releaseDate;
         this.linearId = new UniqueIdentifier();
         this.name = name;
         this.description = description;
         this.issuer = issuer;
-        this.isDeprecated = isDeprecated;
+        this.isDeprecated = false;
         this.participants = new ArrayList<>();
         this.participants.add(issuer);
     }

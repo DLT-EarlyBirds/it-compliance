@@ -45,7 +45,7 @@ public class CreateRegulation {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
-            final Regulation output = new Regulation(name, description, version, releaseDate, this.getOurIdentity(), false);
+            final Regulation output = new Regulation(name, description, version, releaseDate, this.getOurIdentity());
 
             final TransactionBuilder builder = new TransactionBuilder(notary);
 
