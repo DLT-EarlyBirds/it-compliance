@@ -6,6 +6,7 @@ import com.template.states.ClaimTemplate;
 import com.template.states.SpecificClaim;
 import net.corda.core.contracts.LinearPointer;
 import net.corda.core.contracts.UniqueIdentifier;
+import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
@@ -24,6 +25,7 @@ public class CreateSpecificClaim {
     public static class CreateSpecificClaimInitiator extends FlowLogic<SignedTransaction> {
 
         private final String name;
+        private SecureHash attachmentID;
         private final Party supervisorAuthority;
 
         private final UniqueIdentifier claimTemplateLinearId;
@@ -42,29 +44,66 @@ public class CreateSpecificClaim {
             this.supportingClaimsLinearIds = supportingClaimsLinearIds;
         }
 
+        public CreateSpecificClaimInitiator(
+                String name,
+                Party supervisoryAuthority,
+                UniqueIdentifier claimTemplateLinearId,
+                List<UniqueIdentifier> supportingClaimsLinearIds,
+                SecureHash attachmentID
+        ) {
+            this.name = name;
+            this.attachmentID = attachmentID;
+            this.supervisorAuthority = supervisoryAuthority;
+            this.claimTemplateLinearId = claimTemplateLinearId;
+            this.supportingClaimsLinearIds = supportingClaimsLinearIds;
+
+        }
+
         @Suspendable
         @Override
         public SignedTransaction call() throws FlowException {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
+            TransactionBuilder txBuilder = new TransactionBuilder(notary);
 
-            SpecificClaim newClaim = new SpecificClaim(
-                    this.name,
-                    this.getOurIdentity(),
-                    this.supervisorAuthority,
-                    new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class),
-                    this.supportingClaimsLinearIds.stream().map(claimLinearId -> new LinearPointer<>(claimLinearId, SpecificClaim.class)).collect(Collectors.toList())
-            );
+            if (this.attachmentID != null) {
+                SpecificClaim newClaim = new SpecificClaim(
+                        this.name,
+                        this.getOurIdentity(),
+                        this.supervisorAuthority,
+                        new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class),
+                        this.supportingClaimsLinearIds.stream().map(claimLinearId -> new LinearPointer<>(claimLinearId, SpecificClaim.class)).collect(Collectors.toList()),
+                        this.attachmentID
+                );
 
-            TransactionBuilder txBuilder = new TransactionBuilder(notary)
-                    .addOutputState(newClaim)
-                    .addCommand(
-                            new SpecificClaimContract.Commands.CreateClaim(),
-                            Arrays.asList(
-                                    getOurIdentity().getOwningKey(),
-                                    supervisorAuthority.getOwningKey()
-                            )
-                    );
+                        txBuilder.addOutputState(newClaim);
+                        txBuilder.addAttachment(this.attachmentID);
+                        txBuilder.addCommand(
+                                new SpecificClaimContract.Commands.CreateClaim(),
+                                Arrays.asList(
+                                        getOurIdentity().getOwningKey(),
+                                        supervisorAuthority.getOwningKey()
+                                )
+                        );
+            }
+
+            else{
+                SpecificClaim newClaim = new SpecificClaim(
+                        this.name,
+                        this.getOurIdentity(),
+                        this.supervisorAuthority,
+                        new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class),
+                        this.supportingClaimsLinearIds.stream().map(claimLinearId -> new LinearPointer<>(claimLinearId, SpecificClaim.class)).collect(Collectors.toList())
+                );
+                        txBuilder.addOutputState(newClaim);
+                        txBuilder.addCommand(
+                                new SpecificClaimContract.Commands.CreateClaim(),
+                                Arrays.asList(
+                                        getOurIdentity().getOwningKey(),
+                                        supervisorAuthority.getOwningKey()
+                                )
+                        );
+            }
 
             // Verify that the transaction is valid.
             txBuilder.verify(getServiceHub());

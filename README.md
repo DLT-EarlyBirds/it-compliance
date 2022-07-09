@@ -36,3 +36,60 @@ The username is already provided with `user1`, the respective password is `test`
 `flow start CreateRule name: NewRule, ruleSpecification: new Description, parentRegulationLinearId: <RegulationLinearId>`
 
 `run vaultQuery contractStateType: com.template.states.Rule`
+
+## ClaimTemplate Flow 
+`flow start CreateClaimTemplate name: NewClameTemplate, description: new Description, ruleLinearId: <RuleLinearId>`
+
+`run vaultQuery contractStateType: com.template.states.ClaimTemplate`
+
+## SpecificClaim Flow 
+
+### Without referencing an attachment:
+`flow start CreateSpecificClaim name: SpecificClaim, supervisoryAuthority: Supervisory Authority, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: []`
+
+`run vaultQuery contractStateType: com.template.states.SpecificClaim`
+
+### With referencing an attachment:
+`flow start CreateSpecificClaim name: SpecificClaim, supervisoryAuthority: Supervisory Authority, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: [], attachmentID: <attachmentID>`
+
+`run vaultQuery contractStateType: com.template.states.SpecificClaim`
+
+
+# Handling Attachments
+
+## Add an attachment to a node:
+`run uploadAttachment   jar: path\to\attachment.zip`
+
+`attachments trustInfo`
+
+## Add an attachment with meta data:
+`run uploadAttachmentWithMetadata   jar: path\to\attachment.zip, uploader: Peter, filename: test.zip`
+
+## Download an attachment:
+`run openAttachment id: <attachmentID>`
+
+`path\to\save\attachment.zip`
+
+## Copying files to a docker container from the host server:
+If the nodes are running in docker containers then you can't just copy files from the host server to the Corda attachments pool. The files must be copied to the container file system first:
+
+`docker cp path\on\host_server\attachment.zip node_container_id:path/in/container/attachment.zip`
+
+Then from there upload the attachment to Corda:
+
+`run uploadAttachment   jar: path/in/container/attachment.zip`
+
+
+## Copying files from a docker container to the host server:
+First download the attachment to the container file system:
+
+`run openAttachment id: <attachmentID>`
+
+`path/in/container/attachment.zip`
+
+Then copy it to the host server:
+
+`docker cp node_container_id:path/in/container/attachment.zip path\on\host_server\attachment.zip`
+
+
+
