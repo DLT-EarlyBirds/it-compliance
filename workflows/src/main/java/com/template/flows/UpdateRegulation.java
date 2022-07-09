@@ -33,14 +33,16 @@ public class UpdateRegulation {
         private final String description;
         private final String version;
         private final Date releaseDate;
+        private final boolean isDeprecated;
 
         //public constructor
-        public UpdateRegulationInitiator(UniqueIdentifier linearId, String name, String description, String version, Date releaseDate) {
+        public UpdateRegulationInitiator(UniqueIdentifier linearId, String name, String description, String version, Date releaseDate, isDeprecated) {
             this.linearId = linearId;
             this.version = version;
             this.releaseDate = releaseDate;
             this.description = description;
             this.name = name;
+            this.isDeprecated = isDeprecated;
         }
 
         @Override
