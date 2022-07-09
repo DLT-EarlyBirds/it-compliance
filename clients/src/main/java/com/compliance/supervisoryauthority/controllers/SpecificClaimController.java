@@ -27,7 +27,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  * Define your API endpoints here.
  */
 @RestController
-@RequestMapping("/regulation") // The paths for HTTP requests are relative to this base path.
+@RequestMapping("/claims") // The paths for HTTP requests are relative to this base path.
 public class SpecificClaimController {
     private final CordaRPCOps proxy;
     private final CordaX500Name me;
