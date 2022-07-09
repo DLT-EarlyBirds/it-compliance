@@ -65,12 +65,6 @@ public class Controller {
     }
 
 
-    @GetMapping(value = "/templateendpoint", produces = "text/plain")
-    private String templateendpoint() {
-        return "Define an endpoint here.";
-    }
-
-
     /**
      * Helpers for filtering the network map cache.
      */
