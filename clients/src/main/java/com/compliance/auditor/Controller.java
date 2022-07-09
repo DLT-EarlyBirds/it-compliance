@@ -1,6 +1,5 @@
-package com.compliance.supervisoryauthority;
+package com.compliance.auditor;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.messaging.CordaRPCOps;
@@ -9,8 +8,6 @@ import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -128,11 +125,5 @@ public class Controller {
         HashMap<String, String> myMap = new HashMap<>();
         myMap.put("me", me.toString());
         return myMap;
-    }
-
-    @GetMapping(value = "/bootstrapGraph", produces = APPLICATION_JSON_VALUE)
-    private void bootstrapGraph() {
-
-        return;
     }
 }
