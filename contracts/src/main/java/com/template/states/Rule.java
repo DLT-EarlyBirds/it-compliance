@@ -30,6 +30,9 @@ public class Rule implements LinearState {
     // The issuer who submits the rule, usually the supervisory authority or part of the regulatory body
     @NotNull
     private final Party issuer;
+
+    private final boolean isDeprecated;
+
     private final List<Party> involvedParties;
     private final List<AbstractParty> participants;
 
@@ -38,12 +41,13 @@ public class Rule implements LinearState {
 
     /* Constructor of RegulationDescription */
     @ConstructorForDeserialization
-    public Rule(@NotNull UniqueIdentifier linearId, String name, String ruleSpecification, @NotNull Party issuer, List<Party> involvedParties, LinearPointer<Regulation> parentRegulation) {
+    public Rule(@NotNull UniqueIdentifier linearId, String name, String ruleSpecification, @NotNull Party issuer, List<Party> involvedParties, LinearPointer<Regulation> parentRegulation, boolean isDeprecated) {
         this.linearId = linearId;
         this.name = name;
         this.ruleSpecification = ruleSpecification;
         this.issuer = issuer;
         this.parentRegulation = parentRegulation;
+        this.isDeprecated = isDeprecated;
 
         this.participants = new ArrayList<>();
         this.participants.add(issuer);

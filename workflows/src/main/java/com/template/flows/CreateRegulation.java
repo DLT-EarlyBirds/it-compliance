@@ -30,13 +30,15 @@ public class CreateRegulation {
         private final String description;
         private final String version;
         private final Date releaseDate;
+        private final boolean isDeprecated;
 
         //public constructor
-        public CreateRegulationInitiator(String name, String description, String version, Date releaseDate) {
+        public CreateRegulationInitiator(String name, String description, String version, Date releaseDate, boolean isDeprecated) {
             this.version = version;
             this.releaseDate = releaseDate;
             this.description = description;
             this.name = name;
+            this.isDeprecated = isDeprecated;
         }
 
         @Override
@@ -45,7 +47,7 @@ public class CreateRegulation {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
-            final Regulation output = new Regulation(name, description, version, releaseDate, this.getOurIdentity());
+            final Regulation output = new Regulation(name, description, version, releaseDate, this.getOurIdentity(), isDeprecated);
 
             final TransactionBuilder builder = new TransactionBuilder(notary);
 
