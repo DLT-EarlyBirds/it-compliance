@@ -18,6 +18,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-websocket:$spring_boot_version") {
         exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
     }
+    compile "net.corda:corda-jackson:4.8.6"
     compile "org.apache.logging.log4j:log4j-slf4j-impl:${log4j_version}"
     compile "org.apache.logging.log4j:log4j-web:${log4j_version}"
     compile "org.slf4j:jul-to-slf4j:$slf4j_version"
@@ -43,7 +44,7 @@ task runTestClient(type: JavaExec, dependsOn: assemble) {
 task runSupervisoryAuthorityServer(type: JavaExec, dependsOn: assemble) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.compliance.supervisoryauthority.Starter'
-    args '--server.port=10050', '--config.rpc.host=localhost', '--config.rpc.port=10006', '--config.rpc.username=user1', '--config.rpc.password=test'
+    args '--server.port=10050', '--config.rpc.host=localhost', '--config.rpc.port=49202', '--config.rpc.username=user1', '--config.rpc.password=test'
 }
 
 
