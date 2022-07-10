@@ -32,19 +32,20 @@ public class Rule implements LinearState {
     private final Party issuer;
     private final List<Party> involvedParties;
     private final List<AbstractParty> participants;
-
+    private final boolean isDeprecated;
     private final LinearPointer<Regulation> parentRegulation;
 
 
     /* Constructor of RegulationDescription */
     @ConstructorForDeserialization
     public Rule(@NotNull UniqueIdentifier linearId, String name, String ruleSpecification, @NotNull Party issuer,
-                List<Party> involvedParties, LinearPointer<Regulation> parentRegulation) {
+                List<Party> involvedParties, LinearPointer<Regulation> parentRegulation, boolean isDeprecated) {
         this.linearId = linearId;
         this.name = name;
         this.ruleSpecification = ruleSpecification;
         this.issuer = issuer;
         this.parentRegulation = parentRegulation;
+        this.isDeprecated = isDeprecated;
 
         this.participants = new ArrayList<>();
         this.participants.add(issuer);
@@ -60,7 +61,7 @@ public class Rule implements LinearState {
         this.ruleSpecification = ruleSpecification;
         this.issuer = issuer;
         this.parentRegulation = parentRegulation;
-
+        this.isDeprecated = false;
         this.participants = new ArrayList<>();
         this.participants.add(issuer);
         this.participants.addAll(involvedParties);
@@ -99,6 +100,10 @@ public class Rule implements LinearState {
     }
     public List<Party> getInvolvedParties() {
         return involvedParties;
+    }
+
+    public boolean getIsDeprecated(){
+        return isDeprecated;
     }
 
 }

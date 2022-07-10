@@ -58,16 +58,15 @@ public class UpdateRule {
                     .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
 
             final StateAndRef<Rule> input = getServiceHub().getVaultService().queryBy(Rule.class, inputCriteria).getStates().get(0);
-            Rule rule = input.getState().getData();
-//            List<Party> involvedParties = rule.getInvolvedParties();
-            // Add all parties in the network
+            Rule originalRule = (Rule) input.getState().getData();
+
             final List<Party> involvedParties = new ArrayList<>(getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList()));
             // Remove yourself
             involvedParties.remove(getOurIdentity());
             // Remove notaries
             involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
 
-            final Rule output = new Rule(linearId, name, ruleSpecification, this.getOurIdentity(), involvedParties, new LinearPointer<>(parentRegulationLinearId, Regulation.class));
+            final Rule output = new Rule(linearId, name, ruleSpecification, this.getOurIdentity(), involvedParties, new LinearPointer<>(parentRegulationLinearId, Regulation.class), originalRule.getIsDeprecated());
 
             final TransactionBuilder builder = new TransactionBuilder(notary);
 

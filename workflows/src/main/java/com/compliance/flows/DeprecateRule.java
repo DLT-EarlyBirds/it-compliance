@@ -2,41 +2,34 @@ package com.compliance.flows;
 
 import co.paralleluniverse.fibers.Suspendable;
 import com.compliance.contracts.RuleContract;
-import com.compliance.states.Regulation;
 import com.compliance.states.Rule;
+import com.compliance.states.Regulation;
 import net.corda.core.contracts.LinearPointer;
+import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
 import net.corda.core.node.NodeInfo;
+import net.corda.core.node.services.Vault;
+import net.corda.core.node.services.vault.QueryCriteria;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-//Initiate this flow:
-//flow start CreateRegulation description: "test_description", supervisoryAuthority: Supervisory Authority
-
-//Check if added to ledger:
-//run vaultQuery contractStateType: com.template.states.Regulation
-
-public class CreateRule {
+public class DeprecateRule {
 
     @InitiatingFlow
     @StartableByRPC
-    public static class CreateRuleInitiator extends FlowLogic<SignedTransaction> {
-        // Private variables
-        private final String name;
-        private final String ruleSpecification;
-        private final UniqueIdentifier parentRegulationLinearId;
+    public static class DeprecateRuleInitiator extends FlowLogic<SignedTransaction> {
 
-        //public constructor
-        public CreateRuleInitiator(String name, String ruleSpecification, UniqueIdentifier parentRegulationLinearId) {
-            this.name = name;
-            this.ruleSpecification = ruleSpecification;
-            this.parentRegulationLinearId = parentRegulationLinearId;
+        @NotNull
+        private final UniqueIdentifier linearId;
+
+        public DeprecateRuleInitiator(UniqueIdentifier linearId) {
+            this.linearId = linearId;
         }
 
         @Override
@@ -45,22 +38,27 @@ public class CreateRule {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
-            // Add all parties in the network
+            QueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria()
+                    .withUuid(Collections.singletonList(UUID.fromString(linearId.toString())))
+                    .withStatus(Vault.StateStatus.UNCONSUMED)
+                    .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
+
+            final StateAndRef<Rule> input = getServiceHub().getVaultService().queryBy(Rule.class, inputCriteria).getStates().get(0);
+            Rule originalRule = (Rule) input.getState().getData();
+
             final List<Party> involvedParties = new ArrayList<>(getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList()));
             // Remove yourself
             involvedParties.remove(getOurIdentity());
             // Remove notaries
             involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
 
-            final Rule output = new Rule( name, ruleSpecification, this.getOurIdentity(), involvedParties, new LinearPointer<>(parentRegulationLinearId, Regulation.class));
+            final Rule output = new Rule(linearId, originalRule.getName(), originalRule.getRuleSpecification(), this.getOurIdentity(), involvedParties, originalRule.getParentRegulation(), true);
 
             final TransactionBuilder builder = new TransactionBuilder(notary);
 
+            builder.addInputState(input);
             builder.addOutputState(output);
-
-            // Reuse involved parties list for signing
-            involvedParties.add(getOurIdentity());
-            builder.addCommand(new RuleContract.Commands.CreateRule(),
+            builder.addCommand(new RuleContract.Commands.DeprecateRule(),
                     involvedParties.stream().map(Party::getOwningKey).collect(Collectors.toList())
             );
 
@@ -69,13 +67,9 @@ public class CreateRule {
 
             final SignedTransaction signedTransaction = getServiceHub().signInitialTransaction(builder);
 
-            // Broadcast transaction to all parties in the network for signing.
-            List<Party> otherParties = output.getParticipants().stream().map(el -> (Party) el).collect(Collectors.toList());
+            involvedParties.remove(getOurIdentity());
 
-            // Remove yourself
-            otherParties.remove(getOurIdentity());
-
-            List<FlowSession> sessions = otherParties.stream().map(this::initiateFlow).collect(Collectors.toList());
+            List<FlowSession> sessions = involvedParties.stream().map(this::initiateFlow).collect(Collectors.toList());
 
             SignedTransaction stx = subFlow(new CollectSignaturesFlow(signedTransaction, sessions));
 
@@ -83,13 +77,14 @@ public class CreateRule {
         }
     }
 
-    @InitiatedBy(CreateRuleInitiator.class)
-    public static class CreateRuleResponder extends FlowLogic<Void> {
+
+    @InitiatedBy(DeprecateRule.DeprecateRuleInitiator.class)
+    public static class DeprecateRuleResponder extends FlowLogic<Void> {
         //private variable
         private final FlowSession counterpartySession;
 
         //Constructor
-        public CreateRuleResponder(FlowSession counterpartySession) {
+        public DeprecateRuleResponder(FlowSession counterpartySession) {
             this.counterpartySession = counterpartySession;
         }
 

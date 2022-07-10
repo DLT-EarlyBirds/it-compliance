@@ -15,33 +15,19 @@ import net.corda.core.transactions.TransactionBuilder;
 
 import java.util.*;
 
-//Initiate this flow:
-//flow start CreateRegulation description: "test_description", supervisoryAuthority: Supervisory Authority
-
-//Check if added to ledger:
-//run vaultQuery contractStateType: com.template.states.Regulation
-
-public class UpdateRegulation {
+public class DeprecateRegulation {
 
     @InitiatingFlow
     @StartableByRPC
-    public static class UpdateRegulationInitiator extends FlowLogic<SignedTransaction>{
-        // Private variables
+    public static class DeprecateRegulationInitiator extends FlowLogic<SignedTransaction>{
 
         private final UniqueIdentifier linearId;
-        private final String name;
-        private final String description;
-        private final String version;
-        private final Date releaseDate;
 
         //public constructor
-        public UpdateRegulationInitiator(UniqueIdentifier linearId, String name, String description, String version, Date releaseDate) {
+        public DeprecateRegulationInitiator(UniqueIdentifier linearId) {
             this.linearId = linearId;
-            this.version = version;
-            this.releaseDate = releaseDate;
-            this.description = description;
-            this.name = name;
         }
+
         @Override
         @Suspendable
         public SignedTransaction call() throws FlowException {
@@ -58,15 +44,14 @@ public class UpdateRegulation {
             Regulation originalRegulation = (Regulation) input.getState().getData();
 
             // Use the same linearID as the input Regulation
-            final Regulation output = new Regulation(linearId, name, description, version, releaseDate, this.getOurIdentity(), originalRegulation.getIsDeprecated());
+            final Regulation output = new Regulation(linearId, originalRegulation.getName(), originalRegulation.getDescription(), originalRegulation.getVersion(), originalRegulation.getReleaseDate(), this.getOurIdentity(), true);
 
             final TransactionBuilder builder = new TransactionBuilder(notary);
 
             builder.addInputState(input);
             builder.addOutputState(output);
 
-            //[MOH - 08.07.2022]: Corrected CreateRegulation() command to UpdateRegulation()
-            builder.addCommand(new RegulationContract.Commands.UpdateRegulation(), getOurIdentity().getOwningKey());
+            builder.addCommand(new RegulationContract.Commands.DeprecateRegulation(), getOurIdentity().getOwningKey());
 
             // Verify that the transaction is valid.
             builder.verify(getServiceHub());

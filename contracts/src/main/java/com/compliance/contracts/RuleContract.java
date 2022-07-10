@@ -33,11 +33,13 @@ public class RuleContract implements Contract {
             // Retrieve the output state of the transaction
             Rule output = tx.outputsOfType(Rule.class).get(0);
             // Fetch the parent regulation via the linear pointer.
-            StateAndRef<Regulation> parentRegulation = output.getParentRegulation().resolve(tx);
+            StateAndRef<Regulation> parentRegulationStateAndRef = output.getParentRegulation().resolve(tx);
+            Regulation parentRegulation = (Regulation) parentRegulationStateAndRef.getState().getData();
 
             requireThat(require -> {
                 require.using("The rule is not empty", !Objects.equals(output.getName(), "") && !Objects.equals(output.getRuleSpecification(), ""));
-                require.using("The rule needs a parent regulation", !parentRegulation.getState().component1().getName().equals(""));
+                require.using("The parent regulation should not be deprecated", !parentRegulation.getIsDeprecated() );
+                require.using("The rule is not already deprecated", !output.getIsDeprecated());
                 return null;
             });
 
@@ -45,20 +47,25 @@ public class RuleContract implements Contract {
             // Retrieve the output state of the transaction
             Rule output = tx.outputsOfType(Rule.class).get(0);
             // Fetch the parent regulation via the linear pointer.
-            StateAndRef<Regulation> parentRegulation =  output.getParentRegulation().resolve(tx);
+            StateAndRef<Regulation> parentRegulationStateAndRef =  output.getParentRegulation().resolve(tx);
+            Regulation parentRegulation = (Regulation) parentRegulationStateAndRef.getState().getData();
+
             Rule input = tx.inputsOfType(Rule.class).get(0);
 
             requireThat(require -> {
                 require.using("The transaction is only allowed to modify the input rule", output.getLinearId().equals(input.getLinearId()));
                 require.using("The rule is not empty", !Objects.equals(output.getName(), "") && !Objects.equals(output.getRuleSpecification(), ""));
-                require.using("The rule needs a parent regulation", !parentRegulation.getState().component1().getName().equals(""));
+                require.using("The parent regulation should not be deprecated", !parentRegulation.getIsDeprecated() );
                 return null;
             });
         } else if (commandData instanceof Commands.DeprecateRule) {
             Rule input = tx.inputsOfType(Rule.class).get(0);
-            requireThat(require -> {
+            Rule output = tx.outputsOfType(Rule.class).get(0);
 
-               return null;
+            requireThat(require -> {
+              require.using("The rule input is not deprecated", !input.getIsDeprecated());
+              require.using("The rule output is deprecated", output.getIsDeprecated());
+                return null;
             });
         }
     }

@@ -27,15 +27,28 @@ The username is already provided with `user1`, the respective password is `test`
 
 # Issuing flows
 
-## Regulation Flow
+## Create Regulation Flow
 `flow start CreateRegulation name: Regulation, description: Some Description, version: 0.1, releaseDate: 2022-03-22`
 
 `run vaultQuery contractStateType: com.compliance.states.Regulation`
 
-## Rule Flow 
+## Deprecate Regulation Flow
+`flow start DeprecateRegulation linearId: <RegulationLinearId>`
+
+## Update Regulation Flow
+`flow start UpdateRegulation name: Regulation2, description: Some Description, version: 0.2, releaseDate: 2022-03-22, linearId: <RegulationLinearId>`
+
+## Create Rule Flow 
 `flow start CreateRule name: NewRule, ruleSpecification: new Description, parentRegulationLinearId: <RegulationLinearId>`
 
 `run vaultQuery contractStateType: com.compliance.states.Rule`
+
+## Update Rule Flow
+
+`flow start UpdateRule name: NewRule2, ruleSpecification: new Description, parentRegulationLinearId: <RegulationLinearId>, linearId: <RuleLinearId>`
+
+## Deprecate Rule Flow
+`flow start DeprecateRule linearId: <RuleLinearId>`
 
 ## ClaimTemplate Flow 
 `flow start CreateClaimTemplate name: NewClameTemplate, description: new Description, ruleLinearId: <RuleLinearId>`
