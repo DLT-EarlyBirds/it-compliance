@@ -42,15 +42,14 @@ public class UpdateRegulation {
             this.description = description;
             this.name = name;
         }
-    // TODO [MOH - 08.07.2022]: Set old Regulation as deprecated.
-    //  this should also be implemented for Rule, ClaimTemplate & SpecificClaim
         @Override
         @Suspendable
         public SignedTransaction call() throws FlowException {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
-            final Regulation output = new Regulation(name, description, version, releaseDate, this.getOurIdentity());
+            // Use the same linearID as the input Regulation
+            final Regulation output = new Regulation(linearId, name, description, version, releaseDate, this.getOurIdentity());
 
             QueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria()
                     .withUuid(Collections.singletonList(UUID.fromString(linearId.toString())))

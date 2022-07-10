@@ -1,12 +1,14 @@
 package com.template.flows;
 
 import co.paralleluniverse.fibers.Suspendable;
-import com.template.contracts.ClaimTemplateContract;
+import com.template.contracts.SpecificClaimContract;
 import com.template.states.ClaimTemplate;
+import com.template.states.SpecificClaim;
 import com.template.states.Rule;
 import net.corda.core.contracts.LinearPointer;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
+import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
 import net.corda.core.node.services.Vault;
@@ -15,10 +17,8 @@ import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class UpdateSpecificClaim {
 
@@ -26,26 +26,36 @@ public class UpdateSpecificClaim {
     @StartableByRPC
     public static class UpdateSpecificClaimInitiator extends FlowLogic<SignedTransaction> {
         // Private variables
-        @NotNull
-        // Name of the ClaimTemplate
-        private final UniqueIdentifier linearId;
-
+        
+        // Name of the SpecificClaim
         private final String name;
 
+        private SecureHash attachmentID;
+        private final LinearPointer<Rule> rule;
+        @NotNull
+        private final UniqueIdentifier specificClaimLinearId;
+
+        private final List<UniqueIdentifier> supportingClaimsLinearIds;
+
+        private final Party supervisorAuthority;
+        
         // The specification that details what need to be fulfilled
         private final String templateDescription;
 
-        private final List<Party> involvedParties;
-        private final LinearPointer<Rule> rule;
-
-
         //public constructor
-        public UpdateSpecificClaimInitiator(UniqueIdentifier linearId, String name, String templateDescription, List<Party> involvedParties, LinearPointer<Rule> rule) {
-            this.name = name;
-            this.linearId = linearId;
+        public UpdateSpecificClaimInitiator(UniqueIdentifier specificClaimLinearId,
+                                            String name,
+                                            Party supervisoryAuthority,
+                                            String templateDescription, 
+                                            LinearPointer<Rule> rule,
+                                            List<UniqueIdentifier> supportingClaimsLinearIds
+                                            ) {
             this.rule = rule;
+            this.name = name;
+            this.specificClaimLinearId = specificClaimLinearId;
             this.templateDescription = templateDescription;
-            this.involvedParties = involvedParties;
+            this.supervisorAuthority = supervisoryAuthority;
+            this.supportingClaimsLinearIds = supportingClaimsLinearIds;
         }
 
         @Override
@@ -54,28 +64,50 @@ public class UpdateSpecificClaim {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
-            final ClaimTemplate output = new ClaimTemplate(name, templateDescription, this.getOurIdentity(), involvedParties, rule);
 
             QueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria()
-                    .withUuid(Collections.singletonList(UUID.fromString(linearId.toString())))
+                    .withUuid(Collections.singletonList(UUID.fromString(specificClaimLinearId.toString())))
                     .withStatus(Vault.StateStatus.UNCONSUMED)
                     .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
 
-            final StateAndRef<ClaimTemplate> input = getServiceHub().getVaultService().queryBy(ClaimTemplate.class, inputCriteria).getStates().get(0);
-
+            final StateAndRef<SpecificClaim> input = getServiceHub().getVaultService().queryBy(SpecificClaim.class, inputCriteria).getStates().get(0);
             final TransactionBuilder builder = new TransactionBuilder(notary);
 
+            SpecificClaim output = new SpecificClaim(
+                    this.name,
+                    this.getOurIdentity(),
+                    this.supervisorAuthority,
+                    new LinearPointer<>(specificClaimLinearId, ClaimTemplate.class),
+                    this.supportingClaimsLinearIds.stream().map(claimLinearId -> new LinearPointer<>(claimLinearId, SpecificClaim.class)).collect(Collectors.toList())
+            );
             builder.addInputState(input);
             builder.addOutputState(output);
-            builder.addCommand(new ClaimTemplateContract.Commands.UpdateSpecificClaim(), getOurIdentity().getOwningKey());
+            builder.addCommand(
+                    new SpecificClaimContract.Commands.CreateClaim(),
+                    Arrays.asList(
+                            getOurIdentity().getOwningKey(),
+                            supervisorAuthority.getOwningKey()
+                    )
+            );
+
+            builder.addCommand(new SpecificClaimContract.Commands.UpdateSpecificClaim(), getOurIdentity().getOwningKey());
 
             // Verify that the transaction is valid.
             builder.verify(getServiceHub());
 
-            final SignedTransaction signedTransaction = getServiceHub().signInitialTransaction(builder);
+            // Sign the transaction.
+            final SignedTransaction partSignedTx = getServiceHub().signInitialTransaction(builder);
 
-            return subFlow(new FinalityFlow(signedTransaction, Collections.emptyList()));
+            // Send the state to the counterparty, and receive it back with their signature.
+            FlowSession otherPartySession = initiateFlow(supervisorAuthority);
+            final SignedTransaction fullySignedTx = subFlow(
+                    new CollectSignaturesFlow(partSignedTx, Collections.singletonList(otherPartySession)));
+
+            // Notarise and record the transaction in both parties' vaults.
+            return subFlow(new FinalityFlow(fullySignedTx, Collections.singletonList(otherPartySession)));
         }
     }
+
+
 
 }
