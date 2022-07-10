@@ -1,9 +1,9 @@
-package com.template.flows;
+package com.compliance.flows;
 
 import co.paralleluniverse.fibers.Suspendable;
-import com.template.contracts.RuleContract;
-import com.template.states.Rule;
-import com.template.states.Regulation;
+import com.compliance.contracts.RuleContract;
+import com.compliance.states.Rule;
+import com.compliance.states.Regulation;
 import net.corda.core.contracts.LinearPointer;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;

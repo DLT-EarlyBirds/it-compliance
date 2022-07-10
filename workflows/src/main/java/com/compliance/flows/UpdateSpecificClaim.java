@@ -1,10 +1,10 @@
-package com.template.flows;
+package com.compliance.flows;
 
 import co.paralleluniverse.fibers.Suspendable;
-import com.template.contracts.SpecificClaimContract;
-import com.template.states.ClaimTemplate;
-import com.template.states.SpecificClaim;
-import com.template.states.Rule;
+import com.compliance.contracts.SpecificClaimContract;
+import com.compliance.states.ClaimTemplate;
+import com.compliance.states.SpecificClaim;
+import com.compliance.states.Rule;
 import net.corda.core.contracts.LinearPointer;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
