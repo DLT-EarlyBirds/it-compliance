@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Minimum Requirements for Risk Management",
+    "nameAbbreviated": "MaRisk",
+    "nameDE": "Mindestanforderungen an das Risikomanagement",
+    "description": "This Circular provides a flexible and practical framework for structuring institutions’ risk management on the basis of section 25a (1) of the German Banking Act (Kreditwesengesetz). Moreover, it specifies the requirements laid down in section 25a (3) of the Banking Act (risk management at group level) as well as section 25b of the Banking Act (outsourcing).",
+    "descriptionDE": "Dieses Rundschreiben gibt auf der Grundlage des § 25a Abs. 1 des Kreditwesengesetzes (KWG) einen flexiblen und praxisnahen Rahmen für die Ausgestaltung des Risikomanagements der Institute vor. Es präzisiert ferner die Anforderungen des § 25a Abs. 3 KWG (Risikomanagement auf Gruppenebene) sowie des § 25b KWG (Auslagerung).",
+    "version": "Rundschreiben 10/2012",
+    "releaseDate": "27.10.2017",
+    "issuer": "BaFin"
+  },
+  {
+    "name": "Supervisory Requirements for IT in Financial Institutions",
+    "nameAbbreviated": "BAIT",
+    "nameDE": "Bankaufsichtliche Anforderungen an die IT",
+    "description": "The use of information technology (IT) in the institutions, including the use of IT services supplied by IT service providers, is key for the finance industry and its importance will continue to grow. This Circular provides a flexible and practical framework for institutions’ technical and organisational resources on the basis of section 25a (1) of the German Banking Act (Kreditwesengesetz) – in particular for IT resource management, information risk management and information security management. Moreover, it specifies the requirements laid down in section 25b of the Banking Act (outsourcing of activities and processes).",
+    "descriptionDE": "Der Einsatz von Informationstechnik (IT) in den Instituten, auch unter Einbeziehung von IT-Services, die durch IT-Dienstleister bereitgestellt werden, hat eine zentrale Bedeutung für die Finanzwirtschaft und wird weiter an Bedeutung gewinnen. Dieses Rundschreiben gibt auf der Grundlage des § 25a Abs. 1 des Kreditwesengesetzes (KWG) einen flexiblen und praxisnahen Rahmen für die technisch-organisatorische Ausstattung der Institute - insbesondere für das Management der IT-Ressourcen, das Informationsrisikomanagement und das Informationssicherheitsmanagement - vor. Es präzisiert ferner die Anforderungen des § 25b KWG (Auslagerung von Aktivitäten und Prozessen).",
+    "version": "Rundschreiben 10/2017",
+    "releaseDate": "16.08.2021",
+    "issuer": "BaFin"
+  }
+]

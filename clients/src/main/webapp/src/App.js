@@ -1,51 +1,25 @@
-import { Routes, Route } from "react-router-dom";
-import Home from "./screens/Home";
-import ClaimTemplate from "./screens/ClaimTemplate";
-import Regulation from "./screens/Regulation";
-import RegulationGraph from "./screens/RegulationGraph";
-import "./App.css";
-
-import { Breadcrumb, Layout, Menu } from "antd";
 import React from "react";
-const { Content, Footer, Header } = Layout;
+import "antd/dist/antd.min.css";
+import "./index.css";
+import Header from "./components/Header";
+import Regulation from "./views/Regulation";
+import GraphRegulation from "./views/GraphRegulation";
+import Home from "./views/Home";
+import ClaimTemplate from "./views/ClaimTemplate";
+import { Routes, Route } from "react-router-dom";
 
-const App = () => (
-  <React.Fragment>
-    <Layout>
-      <Header
-        style={{
-          position: "fixed",
-          zIndex: 1,
-          width: "100%",
-        }}
-      >
-        <Menu mode="horizontal" defaultSelectedKeys={["mail"]}>
-          <Menu.Item key="mail">Navigation One</Menu.Item>
-        </Menu>
-      </Header>
-      <Content
-        className="site-layout"
-        style={{
-          padding: "0 50px",
-          marginTop: 64,
-        }}
-      >
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/regulations" element={<Regulation />} />
-          <Route path="/claim-template" element={<ClaimTemplate />} />
-          <Route path="/regulation-graph" element={<RegulationGraph />} />
-        </Routes>
-      </Content>
-      <Footer
-        style={{
-          textAlign: "center",
-        }}
-      >
-        It compliance
-      </Footer>
-    </Layout>
-  </React.Fragment>
-);
+const App = () => {
+  return (
+    <>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/regulation" element={<Regulation />} />
+        <Route path="/graph-regulation" element={<GraphRegulation />} />
+        <Route path="/claim-template" element={<ClaimTemplate />} />
+      </Routes>
+    </>
+  );
+};
 
 export default App;
