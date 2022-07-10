@@ -38,7 +38,7 @@ public class UpdateSpecificClaim {
 
         private final UniqueIdentifier claimTemplateLinearId;
 
-        private final Party supervisorAuthority;
+        private final Party supervisoryAuthority;
         
         // The specification that details what need to be fulfilled
         private final String description;
@@ -54,7 +54,7 @@ public class UpdateSpecificClaim {
             this.name = name;
             this.specificClaimLinearId = specificClaimLinearId;
             this.description = description;
-            this.supervisorAuthority = supervisoryAuthority;
+            this.supervisoryAuthority = supervisoryAuthority;
             this.claimTemplateLinearId = claimTemplateLinearId;
             this.supportingClaimsLinearIds = supportingClaimsLinearIds;
         }
@@ -69,7 +69,7 @@ public class UpdateSpecificClaim {
             this.name = name;
             this.specificClaimLinearId = specificClaimLinearId;
             this.description = description;
-            this.supervisorAuthority = supervisoryAuthority;
+            this.supervisoryAuthority = supervisoryAuthority;
             this.claimTemplateLinearId = claimTemplateLinearId;
             this.supportingClaimsLinearIds = supportingClaimsLinearIds;
             this.attachmentID = attachmentID;
@@ -97,7 +97,7 @@ public class UpdateSpecificClaim {
                         this.name,
                         this.description,
                         this.getOurIdentity(),
-                        this.supervisorAuthority,
+                        this.supervisoryAuthority,
                         new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class),
                         this.supportingClaimsLinearIds.stream().map(claimLinearId -> new LinearPointer<>(claimLinearId, SpecificClaim.class)).collect(Collectors.toList()),
                         this.attachmentID
@@ -108,7 +108,7 @@ public class UpdateSpecificClaim {
                         new SpecificClaimContract.Commands.CreateClaim(),
                         Arrays.asList(
                                 getOurIdentity().getOwningKey(),
-                                supervisorAuthority.getOwningKey()
+                                supervisoryAuthority.getOwningKey()
                         )
                 );
             }
@@ -118,7 +118,7 @@ public class UpdateSpecificClaim {
                         this.name,
                         this.description,
                         this.getOurIdentity(),
-                        this.supervisorAuthority,
+                        this.supervisoryAuthority,
                         new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class),
                         this.supportingClaimsLinearIds.stream().map(claimLinearId -> new LinearPointer<>(claimLinearId, SpecificClaim.class)).collect(Collectors.toList())
                 );
@@ -127,7 +127,7 @@ public class UpdateSpecificClaim {
                         new SpecificClaimContract.Commands.CreateClaim(),
                         Arrays.asList(
                                 getOurIdentity().getOwningKey(),
-                                supervisorAuthority.getOwningKey()
+                                supervisoryAuthority.getOwningKey()
                         )
                 );
 
@@ -142,7 +142,7 @@ public class UpdateSpecificClaim {
             final SignedTransaction partSignedTx = getServiceHub().signInitialTransaction(builder);
 
             // Send the state to the counterparty, and receive it back with their signature.
-            FlowSession otherPartySession = initiateFlow(supervisorAuthority);
+            FlowSession otherPartySession = initiateFlow(supervisoryAuthority);
             final SignedTransaction fullySignedTx = subFlow(
                     new CollectSignaturesFlow(partSignedTx, Collections.singletonList(otherPartySession)));
 

@@ -28,7 +28,7 @@ public class CreateSpecificClaim {
         private SecureHash attachmentID;
 
         private final String description;
-        private final Party supervisorAuthority;
+        private final Party supervisoryAuthority;
 
         private final UniqueIdentifier claimTemplateLinearId;
 
@@ -43,7 +43,7 @@ public class CreateSpecificClaim {
         ) {
             this.name = name;
             this.description = description;
-            this.supervisorAuthority = supervisoryAuthority;
+            this.supervisoryAuthority = supervisoryAuthority;
             this.claimTemplateLinearId = claimTemplateLinearId;
             this.supportingClaimsLinearIds = supportingClaimsLinearIds;
         }
@@ -59,7 +59,7 @@ public class CreateSpecificClaim {
             this.name = name;
             this.description = description;
             this.attachmentID = attachmentID;
-            this.supervisorAuthority = supervisoryAuthority;
+            this.supervisoryAuthority = supervisoryAuthority;
             this.claimTemplateLinearId = claimTemplateLinearId;
             this.supportingClaimsLinearIds = supportingClaimsLinearIds;
 
@@ -78,7 +78,7 @@ public class CreateSpecificClaim {
                         this.name,
                         this.description,
                         this.getOurIdentity(),
-                        this.supervisorAuthority,
+                        this.supervisoryAuthority,
                         new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class),
                         this.supportingClaimsLinearIds.stream().map(claimLinearId -> new LinearPointer<>(claimLinearId, SpecificClaim.class)).collect(Collectors.toList()),
                         this.attachmentID
@@ -90,7 +90,7 @@ public class CreateSpecificClaim {
                                 new SpecificClaimContract.Commands.CreateClaim(),
                                 Arrays.asList(
                                         getOurIdentity().getOwningKey(),
-                                        supervisorAuthority.getOwningKey()
+                                        supervisoryAuthority.getOwningKey()
                                 )
                         );
             }
@@ -101,7 +101,7 @@ public class CreateSpecificClaim {
                         this.name,
                         this.description,
                         this.getOurIdentity(),
-                        this.supervisorAuthority,
+                        this.supervisoryAuthority,
                         new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class),
                         this.supportingClaimsLinearIds.stream().map(claimLinearId -> new LinearPointer<>(claimLinearId, SpecificClaim.class)).collect(Collectors.toList())
                 );
@@ -110,7 +110,7 @@ public class CreateSpecificClaim {
                                 new SpecificClaimContract.Commands.CreateClaim(),
                                 Arrays.asList(
                                         getOurIdentity().getOwningKey(),
-                                        supervisorAuthority.getOwningKey()
+                                        supervisoryAuthority.getOwningKey()
                                 )
                         );
             }
@@ -122,7 +122,7 @@ public class CreateSpecificClaim {
             final SignedTransaction partSignedTx = getServiceHub().signInitialTransaction(txBuilder);
 
             // Send the state to the counterparty, and receive it back with their signature.
-            FlowSession otherPartySession = initiateFlow(supervisorAuthority);
+            FlowSession otherPartySession = initiateFlow(supervisoryAuthority);
             final SignedTransaction fullySignedTx = subFlow(
                     new CollectSignaturesFlow(partSignedTx, Collections.singletonList(otherPartySession)));
 
