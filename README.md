@@ -30,29 +30,29 @@ The username is already provided with `user1`, the respective password is `test`
 ## Regulation Flow
 `flow start CreateRegulation name: Regulation, description: Some Description, version: 0.1, releaseDate: 2022-03-22`
 
-`run vaultQuery contractStateType: com.template.states.Regulation`
+`run vaultQuery contractStateType: com.compliance.states.Regulation`
 
 ## Rule Flow 
 `flow start CreateRule name: NewRule, ruleSpecification: new Description, parentRegulationLinearId: <RegulationLinearId>`
 
-`run vaultQuery contractStateType: com.template.states.Rule`
+`run vaultQuery contractStateType: com.compliance.states.Rule`
 
 ## ClaimTemplate Flow 
 `flow start CreateClaimTemplate name: NewClameTemplate, description: new Description, ruleLinearId: <RuleLinearId>`
 
-`run vaultQuery contractStateType: com.template.states.ClaimTemplate`
+`run vaultQuery contractStateType: com.compliance.states.ClaimTemplate`
 
 ## SpecificClaim Flow 
 
 ### Without referencing an attachment:
 `flow start CreateSpecificClaim name: SpecificClaim, supervisoryAuthority: Supervisory Authority, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: []`
 
-`run vaultQuery contractStateType: com.template.states.SpecificClaim`
+`run vaultQuery contractStateType: com.compliance.states.SpecificClaim`
 
 ### With referencing an attachment:
 `flow start CreateSpecificClaim name: SpecificClaim, supervisoryAuthority: Supervisory Authority, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: [], attachmentID: <attachmentID>`
 
-`run vaultQuery contractStateType: com.template.states.SpecificClaim`
+`run vaultQuery contractStateType: com.compliance.states.SpecificClaim`
 
 
 # Handling Attachments
