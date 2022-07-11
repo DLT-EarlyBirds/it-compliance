@@ -17,7 +17,7 @@ const Header = () => {
       selectedKeys={[pathname]}
       defaultSelectedKeys={["home"]}
     >
-      <Menu.Item key="/home" icon={<HomeOutlined />}>
+      <Menu.Item key="/" icon={<HomeOutlined />}>
         <Link to="/">Home</Link>
       </Menu.Item>
       <Menu.Item key="/graph-regulation" icon={<RadarChartOutlined />}>

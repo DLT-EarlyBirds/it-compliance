@@ -1,5 +1,6 @@
 [
   {
+    "id": "1",
     "name": "Minimum Requirements for Risk Management",
     "nameAbbreviated": "MaRisk",
     "nameDE": "Mindestanforderungen an das Risikomanagement",
@@ -10,6 +11,7 @@
     "issuer": "BaFin"
   },
   {
+    "id": "2",
     "name": "Supervisory Requirements for IT in Financial Institutions",
     "nameAbbreviated": "BAIT",
     "nameDE": "Bankaufsichtliche Anforderungen an die IT",

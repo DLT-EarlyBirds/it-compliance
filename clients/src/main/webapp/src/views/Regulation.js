@@ -1,5 +1,5 @@
 import React from "react";
-import { Table } from "antd";
+import { Table, Button } from "antd";
 import regulationData from "../data/regulations.json";
 import CreateRegulation from "../components/CreateRegulation";
 
@@ -23,6 +23,17 @@ const columns = [
   {
     title: "Version",
     dataIndex: "version",
+  },
+  {
+    title: "Deprecate",
+    dataIndex: "id",
+    render: (id) => {
+      return (
+        <Button type="primary" onClick={() => console.log(id)}>
+          Deprecate
+        </Button>
+      );
+    },
   },
 ];
 
