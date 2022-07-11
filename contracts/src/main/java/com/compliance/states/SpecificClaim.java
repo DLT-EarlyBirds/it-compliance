@@ -32,7 +32,7 @@ public class SpecificClaim implements LinearState {
     @NotNull
     private final Party financialServiceProvider;
     @NotNull
-    private final Party supervisorAuthority;
+    private final Party supervisoryAuthority;
     private final List<AbstractParty> participants;
 
     // A reference to the claim template that is implemented by this specific claim.
@@ -47,7 +47,7 @@ public class SpecificClaim implements LinearState {
                          String name,
                          String description,
                          @NotNull Party financialServiceProvider,
-                         @NotNull Party supervisorAuthority,
+                         @NotNull Party supervisoryAuthority,
                          LinearPointer<ClaimTemplate> claimTemplate,
                          List<LinearPointer<SpecificClaim>> supportingClaims) {
         this.name = name;
@@ -55,11 +55,11 @@ public class SpecificClaim implements LinearState {
         this.description = description;
         this.claimTemplate = claimTemplate;
         this.supportingClaims = supportingClaims;
-        this.supervisorAuthority = supervisorAuthority;
+        this.supervisoryAuthority = supervisoryAuthority;
         this.financialServiceProvider = financialServiceProvider;
 
         this.participants = new ArrayList<>();
-        this.participants.add(supervisorAuthority);
+        this.participants.add(supervisoryAuthority);
         this.participants.add(financialServiceProvider);
     }
 
@@ -68,7 +68,7 @@ public class SpecificClaim implements LinearState {
                          String name,
                          String description,
                          @NotNull Party financialServiceProvider,
-                         @NotNull Party supervisorAuthority,
+                         @NotNull Party supervisoryAuthority,
                          LinearPointer<ClaimTemplate> claimTemplate,
                          List<LinearPointer<SpecificClaim>> supportingClaims,
                          SecureHash attachmentID) {
@@ -78,11 +78,11 @@ public class SpecificClaim implements LinearState {
         this.attachmentID = attachmentID;
         this.claimTemplate = claimTemplate;
         this.supportingClaims = supportingClaims;
-        this.supervisorAuthority = supervisorAuthority;
+        this.supervisoryAuthority = supervisoryAuthority;
         this.financialServiceProvider = financialServiceProvider;
 
         this.participants = new ArrayList<>();
-        this.participants.add(supervisorAuthority);
+        this.participants.add(supervisoryAuthority);
         this.participants.add(financialServiceProvider);
     }
 
@@ -102,8 +102,8 @@ public class SpecificClaim implements LinearState {
     }
 
     @NotNull
-    public Party getSupervisorAuthority() {
-        return supervisorAuthority;
+    public Party getsupervisoryAuthority() {
+        return supervisoryAuthority;
     }
 
     @NotNull
