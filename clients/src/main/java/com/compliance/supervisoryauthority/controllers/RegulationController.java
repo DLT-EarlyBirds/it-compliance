@@ -63,9 +63,10 @@ public class RegulationController {
                 .collect(Collectors.toList());
     }
 
-    @PutMapping(value = "/update")
-    private void updateRegulation(String linearId, String name, String description, String version, Date releaseDate) throws ExecutionException, InterruptedException {
-        UniqueIdentifier id = UniqueIdentifier.Companion.fromString(linearId);
+    @PutMapping(value = "/")
+    private void updateRegulation(@RequestBody RegulationDTO regulationDTO) throws ExecutionException, InterruptedException {
+        logger.warn(regulationDTO.getLinearId());
+        UniqueIdentifier id = UniqueIdentifier.Companion.fromString(regulationDTO.getLinearId());
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(id), Vault.StateStatus.ALL, Collections.singleton(Regulation.class));
         // Check if state with that linear ID exists
         // Todo: Should throw custom exception if no regulation with the ID exists
@@ -73,23 +74,23 @@ public class RegulationController {
             // Call the update flow
             SignedTransaction tx = proxy.startTrackedFlowDynamic(
                     UpdateRegulation.UpdateRegulationInitiator.class,
-                    linearId,
-                    name,
-                    description,
-                    version,
-                    releaseDate
+                    id,
+                    regulationDTO.getName(),
+                    regulationDTO.getDescription(),
+                    regulationDTO.getVersion(),
+                    regulationDTO.getReleaseDate()
             ).getReturnValue().get();
         }
     }
 
-    @PostMapping("/create")
-    private UniqueIdentifier createRegulation(@RequestBody RegulationDTO regulationDTO) throws ExecutionException, InterruptedException {
+    @PostMapping("/")
+    private Regulation createRegulation(@RequestBody RegulationDTO regulationDTO) throws ExecutionException, InterruptedException {
         SignedTransaction tx = proxy.startTrackedFlowDynamic(
                 CreateRegulation.CreateRegulationInitiator.class,
                 regulationDTO.getName(),
                 regulationDTO.getDescription(),
                 regulationDTO.getVersion(),
-                new Date()
+                regulationDTO.getReleaseDate()
         ).getReturnValue().get();
 
         List<Regulation> regulations = proxy
@@ -107,8 +108,7 @@ public class RegulationController {
                         reg -> reg.getName().equals(regulationDTO.getName()) && reg.getDescription().equals(regulationDTO.getDescription())
                 )
                 .collect(Collectors.toList())
-                .get(0)
-                .getLinearId();
+                .get(0);
     }
 
 
