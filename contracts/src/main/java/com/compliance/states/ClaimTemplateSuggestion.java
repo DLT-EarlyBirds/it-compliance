@@ -89,6 +89,9 @@ public class ClaimTemplateSuggestion implements LinearState {
         return issuer;
     }
 
+    public Party getSupervisoryAuthority() {
+        return supervisoryAuthority;
+    }
 
     @NotNull
     @Override
