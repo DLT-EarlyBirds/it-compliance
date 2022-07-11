@@ -6,6 +6,9 @@ import com.compliance.flows.CreateRule;
 import com.compliance.states.Regulation;
 import com.compliance.states.Rule;
 import com.compliance.supervisoryauthority.NodeRPCConnection;
+import com.compliance.supervisoryauthority.models.ClaimTemplateDTO;
+import com.compliance.supervisoryauthority.models.RegulationDTO;
+import com.compliance.supervisoryauthority.models.RuleDTO;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.messaging.CordaRPCOps;
@@ -126,6 +129,35 @@ public class NetworkController {
 
     @GetMapping(value = "/bootstrapGraph", produces = APPLICATION_JSON_VALUE)
     private void bootstrapGraph() {
+        RegulationDTO mockRegulation1 = new RegulationDTO(
+                "",
+                "MaRisk AT 7",
+                "Provides a flexible and practical framework for structuring institutions' risk management [on the basis of Kreditwesengestz §25a and §25b]",
+                "0.1",
+                new Date()
+        );
+        RuleDTO mockRule1 = new RuleDTO(
+                "",
+                "MaRisk AT 7.2 p. 3",
+                "The IT systems shall be tested before their first use and after any material changes and approved by both the responsible organisational unit staff and IT staff. To this end, a standard process of development, testing, approval and implementation in the production processes shall be established. The production and testing environments shall be segregated.",
+                ""
+        );
+        ClaimTemplateDTO mockClaimTemplate1a = new ClaimTemplateDTO(
+                "",
+                "Admin Access",
+                "Proof that IT admins only accessed production systems.",
+                ""
+        );
+        ClaimTemplateDTO mockClaimTemplate1b = new ClaimTemplateDTO(
+                "",
+                "Developer Access",
+                "Proof that Developers only accessed development/testing systems.",
+                ""
+        );
+
+
+
+
         // Issue the first regulation
         logger.info("Bootstrapping regulation graph");
 
@@ -133,10 +165,10 @@ public class NetworkController {
             logger.info("Creating regulation");
             SignedTransaction regulation = proxy.startTrackedFlowDynamic(
                     CreateRegulation.CreateRegulationInitiator.class,
-                    "MaRisk AT 7",
-                    "Provides a flexible and practical framework for structuring institutions' risk management [on the basis of Kreditwesengestz §25a and §25b]",
-                    "0.1",
-                    new Date()
+                    mockRegulation1.getName(),
+                    mockRegulation1.getDescription(),
+                    mockRegulation1.getVersion(),
+                    mockRegulation1.getReleaseDate()
             ).getReturnValue().get();
 
             // Get regulation linear ID
@@ -153,8 +185,8 @@ public class NetworkController {
             logger.info("Creating rule");
             SignedTransaction rule = proxy.startTrackedFlowDynamic(
                     CreateRule.CreateRuleInitiator.class,
-                    "MaRisk AT 7.2 p. 3",
-                    "The IT systems shall be tested before their first use and after any material changes and approved by both the responsible organisational unit staff and IT staff. To this end, a standard process of development, testing, approval and implementation in the production processes shall be established. The production and testing environments shall be segregated.",
+                    mockRule1.getName(),
+                    mockRule1.getRuleSpecification(),
                     regulationLinearId
             ).getReturnValue().get();
 
@@ -171,16 +203,16 @@ public class NetworkController {
             logger.info("Creating developer claim template");
             SignedTransaction developersClaimTemplate = proxy.startTrackedFlowDynamic(
                     CreateClaimTemplate.CreateClaimTemplateInitiator.class,
-                    "Developer Access",
-                    "Proof that Developers only accessed development/testing systems.",
+                    mockClaimTemplate1a.getName(),
+                    mockClaimTemplate1a.getTemplateDescription(),
                     ruleLinearId
             ).getReturnValue().get();
 
             logger.info("Creating admin claim template");
             SignedTransaction adminsClaimTemplate = proxy.startTrackedFlowDynamic(
                     CreateClaimTemplate.CreateClaimTemplateInitiator.class,
-                    "MaRisk AT 7.2 p. 3",
-                    "Proof that IT admins only accessed production systems.",
+                    mockClaimTemplate1b.getName(),
+                    mockClaimTemplate1b.getTemplateDescription(),
                     ruleLinearId
             ).getReturnValue().get();
 
