@@ -25,8 +25,7 @@ public class UpdateSpecificClaim {
     @InitiatingFlow
     @StartableByRPC
     public static class UpdateSpecificClaimInitiator extends FlowLogic<SignedTransaction> {
-        // Private variables
-        
+
         // Name of the SpecificClaim
         private final String name;
 
@@ -39,18 +38,18 @@ public class UpdateSpecificClaim {
         private final UniqueIdentifier claimTemplateLinearId;
 
         private final Party supervisorAuthority;
-        
+
         // The specification that details what need to be fulfilled
         private final String description;
 
-        //public constructor
-        public UpdateSpecificClaimInitiator(UniqueIdentifier specificClaimLinearId,
-                                            String name,
-                                            String description,
-                                            Party supervisoryAuthority,
-                                            UniqueIdentifier claimTemplateLinearId,
-                                            List<UniqueIdentifier> supportingClaimsLinearIds
-                                            ) {
+        public UpdateSpecificClaimInitiator(
+                @NotNull UniqueIdentifier specificClaimLinearId,
+                String name,
+                String description,
+                Party supervisoryAuthority,
+                UniqueIdentifier claimTemplateLinearId,
+                List<UniqueIdentifier> supportingClaimsLinearIds
+        ) {
             this.name = name;
             this.specificClaimLinearId = specificClaimLinearId;
             this.description = description;
@@ -58,13 +57,15 @@ public class UpdateSpecificClaim {
             this.claimTemplateLinearId = claimTemplateLinearId;
             this.supportingClaimsLinearIds = supportingClaimsLinearIds;
         }
-        public UpdateSpecificClaimInitiator(UniqueIdentifier specificClaimLinearId,
-                                            String name,
-                                            String description,
-                                            Party supervisoryAuthority,
-                                            UniqueIdentifier claimTemplateLinearId,
-                                            List<UniqueIdentifier> supportingClaimsLinearIds,
-                                            SecureHash attachmentID
+
+        public UpdateSpecificClaimInitiator(
+                @NotNull UniqueIdentifier specificClaimLinearId,
+                String name,
+                String description,
+                Party supervisoryAuthority,
+                UniqueIdentifier claimTemplateLinearId,
+                List<UniqueIdentifier> supportingClaimsLinearIds,
+                SecureHash attachmentID
         ) {
             this.name = name;
             this.specificClaimLinearId = specificClaimLinearId;
@@ -91,48 +92,57 @@ public class UpdateSpecificClaim {
             final TransactionBuilder builder = new TransactionBuilder(notary);
             builder.addInputState(input);
 
+            SpecificClaim output;
+
             if (this.attachmentID != null) {
-                SpecificClaim output = new SpecificClaim(
+                output = new SpecificClaim(
                         specificClaimLinearId,
                         this.name,
                         this.description,
                         this.getOurIdentity(),
                         this.supervisorAuthority,
                         new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class),
-                        this.supportingClaimsLinearIds.stream().map(claimLinearId -> new LinearPointer<>(claimLinearId, SpecificClaim.class)).collect(Collectors.toList()),
+                        this.supportingClaimsLinearIds
+                                .stream()
+                                .map(
+                                        claimLinearId -> new LinearPointer<>(
+                                                claimLinearId,
+                                                SpecificClaim.class
+                                        )
+                                )
+                                .collect(Collectors.toList()),
                         this.attachmentID
                 );
-                builder.addOutputState(output);
-                builder.addAttachment(attachmentID);
-                builder.addCommand(
-                        new SpecificClaimContract.Commands.CreateClaim(),
-                        Arrays.asList(
-                                getOurIdentity().getOwningKey(),
-                                supervisorAuthority.getOwningKey()
-                        )
-                );
-            }
-            else {
-                SpecificClaim output = new SpecificClaim(
+
+            } else {
+                output = new SpecificClaim(
                         specificClaimLinearId,
                         this.name,
                         this.description,
                         this.getOurIdentity(),
                         this.supervisorAuthority,
                         new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class),
-                        this.supportingClaimsLinearIds.stream().map(claimLinearId -> new LinearPointer<>(claimLinearId, SpecificClaim.class)).collect(Collectors.toList())
+                        this.supportingClaimsLinearIds
+                                .stream()
+                                .map(
+                                        claimLinearId -> new LinearPointer<>(
+                                                claimLinearId,
+                                                SpecificClaim.class
+                                        )
+                                )
+                                .collect(Collectors.toList())
                 );
-                builder.addOutputState(output);
-                builder.addCommand(
-                        new SpecificClaimContract.Commands.CreateClaim(),
-                        Arrays.asList(
-                                getOurIdentity().getOwningKey(),
-                                supervisorAuthority.getOwningKey()
-                        )
-                );
-
             }
 
+            builder.addOutputState(output);
+            builder.addAttachment(attachmentID);
+            builder.addCommand(
+                    new SpecificClaimContract.Commands.UpdateSpecificClaim(),
+                    Arrays.asList(
+                            getOurIdentity().getOwningKey(),
+                            supervisorAuthority.getOwningKey()
+                    )
+            );
 
 
             // Verify that the transaction is valid.
@@ -167,7 +177,7 @@ public class UpdateSpecificClaim {
             SignedTransaction signedTransaction = subFlow(new SignTransactionFlow(counterpartySession) {
                 @Suspendable
                 @Override
-                protected void checkTransaction(SignedTransaction stx) throws FlowException {
+                protected void checkTransaction(@NotNull SignedTransaction stx) throws FlowException {
                     /*
                      * SignTransactionFlow will automatically verify the transaction and its signatures before signing it.
                      * However, just because a transaction is contractually valid doesn’t mean we necessarily want to sign.
