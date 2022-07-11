@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -65,7 +64,6 @@ public class RegulationController {
 
     @PutMapping(value = "/")
     private void updateRegulation(@RequestBody RegulationDTO regulationDTO) throws ExecutionException, InterruptedException {
-        logger.warn(regulationDTO.getLinearId());
         UniqueIdentifier id = UniqueIdentifier.Companion.fromString(regulationDTO.getLinearId());
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(id), Vault.StateStatus.ALL, Collections.singleton(Regulation.class));
         // Check if state with that linear ID exists
