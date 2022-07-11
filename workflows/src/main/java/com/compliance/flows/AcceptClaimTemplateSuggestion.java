@@ -39,12 +39,19 @@ public class AcceptClaimTemplateSuggestion {
         public SignedTransaction call() throws FlowException {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
+            final TransactionBuilder builder = new TransactionBuilder(notary);
+            try {
+                QueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria()
+                        .withUuid(Collections.singletonList(UUID.fromString(linearId.toString())))
+                        .withStatus(Vault.StateStatus.UNCONSUMED)
+                        .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
 
-            QueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria()
-                    .withUuid(Collections.singletonList(UUID.fromString(linearId.toString())))
-                    .withStatus(Vault.StateStatus.UNCONSUMED)
-                    .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
-
+                final StateAndRef<ClaimTemplateSuggestion> input = getServiceHub().getVaultService().queryBy(ClaimTemplateSuggestion.class, inputCriteria).getStates().get(0);
+                builder.addInputState(input);
+            }
+            catch (IndexOutOfBoundsException e) {
+                throw new FlowException("ERROR: No ClaimTemplateSuggestion with provided ID found!");
+            }
 
             // Add all parties in the network
             final List<Party> involvedParties = new ArrayList<>(getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList()));
@@ -54,14 +61,11 @@ public class AcceptClaimTemplateSuggestion {
             // Remove notaries
             involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
 
-            final StateAndRef<ClaimTemplateSuggestion> input = getServiceHub().getVaultService().queryBy(ClaimTemplateSuggestion.class, inputCriteria).getStates().get(0);
             ClaimTemplateSuggestion originalClaimTemplateSuggestion = (ClaimTemplateSuggestion) input.getState().getData();
 
             final ClaimTemplate output = new ClaimTemplate(originalClaimTemplateSuggestion.getName(), originalClaimTemplateSuggestion.getTemplateDescription(), this.getOurIdentity(), involvedParties, originalClaimTemplateSuggestion.getRule());
 
-            final TransactionBuilder builder = new TransactionBuilder(notary);
 
-            builder.addInputState(input);
             builder.addOutputState(output);
             builder.addCommand(new ClaimTemplateContract.Commands.AcceptClaimTemplateSuggestion(),
                     involvedParties.stream().map(Party::getOwningKey).collect(Collectors.toList())
