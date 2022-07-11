@@ -1,11 +1,9 @@
 package com.compliance.supervisoryauthority.controllers;
 
-import com.compliance.flows.CreateRegulation;
-import com.compliance.flows.UpdateRegulation;
-import com.compliance.states.Regulation;
+import com.compliance.flows.CreateRule;
+import com.compliance.flows.UpdateRule;
 import com.compliance.states.Rule;
 import com.compliance.supervisoryauthority.NodeRPCConnection;
-import com.compliance.supervisoryauthority.models.RegulationDTO;
 import com.compliance.supervisoryauthority.models.RuleDTO;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.CordaX500Name;
@@ -67,15 +65,15 @@ public class RuleController {
     }
 
     @PutMapping(value = "/")
-    private void updateRule(@RequestBody RuleDTO ruleDTO) throws ExecutionException, InterruptedException {
+    private void update(@RequestBody RuleDTO ruleDTO) throws ExecutionException, InterruptedException {
         UniqueIdentifier id = UniqueIdentifier.Companion.fromString(ruleDTO.getLinearId());
-        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(id), Vault.StateStatus.ALL, Collections.singleton(Regulation.class));
+        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(id), Vault.StateStatus.ALL, Collections.singleton(Rule.class));
         // Check if state with that linear ID exists
         // Todo: Should throw custom exception if no regulation with the ID exists
-        if (!proxy.vaultQueryByCriteria(queryCriteria, Regulation.class).getStates().isEmpty()) {
+        if (!proxy.vaultQueryByCriteria(queryCriteria, Rule.class).getStates().isEmpty()) {
             // Call the update flow
             SignedTransaction tx = proxy.startTrackedFlowDynamic(
-                    UpdateRegulation.UpdateRegulationInitiator.class,
+                    UpdateRule.UpdateRuleInitiator.class,
                     id,
                     ruleDTO.getName(),
                     ruleDTO.getRuleSpecification(),
@@ -86,9 +84,9 @@ public class RuleController {
 
 
     @PostMapping("/")
-    private Rule createRule(@RequestBody RuleDTO ruleDTO) throws ExecutionException, InterruptedException {
+    private Rule create(@RequestBody RuleDTO ruleDTO) throws ExecutionException, InterruptedException {
         SignedTransaction tx = proxy.startTrackedFlowDynamic(
-                CreateRegulation.CreateRegulationInitiator.class,
+                CreateRule.CreateRuleInitiator.class,
                 ruleDTO.getName(),
                 ruleDTO.getRuleSpecification(),
                 UniqueIdentifier.Companion.fromString(ruleDTO.getParentRegulation()),
@@ -107,7 +105,7 @@ public class RuleController {
         return rules
                 .stream()
                 .filter(
-                        reg -> reg.getName().equals(ruleDTO.getName()) && reg.getRuleSpecification().equals(ruleDTO.getRuleSpecification())
+                        rule -> rule.getName().equals(ruleDTO.getName()) && rule.getRuleSpecification().equals(ruleDTO.getRuleSpecification())
                 )
                 .collect(Collectors.toList())
                 .get(0);
