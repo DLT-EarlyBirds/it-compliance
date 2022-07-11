@@ -49,14 +49,20 @@ public class UpdateRule {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
+            final TransactionBuilder builder = new TransactionBuilder(notary);
 
-            QueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria()
-                    .withUuid(Collections.singletonList(UUID.fromString(linearId.toString())))
-                    .withStatus(Vault.StateStatus.UNCONSUMED)
-                    .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
+            try {
+                QueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria()
+                        .withUuid(Collections.singletonList(UUID.fromString(linearId.toString())))
+                        .withStatus(Vault.StateStatus.UNCONSUMED)
+                        .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
 
-            final StateAndRef<Rule> input = getServiceHub().getVaultService().queryBy(Rule.class, inputCriteria).getStates().get(0);
-            Rule rule = input.getState().getData();
+                final StateAndRef<Rule> input = getServiceHub().getVaultService().queryBy(Rule.class, inputCriteria).getStates().get(0);
+                builder.addInputState(input);
+            }
+            catch (IndexOutOfBoundsException e) {
+                throw new FlowException("ERROR: No Rule with provided ID found!");
+            }
 
             // Add all parties in the network
             final List<Party> involvedParties = new ArrayList<>(
@@ -77,9 +83,7 @@ public class UpdateRule {
 
             final Rule output = new Rule(linearId, name, ruleSpecification, this.getOurIdentity(), involvedParties, new LinearPointer<>(parentRegulationLinearId, Regulation.class));
 
-            final TransactionBuilder builder = new TransactionBuilder(notary);
 
-            builder.addInputState(input);
             builder.addOutputState(output);
             builder.addCommand(new RuleContract.Commands.UpdateRule(),
                     involvedParties.stream().map(Party::getOwningKey).collect(Collectors.toList())
