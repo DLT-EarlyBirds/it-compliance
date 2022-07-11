@@ -1,8 +1,11 @@
 package com.compliance.supervisoryauthority.controllers;
 
 import com.compliance.flows.CreateRegulation;
+import com.compliance.flows.UpdateRegulation;
+import com.compliance.states.Regulation;
 import com.compliance.states.Rule;
 import com.compliance.supervisoryauthority.NodeRPCConnection;
+import com.compliance.supervisoryauthority.models.RegulationDTO;
 import com.compliance.supervisoryauthority.models.RuleDTO;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.CordaX500Name;
@@ -61,6 +64,24 @@ public class RuleController {
                         ruleStateAndRef -> ruleStateAndRef.getState().getData()
                 )
                 .collect(Collectors.toList());
+    }
+
+    @PutMapping(value = "/")
+    private void updateRule(@RequestBody RuleDTO ruleDTO) throws ExecutionException, InterruptedException {
+        UniqueIdentifier id = UniqueIdentifier.Companion.fromString(ruleDTO.getLinearId());
+        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(id), Vault.StateStatus.ALL, Collections.singleton(Regulation.class));
+        // Check if state with that linear ID exists
+        // Todo: Should throw custom exception if no regulation with the ID exists
+        if (!proxy.vaultQueryByCriteria(queryCriteria, Regulation.class).getStates().isEmpty()) {
+            // Call the update flow
+            SignedTransaction tx = proxy.startTrackedFlowDynamic(
+                    UpdateRegulation.UpdateRegulationInitiator.class,
+                    id,
+                    ruleDTO.getName(),
+                    ruleDTO.getRuleSpecification(),
+                    UniqueIdentifier.Companion.fromString(ruleDTO.getParentRegulation())
+            ).getReturnValue().get();
+        }
     }
 
 
