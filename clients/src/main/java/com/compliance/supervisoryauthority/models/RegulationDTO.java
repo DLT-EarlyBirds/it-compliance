@@ -1,6 +1,7 @@
 package com.compliance.supervisoryauthority.models;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Generated;
@@ -19,15 +20,18 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 })
 public class RegulationDTO implements Serializable
 {
-
+    @JsonProperty("linearId")
+    private String linearId;
     @JsonProperty("name")
     private String name;
     @JsonProperty("description")
     private String description;
     @JsonProperty("version")
     private String version;
+    @JsonProperty("releaseDate")
+    private Date releaseDate;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
     private final static long serialVersionUID = -7129508973474007122L;
 
     /**
@@ -38,16 +42,29 @@ public class RegulationDTO implements Serializable
     }
 
     /**
-     *
+     * @param linearId
      * @param name
      * @param description
      * @param version
+     * @param releaseDate
      */
-    public RegulationDTO(String name, String description, String version) {
+    public RegulationDTO(String linearId, String name, String description, String version, Date releaseDate) {
         super();
+        this.linearId = linearId;
         this.name = name;
         this.description = description;
         this.version = version;
+        this.releaseDate = releaseDate;
+    }
+
+    @JsonProperty("linearId")
+    public String getLinearId() {
+        return linearId;
+    }
+
+    @JsonProperty("linearId")
+    public void setLinearId(String linearId) {
+        this.linearId = linearId;
     }
 
     @JsonProperty("name")
@@ -78,6 +95,16 @@ public class RegulationDTO implements Serializable
     @JsonProperty("version")
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    @JsonProperty("releaseDate")
+    public Date getReleaseDate() {
+        return releaseDate;
+    }
+
+    @JsonProperty("releaseDate")
+    public void setReleaseDate(Date releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
     @JsonAnyGetter
