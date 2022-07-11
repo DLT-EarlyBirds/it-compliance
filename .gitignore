@@ -76,3 +76,6 @@ docs/virtualenv/
 
 # if you use the installQuasar task
 lib
+
+
+node_modules

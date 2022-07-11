@@ -1,0 +1,172 @@
+[
+  {
+    "name": "BAIT 6.1.",
+    "topic": "Identity and access management",
+    "parentRegulation": "BAIT",
+    "chapter": 6,
+    "ruleSpecification1": "Identity and access management ensures that access rights granted to users are in line with and used as defined in the institution’s organisational and operational requirements. Identity and access management shall meet the requirements set out in AT 4.3.1 number 2, AT 7.2 number 2 as well as BTO number 9 of MaRisk. All forms of access rights to components of the information domain should be subject to standardised processes and controls.",
+    "ruleSpecification2": "",
+    "ruleSpecification1DE": "Ein Identitäts- und Rechtemanagement stellt sicher, dass den Benutzern eingeräumte Berechtigungen so ausgestaltet sind und genutzt werden, wie es den organisatorischen und fachlichen Vorgaben des Instituts entspricht. Das Identitäts- und Rechtemanagement hat die Anforderungen nach AT 4.3.1 Tz. 2, AT 7.2 Tz. 2, sowie BTO Tz. 9 der MaRisk zu erfüllen. Jegliche Zugriffs-, Zugangs- und Zutrittsrechte auf Bestandteile bzw. zu Bestandteilen des Informationsverbundes sollten standardisierten Prozessen und Kontrollen unterliegen.",
+    "ruleSpecification2DE": ""
+  },
+  {
+    "name": "BAIT 6.2.",
+    "topic": "Identity and access management",
+    "parentRegulation": "BAIT",
+    "chapter": 6,
+    "ruleSpecification1": "User access rights concepts define the scope and the conditions of use for access rights to IT systems (access to IT systems and access to data) and access rights to premises in a manner that is consistently in line with the determined protection requirements and can be completely and comprehensibly derived from the concept for all access rights provided. User access rights concepts shall ensure that users are assigned access rights according to the need-to-know and least- privilege principles, that the segregation of duties is observed across user access rights concepts and that conflicts of interest are avoided. User access rights concepts shall be reviewed regularly and on an event-driven basis and updated if necessary.",
+    "ruleSpecification2": "One possible condition for use is limiting the time for which access rights are granted.\nDepending on their nature, access rights can be granted for personalised and for non-personalised users (including technical users).\nAccess rights to the IT systems may be present at all levels of an IT system (e.g. operating system, database, application).\nExamples of technical users are users who are used by IT systems in order to identify themselves to other IT systems or to perform IT routines autonomously.",
+    "ruleSpecification1DE": "Berechtigungskonzepte legen den Umfang und die Nutzungsbedingungen der Berechtigungen für die IT-Systeme (Zugang zu IT-Systemen sowie Zugriff auf Daten) sowie die Zutrittsrechte zu Räumen konsistent zum ermittelten Schutzbedarf sowie vollständig und nachvollziehbar ableitbar für alle bereitgestellten Berechtigungen fest. Berechtigungskonzepte haben die Vergabe von Berechtigungen nach dem Sparsamkeitsgrundsatz („Need-to-know“ und „Least-Privilege“ Prinzipien) sicherzustellen, die Funktionstrennung auch berechtigungskonzeptübergreifend zu wahren und Interessenskonflikte zu vermeiden. Berechtigungskonzepte sind regelmäßig und anlassbezogen zu überprüfen und ggf. zu aktualisieren.",
+    "ruleSpecification2DE": "Eine mögliche Nutzungsbedingung ist die Befristung von eingeräumten Be-rechtigungen.\nBerechtigungen können, je nach Art, für personalisierte sowie für nicht personalisierte Benutzer (inkl. technische Benutzer) vorliegen.\nZugangs- und Zugriffsberechtigungen auf den IT-Systemen können auf allen Ebenen eines IT-Systems (z. B. Betriebssystem, Datenbank, Anwendung) vorliegen.\nTechnische Benutzer sind z. B. Benutzer, die von IT-Systemen verwendet werden, um sich gegenüber anderen IT-Systemen zu identifizieren oder um eigenständig IT-Routinen auszuführen."
+  },
+  {
+    "name": "BAIT 6.3.",
+    "topic": "Identity and access management",
+    "parentRegulation": "BAIT",
+    "chapter": 6,
+    "ruleSpecification1": "It shall be possible for access to IT systems to be unequivocally traced back to an active or responsible natural person at all times (wherever possible, automatically).",
+    "ruleSpecification2": "For example, automated activities shall be capable of being allocated to responsible persons. Any deviations from this in justifiable exceptional cases and the resultant risks shall be assessed, documented and subsequently approved by the responsible organisational unit.",
+    "ruleSpecification1DE": "Zugriffe und Zugänge müssen jederzeit zweifelsfrei einer handelnden bzw. verantwortlichen Person (möglichst automatisiert) zuzuordnen sein.",
+    "ruleSpecification2DE": "Beispielsweise müssen automatisierte Aktivitäten verantwortlichen Personen zuordenbar sein. Abweichungen in begründeten Ausnahmefällen und die hieraus resultierenden Risiken sind zu bewerten, zu dokumentieren und anschließend von der fachlich verantwortlichen Stelle zu genehmigen."
+  },
+  {
+    "name": "BAIT 6.4.",
+    "topic": "Identity and access management",
+    "parentRegulation": "BAIT",
+    "chapter": 6,
+    "ruleSpecification1": "Approval and control processes shall ensure compliance with the requirements contained in the user access rights concept when setting up, changing, deactivating or deleting access rights for users. The responsible organisational unit shall be appropriately involved, thus enabling it to fulfil its organisational responsibilities.",
+    "ruleSpecification2": "Setting up, changing, deactivating or deleting access rights also requires timely or immediate implementation in the target system.\nReasons for immediate deactivation or deletion of access rights include the risk of abuse (e.g. if an employee is terminated without notice).",
+    "ruleSpecification1DE": "Die Verfahren zur Einrichtung, Änderung, Deaktivierung oder Lö- schung von Berechtigungen für Benutzer haben durch Genehmigungs- und Kontrollprozesse sicherzustellen, dass die Vorgaben des Berechtigungskonzepts eingehalten werden. Dabei ist die fachlich verantwortliche Stelle angemessen einzubinden, so dass sie ihrer fachlichen Verantwortung nachkommen kann.",
+    "ruleSpecification2DE": "Die Einrichtung, Änderung, Deaktivierung oder Löschung von Berechtigun- gen umfassen jeweils auch die zeitnahe oder unverzügliche Umsetzung im Zielsystem.\nGrund für eine unverzügliche Deaktivierung bzw. Löschung von Berechtigungen ist u. a. die Gefahr einer missbräuchlichen Verwendung (z. B. bei fristloser Kündigung eines Mitarbeiters)."
+  },
+  {
+    "name": "BAIT 6.5.",
+    "topic": "Identity and access management",
+    "parentRegulation": "BAIT",
+    "chapter": 6,
+    "ruleSpecification1": "The control bodies responsible for setting up, changing, deactivating or deleting access rights shall be involved in reviewing whether access rights granted are still required and whether these comply with the requirements contained in the user access rights concept (recertification).",
+    "ruleSpecification2": "If during recertification it is discovered that unauthorised access rights have been granted, they shall be removed in line with the standard procedure and other measures shall be taken if necessary (e.g. analysis of causes, incident report).",
+    "ruleSpecification1DE": "Bei der Überprüfung, ob die eingeräumten Berechtigungen weiterhin benötigt werden und ob diese den Vorgaben des Berechtigungskonzepts entsprechen (Rezertifizierung), sind die für die Einrichtung, Änderung, Deaktivierung oder Löschung von Berechtigungen zuständigen Kontrollinstanzen einzubeziehen.",
+    "ruleSpecification2DE": "Fällt im Rahmen der Rezertifizierung auf, dass nicht legitimierte Berechtigungen vorhanden sind, so werden diese gemäß Regelverfahren zeitnah entzogen und bei Bedarf weitere Maßnahmen (z. B. Ursachenanalyse, Vorfallmeldung) ergriffen."
+  },
+  {
+    "name": "BAIT 6.6.",
+    "topic": "Identity and access management",
+    "parentRegulation": "BAIT",
+    "chapter": 6,
+    "ruleSpecification1": "The setting up, changing, deactivating and deleting of access rights and recertification shall be documented in a way that facilitates comprehension and analysis.",
+    "ruleSpecification2": "",
+    "ruleSpecification1DE": "Die Einrichtung, Änderung, Deaktivierung sowie Löschung von Berechtigungen und die Rezertifizierung sind nachvollziehbar und aus- wertbar zu dokumentieren.",
+    "ruleSpecification2DE": ""
+  },
+  {
+    "name": "BAIT 6.7.",
+    "topic": "Identity and access management",
+    "parentRegulation": "BAIT",
+    "chapter": 6,
+    "ruleSpecification1": "The institution shall set up logging and monitoring processes consistent with the protection requirements and the target requirements that enable checks to be carried out to ensure that access rights are used only in the manner intended. Owing to the associated far-reaching intervention options, the institution shall in particular set up appropriate processes to log and monitor the activities with privileged (particularly critical) access rights.",
+    "ruleSpecification2": "Overarching responsibility for the processes used to log and monitor access rights shall be assigned to a party that is independent of the authorised user in question and his/her organisational unit. As a rule, privileged access rights include the rights to access data centres, technology rooms and other sensitive areas.",
+    "ruleSpecification1DE": "Das Institut hat nach Maßgabe des Schutzbedarfs und der Soll-Anforderungen Prozesse zur Protokollierung und Überwachung einzurichten, die überprüfbar machen, dass die Berechtigungen nur wie vorgesehen eingesetzt werden. Aufgrund der damit verbundenen weitreichenden Eingriffsmöglichkeiten hat das Institut insbesondere für die Aktivitäten mit privilegierten (besonders kritischen) Benutzer- und Zutrittsrechten angemessene Prozesse zur Protokollierung und Überwachung einzurichten.",
+    "ruleSpecification2DE": "Die übergeordnete Verantwortung für die Prozesse zur Protokollierung und Überwachung von Berechtigungen wird einer Stelle zugeordnet, die unabhängig vom berechtigten Benutzer oder dessen Organisationseinheit ist. Zu privilegierten Zutrittsrechten zählen in der Regel die Rechte zum Zutritt zu Rechenzentren, Technikräumen sowie sonstigen sensiblen Bereichen."
+  },
+  {
+    "name": "BAIT 6.8.",
+    "topic": "Identity and access management",
+    "parentRegulation": "BAIT",
+    "chapter": 6,
+    "ruleSpecification1": "Accompanying technical and organisational measures shall be implemented to ensure that the requirements contained in the user access rights concepts cannot be circumvented.",
+    "ruleSpecification2": "Examples of such measures are:\n• a selection of appropriate authentication procedures (including strong\nauthentication in the case of remote access);\n• implementation of a policy to use secure passwords;\n• screen saver that is automatically secured with a password;\n• data encryption;\n• tamper-proof implementation of logging;\n• measures to raise staff awareness.",
+    "ruleSpecification1DE": "Durch begleitende technisch-organisatorische Maßnahmen ist einer Umgehung der Vorgaben der Berechtigungskonzepte vorzubeugen.",
+    "ruleSpecification2DE": "Technisch-organisatorische Maßnahmen sind beispielsweise:\n• Auswahl angemessener Authentifizierungsverfahren (u. a. starke Authentifizierung im Falle von Fernzugriffen)\n• Implementierung einer Richtlinie zur Wahl sicherer Passwörter\n• automatische passwortgesicherte Bildschirmsperre\n• Verschlüsselung von Daten\n• manipulationssichere Implementierung der Protokollierung\n• Maßnahmen zur Sensibilisierung der Mitarbeiter."
+  },
+  {
+    "name": "MaRisk AT 4.3.1 p. 1",
+    "topic": "Organisational and operational structure",
+    "parentRegulation": "MaRisk",
+    "chapter": 4,
+    "ruleSpecification1": "When designing the organisational and operational structure it shall be ensured that activities that are not compatible with each other are performed by different staff members and that conflicts of interest are avoided also when staff members change posts. If staff of trading or front office units move to back office units and control units, appropriate cooling-off periods shall be applied to activities that violate the ban on self-audit and self- review.",
+    "ruleSpecification2": "Back office units and control units\nBack office units and control units within the meaning of this number are:\n- risk control function,\n- compliance function,\n- back office,\n- settlement and control.\n\nIf the cooling-off periods would lead to a disproportionate delay in operating procedures, smaller, less complex institutions may establish alternative, appropriate control mechanisms.",
+    "ruleSpecification1DE": "Bei der Ausgestaltung der Aufbau- und Ablauforganisation ist sicherzustellen, dass miteinander unvereinbare Tätigkeiten durch unterschiedliche Mitarbeiter durchgeführt und auch bei Arbeitsplatzwechseln Interessenkonflikte vermieden werden. Beim Wechsel von Mitarbeitern der Handels- und Marktbereiche in nachgelagerte Bereiche und Kontrollbereiche sind für Tätigkeiten, die gegen das Verbot der Selbstprüfung und –überprüfung verstoßen, angemessene Übergangsfristen vorzusehen.",
+    "ruleSpecification2DE": "Nachgelagerte Bereiche und Kontrollbereiche\nAls nachgelagerte Bereiche und Kontrollbereiche im Sinne dieser Tz. sind anzusehen:\n- Risikocontrolling-Funktion,\n- Compliance-Funktion,\n- Marktfolge,\n- Abwicklung und Kontrolle.\n\nSofern die Übergangsfristen zu einer unverhältnismäßigen Verzögerung im Betriebsablauf führen, können kleinere, weniger komplexe Institute abweichend hiervon alternative angemessene Kontrollmechanismen einrichten."
+  },
+  {
+    "name": "MaRisk AT 4.3.1 p. 2",
+    "topic": "Organisational and operational structure",
+    "parentRegulation": "MaRisk",
+    "chapter": 4,
+    "ruleSpecification1": "Processes as well as the related tasks, competencies, responsibilities, controls and reporting channels shall be clearly defined and coordinated. Rights and competencies shall be assigned on a need-to-know basis and shall be swiftly adjusted, where necessary. This shall include regular and ad hoc reviews of IT access rights, authorities to sign and other competencies that have been assigned within appropriate periods of time. The periods of time shall depend on the significance of the processes and, in the case of IT access rights, on the protection requirements of the processed data. The same shall apply to interfaces to material outsourced activities and processes.",
+    "ruleSpecification2": "Reviewing rights and competencies\nAccess rights in connection with transaction accounts and essential IT access rights shall be reviewed at least annually, and all others at least every three years. Especially critical IT access rights, such as those held by administrators, shall be reviewed at least every six months.",
+    "ruleSpecification1DE": "Prozesse sowie die damit verbundenen Aufgaben, Kompetenzen, Verantwortlichkeiten, Kontrollen sowie Kommunikationswege sind klar zu definieren und aufeinander abzustimmen. Berechtigungen und Kompetenzen sind nach dem Sparsamkeitsgrundsatz (Need-to-know-Prinzip) zu vergeben und bei Bedarf zeitnah anzupassen. Dies beinhaltet auch die regelmäßige und anlassbezogene Überprüfung von IT-Berechtigungen, Zeichnungsberechtigungen und sonstigen eingeräumten Kompetenzen innerhalb angemessener Fristen. Die Fristen orientieren sich dabei an der Bedeutung der Prozesse und, bei IT-Berechtigungen, dem Schutzbedarf verarbeiteter Informationen. Das gilt auch bezüglich der Schnittstellen zu wesentlichen Auslagerungen.",
+    "ruleSpecification2DE": "Überprüfung von Berechtigungen und Kompetenzen Zeichnungsberechtigungen in Verbindung mit Zahlungsverkehrskonten und wesentliche IT-Berechtigungen sind mindestens jährlich zu überprüfen, alle anderen mindestens alle drei Jahre. Besonders kritische IT-Berechtigungen, wie sie bspw. Administratoren aufweisen, sind mindestens halbjährlich zu überprüfen."
+  },
+  {
+    "name": "MaRisk AT 7.2 p. 1",
+    "topic": "Technical and organisational resources",
+    "parentRegulation": "MaRisk",
+    "chapter": 7,
+    "ruleSpecification1": "The scope and quality of the technical and organisational resources shall be based, in particular, on the internal operating needs, business activities and risk situation.",
+    "ruleSpecification2": "",
+    "ruleSpecification1DE": "Umfang und Qualität der technisch-organisatorischen Ausstattung haben sich insbesondere an betriebsinternen Erfordernissen, den Geschäftsaktivitäten sowie der Risikosituation zu orientieren.",
+    "ruleSpecification2DE": ""
+  },
+  {
+    "name": "MaRisk AT 7.2 p. 2",
+    "topic": "Technical and organisational resources",
+    "parentRegulation": "MaRisk",
+    "chapter": 7,
+    "ruleSpecification1": "The IT systems (hardware and software components) and the related IT processes shall ensure the integrity, availability, authenticity and confidentiality of the data. To this end, generally established standards shall apply to the arrangement of the IT systems and related IT processes; in particular, processes shall be established for appropriately allocating IT access rights to ensure that staff have only those rights that they need to perform their particular tasks; IT access rights may be collated in a role model. The suitability of the IT systems and related processes shall be regularly reviewed by the responsible organisational unit staff and IT staff.",
+    "ruleSpecification2": "Standards for IT management arrangements\nThese standards include, for example, the IT Baseline Protection manual (Grundschutz) issued by the Federal Office for Information Security (BSI) and the standard ISO/IEC 2700X of the International Organization for Standardization. The adherence to established standards does not mean that standard hardware or software must be used. In-house solutions are generally equally permissible.\n\nIT access rights\nThe IT access rights allocated to staff should not conflict with their assignment to a particular organisational unit. It should be ensured that, especially when granting access rights in conjunction with role models, the segregation of duties is observed and conflicts of interest are avoided.",
+    "ruleSpecification1DE": "Die IT-Systeme (Hardware- und Software-Komponenten), die zugehörigen IT-Prozesse und sonstige Bestandteile des Informationsverbundes müssen die Integrität, die Verfügbarkeit, die Authentizität sowie die Vertraulichkeit der Daten sicherstellen. Für diese Zwecke ist bei der Ausgestaltung der IT-Systeme und der zugehörigen IT-Prozesse grundsätzlich auf gängige Standards abzustellen, insbesondere sind Prozesse für eine angemessene IT-Berechtigungsvergabe einzurichten, die sicherstellen, dass jeder Mitarbeiter nur über die Rechte verfügt, die er für seine Tätigkeit benötigt; die Zusammenfassung von Berechtigungen in einem Rollenmodell ist möglich. Die Eignung der IT-Systeme und der zugehörigen Prozesse ist regelmäßig von den fachlich und technisch zuständigen Mitarbeitern zu überprüfen.",
+    "ruleSpecification2DE": "Informationsverbund\nZu einem Informationsverbund gehören bspw. geschäftsrelevante Informationen, Geschäfts- und Unterstützungsprozesse, IT-Systeme und die zugehörigen IT-Prozesse so- wie Netz- und Gebäudeinfrastrukturen.\n\nStandards zur Ausgestaltung der IT-Systeme\nZu solchen Standards zählen z. B. der IT-Grundschutz des Bundesamtes für Sicherheit in der Informationstechnik (BSI) und die internationalen Sicherheitsstandards ISO/IEC 270XX der International Organization for Standardization. Das Abstellen auf gängige Standards zielt nicht auf die Verwendung von Standardhardware bzw. -software ab. Eigenentwicklungen sind grundsätzlich ebenso möglich.\n\nZugriffsrechte\nDie eingerichteten Berechtigungen dürfen nicht im Widerspruch zur organisatorischen Zuordnung von Mitarbeitern stehen. Insbesondere bei Berechtigungsvergaben im Rahmen von Rollenmodellen ist darauf zu achten, dass Funktionstrennungen beibehalten bzw. Interessenkonflikte vermieden werden."
+  },
+  {
+    "name": "MaRisk AT 7.2 p. 3",
+    "topic": "Technical and organisational resources",
+    "parentRegulation": "MaRisk",
+    "chapter": 7,
+    "ruleSpecification1": "The IT systems shall be tested before their first use and after any material changes and approved by both the responsible organisational unit staff and IT staff. To this end, a standard process of development, testing, approval and implementation in the production processes shall be established. The production and testing environments shall be segregated.",
+    "ruleSpecification2": "Changes to IT systems\nThe assessment of the materiality of changes shall be based not on the extent of changes but on the impact they may have on the functioning of the IT system concerned.\n\nApproval by IT staff and organisational unit staff\nThe approval process carried out by the staff of the organisational unit and IT staff should focus on the suitability and appropriateness of the IT systems for the institution’s specific situation. Third-party certifications may be taken into account in the approval process but cannot substitute it entirely.",
+    "ruleSpecification1DE": "Die IT-Systeme sind vor ihrem erstmaligen Einsatz und nach wesentlichen Veränderungen zu testen und von den fachlich sowie auch von den technisch zuständigen Mitarbeitern abzunehmen. Hierfür ist ein Regelprozess der Entwicklung, des Testens, der Freigabe und der Implementierung in die Produktionsprozesse zu etablieren. Produktions- und Testumgebung sind dabei grundsätzlich voneinander zu trennen.",
+    "ruleSpecification2DE": "Veränderungen an IT-Systemen\nBei der Beurteilung der Wesentlichkeit von Veränderungen ist nicht auf den Umfang der Veränderungen, sondern auf die Auswirkungen, die eine Veränderung auf die Funktionsfähigkeit des betroffenen IT-Systems haben kann, abzustellen.\n\nAbnahme durch die technisch und fachlich zuständigen Mitarbeiter\nBei der Abnahme durch die fachlich und die technisch zuständigen Mitarbeiter steht die Eignung und Angemessenheit der IT-Systeme für die spezifische Situation des jeweiligen Instituts im Mittelpunkt. Gegebenenfalls vorliegende Testate Dritter können bei der Abnahme berücksichtigt werden, sie können die Abnahme jedoch nicht vollständig ersetzen."
+  },
+  {
+    "name": "MaRisk AT 7.2 p. 4",
+    "topic": "Technical and organisational resources",
+    "parentRegulation": "MaRisk",
+    "chapter": 7,
+    "ruleSpecification1": "In the case of IT risks, appropriate monitoring and management processes shall be set up, comprising, in particular, specification of IT risk criteria, identification of IT risks, determination of the required level of protection, derivation of protective measures for IT operations and specification of corresponding measures for risk handling and mitigation. For software procurement, the associated risks shall be appropriately assessed.",
+    "ruleSpecification2": "",
+    "ruleSpecification1DE": "Für IT-Risiken sind angemessene Überwachungs- und Steuerungsprozesse einzurichten, die insbesondere die Festlegung von IT-Risikokriterien, die Identifikation von IT- Risiken, die Festlegung des Schutzbedarfs, daraus abgeleitete Schutzmaßnahmen für den IT-Betrieb sowie die Festlegung entsprechender Maßnahmen zur Risikobehandlung und –minderung umfassen. Beim Bezug von Software sind die damit verbundenen Risiken angemessen zu bewerten.",
+    "ruleSpecification2DE": ""
+  },
+  {
+    "name": "MaRisk AT 7.2 p. 5",
+    "topic": "Technical and organisational resources",
+    "parentRegulation": "MaRisk",
+    "chapter": 7,
+    "ruleSpecification1": "The requirements of AT 7.2 shall also be observed when using applications developed internally by the organisational units (individual data processing, IDP) according to the criticality of the business processes supported and the importance of the application for these processes. Measures to safeguard data security shall be tailored to the protection requirements of the processed data.",
+    "ruleSpecification2": "",
+    "ruleSpecification1DE": "Die Anforderungen aus AT 7.2 sind auch beim Einsatz von durch Mitarbeiter des Fachbereichs entwickelten oder betriebenen Anwendungen (Individuelle Datenverarbeitung - „IDV“) entsprechend der Kritikalität der unterstützten Geschäftsprozesse und der Bedeutung der Anwendungen für diese Prozesse zu beachten. Die Festlegung von Maßnahmen zur Sicherstellung der Datensicherheit hat sich am Schutzbedarf der verarbeiteten Daten zu orientieren.",
+    "ruleSpecification2DE": ""
+  },
+  {
+    "name": "",
+    "topic": "",
+    "parentRegulation": "",
+    "chapter": "",
+    "ruleSpecification1": "",
+    "ruleSpecification2": "",
+    "ruleSpecification1DE": "",
+    "ruleSpecification2DE": ""
+  },
+  {
+    "name": "",
+    "topic": "",
+    "parentRegulation": "",
+    "chapter": "",
+    "ruleSpecification1": "",
+    "ruleSpecification2": "",
+    "ruleSpecification1DE": "",
+    "ruleSpecification2DE": ""
+  }
+]
