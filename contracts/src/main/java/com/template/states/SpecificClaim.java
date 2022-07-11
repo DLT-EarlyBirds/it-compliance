@@ -106,4 +106,8 @@ public class SpecificClaim implements LinearState {
     public List<LinearPointer<SpecificClaim>> getSupportingClaims() {
         return supportingClaims;
     }
+
+    public SecureHash getAttachmentID() {
+        return attachmentID;
+    }
 }
