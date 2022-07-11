@@ -48,10 +48,6 @@ public class AcceptClaimTemplateSuggestion {
 
                 final StateAndRef<ClaimTemplateSuggestion> input = getServiceHub().getVaultService().queryBy(ClaimTemplateSuggestion.class, inputCriteria).getStates().get(0);
                 builder.addInputState(input);
-            }
-            catch (IndexOutOfBoundsException e) {
-                throw new FlowException("ERROR: No ClaimTemplateSuggestion with provided ID found!");
-            }
 
             // Add all parties in the network
             final List<Party> involvedParties = new ArrayList<>(getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList()));
@@ -83,6 +79,12 @@ public class AcceptClaimTemplateSuggestion {
             SignedTransaction stx = subFlow(new CollectSignaturesFlow(signedTransaction, sessions));
 
             return subFlow(new FinalityFlow(stx, sessions));
+            }
+
+            catch (IndexOutOfBoundsException e) {
+                throw new FlowException("ERROR: No ClaimTemplateSuggestion with provided ID found!");
+            }
+
         }
     }
 
