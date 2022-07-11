@@ -1,6 +1,7 @@
 import React from "react";
 import { Table } from "antd";
 import regulationData from "../data/regulations.json";
+import CreateRegulation from "../components/CreateRegulation";
 
 const columns = [
   {
@@ -26,7 +27,12 @@ const columns = [
 ];
 
 function Regulation() {
-  return <Table columns={columns} dataSource={regulationData} />;
+  return (
+    <div>
+      <CreateRegulation />
+      <Table columns={columns} dataSource={regulationData} />
+    </div>
+  );
 }
 
 export default Regulation;

@@ -12,12 +12,14 @@ const App = () => {
   return (
     <>
       <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/regulation" element={<Regulation />} />
-        <Route path="/graph-regulation" element={<GraphRegulation />} />
-        <Route path="/claim-template" element={<ClaimTemplate />} />
-      </Routes>
+      <div className="mx-10">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/regulation" element={<Regulation />} />
+          <Route path="/graph-regulation" element={<GraphRegulation />} />
+          <Route path="/claim-template" element={<ClaimTemplate />} />
+        </Routes>
+      </div>
     </>
   );
 };
