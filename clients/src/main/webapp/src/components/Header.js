@@ -5,6 +5,7 @@ import {
   FileTextOutlined,
   OneToOneOutlined,
   HomeOutlined,
+  FormOutlined,
 } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
 
@@ -23,11 +24,14 @@ const Header = () => {
       <Menu.Item key="/graph-regulation" icon={<RadarChartOutlined />}>
         <Link to="/graph-regulation">Graph Regulation</Link>
       </Menu.Item>
-      <Menu.Item key="/regulation" icon={<OneToOneOutlined />}>
-        <Link to="/regulation">Regulations</Link>
+      <Menu.Item key="/regulations" icon={<OneToOneOutlined />}>
+        <Link to="/regulations">Regulations</Link>
       </Menu.Item>
-      <Menu.Item key="/claim-template" icon={<FileTextOutlined />}>
-        <Link to="/claim-template">Claim Templates</Link>
+      <Menu.Item key="/rules" icon={<FormOutlined />}>
+        <Link to="/rules">Rules</Link>
+      </Menu.Item>
+      <Menu.Item key="/claim-templates" icon={<FileTextOutlined />}>
+        <Link to="/claim-templates">Claim Templates</Link>
       </Menu.Item>
     </Menu>
   );
