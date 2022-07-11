@@ -43,17 +43,13 @@ public class SpecificClaimContract implements Contract {
                 require.using("The output of Claim must have a name value", !output.getName().equals(""));
                 return null;
             });
-        } else if (commandData instanceof Commands.AddEvidence) {
 
-            requireThat(require -> {
-                return null;
-            });
-        } else if (commandData instanceof Commands.AddSupportingClaim) {
-
-            requireThat(require -> {
-                return null;
-            });
         } else if (commandData instanceof Commands.ResubmitClaim) {
+
+            requireThat(require -> {
+                return null;
+            });
+        } else if (commandData instanceof Commands.UpdateSpecificClaim) {
 
             requireThat(require -> {
                 return null;
@@ -66,12 +62,9 @@ public class SpecificClaimContract implements Contract {
         //In our hello-world app, We will only have one command.
         class CreateClaim implements Commands {
         }
-        class AddEvidence implements Commands {
-        }
-        class AddSupportingClaim implements  Commands {
-
-        }
         class ResubmitClaim implements Commands {
+        }
+        class UpdateSpecificClaim implements Commands {
         }
     }
 }

@@ -3,6 +3,7 @@ package com.compliance.flows;
 import co.paralleluniverse.fibers.Suspendable;
 import com.compliance.contracts.RegulationContract;
 import com.compliance.states.Regulation;
+import net.corda.core.contracts.LinearState;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.*;
@@ -25,7 +26,6 @@ public class UpdateRegulation {
     @InitiatingFlow
     @StartableByRPC
     public static class UpdateRegulationInitiator extends FlowLogic<SignedTransaction>{
-        // Private variables
 
         private final UniqueIdentifier linearId;
         private final String name;
@@ -33,7 +33,6 @@ public class UpdateRegulation {
         private final String version;
         private final Date releaseDate;
 
-        //public constructor
         public UpdateRegulationInitiator(UniqueIdentifier linearId, String name, String description, String version, Date releaseDate) {
             this.linearId = linearId;
             this.version = version;
@@ -41,13 +40,13 @@ public class UpdateRegulation {
             this.description = description;
             this.name = name;
         }
-
         @Override
         @Suspendable
         public SignedTransaction call() throws FlowException {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
+            // Use the same linearID as the input Regulation
             final Regulation output = new Regulation(linearId, name, description, version, releaseDate, this.getOurIdentity());
 
             QueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria()
@@ -61,7 +60,8 @@ public class UpdateRegulation {
 
             builder.addInputState(input);
             builder.addOutputState(output);
-            builder.addCommand(new RegulationContract.Commands.CreateRegulation(), getOurIdentity().getOwningKey());
+
+            builder.addCommand(new RegulationContract.Commands.UpdateRegulation(), getOurIdentity().getOwningKey());
 
             // Verify that the transaction is valid.
             builder.verify(getServiceHub());

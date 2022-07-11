@@ -26,6 +26,8 @@ public class CreateSpecificClaim {
 
         private final String name;
         private SecureHash attachmentID;
+
+        private final String description;
         private final Party supervisorAuthority;
 
         private final UniqueIdentifier claimTemplateLinearId;
@@ -34,11 +36,13 @@ public class CreateSpecificClaim {
 
         public CreateSpecificClaimInitiator(
                 String name,
+                String description,
                 Party supervisoryAuthority,
                 UniqueIdentifier claimTemplateLinearId,
                 List<UniqueIdentifier> supportingClaimsLinearIds
         ) {
             this.name = name;
+            this.description = description;
             this.supervisorAuthority = supervisoryAuthority;
             this.claimTemplateLinearId = claimTemplateLinearId;
             this.supportingClaimsLinearIds = supportingClaimsLinearIds;
@@ -46,12 +50,14 @@ public class CreateSpecificClaim {
 
         public CreateSpecificClaimInitiator(
                 String name,
+                String description,
                 Party supervisoryAuthority,
                 UniqueIdentifier claimTemplateLinearId,
                 List<UniqueIdentifier> supportingClaimsLinearIds,
                 SecureHash attachmentID
         ) {
             this.name = name;
+            this.description = description;
             this.attachmentID = attachmentID;
             this.supervisorAuthority = supervisoryAuthority;
             this.claimTemplateLinearId = claimTemplateLinearId;
@@ -68,7 +74,9 @@ public class CreateSpecificClaim {
 
             if (this.attachmentID != null) {
                 SpecificClaim newClaim = new SpecificClaim(
+                        new UniqueIdentifier(),
                         this.name,
+                        this.description,
                         this.getOurIdentity(),
                         this.supervisorAuthority,
                         new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class),
@@ -89,7 +97,9 @@ public class CreateSpecificClaim {
 
             else{
                 SpecificClaim newClaim = new SpecificClaim(
+                        new UniqueIdentifier(),
                         this.name,
+                        this.description,
                         this.getOurIdentity(),
                         this.supervisorAuthority,
                         new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class),

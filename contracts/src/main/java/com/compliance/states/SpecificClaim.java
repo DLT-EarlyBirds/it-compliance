@@ -28,6 +28,7 @@ public class SpecificClaim implements LinearState {
 
     private SecureHash attachmentID;
 
+    private final String description;
     @NotNull
     private final Party financialServiceProvider;
     @NotNull
@@ -42,34 +43,47 @@ public class SpecificClaim implements LinearState {
 
 
     /* Constructor of your Corda state */
-    public SpecificClaim(String name, @NotNull Party financialServiceProvider, @NotNull Party supervisorAuthority, LinearPointer<ClaimTemplate> claimTemplate,
+    public SpecificClaim(UniqueIdentifier linearId,
+                         String name,
+                         String description,
+                         @NotNull Party financialServiceProvider,
+                         @NotNull Party supervisorAuthority,
+                         LinearPointer<ClaimTemplate> claimTemplate,
                          List<LinearPointer<SpecificClaim>> supportingClaims) {
-        this.linearId = new UniqueIdentifier();
-        this.financialServiceProvider = financialServiceProvider;
-        this.supervisorAuthority = supervisorAuthority;
         this.name = name;
+        this.linearId = linearId;
+        this.description = description;
         this.claimTemplate = claimTemplate;
         this.supportingClaims = supportingClaims;
+        this.supervisorAuthority = supervisorAuthority;
+        this.financialServiceProvider = financialServiceProvider;
 
         this.participants = new ArrayList<>();
-        this.participants.add(financialServiceProvider);
         this.participants.add(supervisorAuthority);
+        this.participants.add(financialServiceProvider);
     }
 
     @ConstructorForDeserialization
-    public SpecificClaim(String name, @NotNull Party financialServiceProvider, @NotNull Party supervisorAuthority, LinearPointer<ClaimTemplate> claimTemplate,
-                         List<LinearPointer<SpecificClaim>> supportingClaims, SecureHash attachmentID) {
-        this.linearId = new UniqueIdentifier();
-        this.financialServiceProvider = financialServiceProvider;
-        this.supervisorAuthority = supervisorAuthority;
+    public SpecificClaim(UniqueIdentifier linearId,
+                         String name,
+                         String description,
+                         @NotNull Party financialServiceProvider,
+                         @NotNull Party supervisorAuthority,
+                         LinearPointer<ClaimTemplate> claimTemplate,
+                         List<LinearPointer<SpecificClaim>> supportingClaims,
+                         SecureHash attachmentID) {
         this.name = name;
+        this.linearId = linearId;
+        this.description = description;
+        this.attachmentID = attachmentID;
         this.claimTemplate = claimTemplate;
         this.supportingClaims = supportingClaims;
-        this.attachmentID = attachmentID;
+        this.supervisorAuthority = supervisorAuthority;
+        this.financialServiceProvider = financialServiceProvider;
 
         this.participants = new ArrayList<>();
-        this.participants.add(financialServiceProvider);
         this.participants.add(supervisorAuthority);
+        this.participants.add(financialServiceProvider);
     }
 
     @Override
@@ -104,5 +118,9 @@ public class SpecificClaim implements LinearState {
 
     public List<LinearPointer<SpecificClaim>> getSupportingClaims() {
         return supportingClaims;
+    }
+
+    public SecureHash getAttachmentID() {
+        return attachmentID;
     }
 }
