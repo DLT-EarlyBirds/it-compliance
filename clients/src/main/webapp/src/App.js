@@ -1,22 +1,29 @@
-import logo from "./logo.svg";
-import "./App.css";
+import React from "react";
+import "antd/dist/antd.min.css";
+import "./index.css";
+import Header from "./components/Header";
+import Regulation from "./views/Regulation";
+import GraphRegulation from "./views/GraphRegulation";
+import Home from "./views/Home";
+import Rule from "./views/Rule";
+import ClaimTemplate from "./views/ClaimTemplate";
+import { Routes, Route } from "react-router-dom";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          IT compliance
-        </a>
-      </header>
-    </div>
+    <>
+      <Header />
+      <div className="mx-10">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/regulations" element={<Regulation />} />
+          <Route path="/rules" element={<Rule />} />
+          <Route path="/graph-regulations" element={<GraphRegulation />} />
+          <Route path="/claim-templates" element={<ClaimTemplate />} />
+        </Routes>
+      </div>
+    </>
   );
-}
+};
 
 export default App;
