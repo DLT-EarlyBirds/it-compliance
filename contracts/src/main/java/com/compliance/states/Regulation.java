@@ -36,6 +36,10 @@ public class Regulation implements LinearState {
     @NotNull
     private final Date releaseDate;
     // The issuer who submits the regulation
+
+    @NotNull
+    private final boolean isDeprecated;
+
     @NotNull
     private final Party issuer;
     private final List<AbstractParty> participants;
@@ -43,8 +47,9 @@ public class Regulation implements LinearState {
 
     /* Constructor of RegulationDescription */
     @ConstructorForDeserialization
-    public Regulation(@NotNull UniqueIdentifier linearId, @NotNull String name, @NotNull String description, @NotNull String version, @NotNull Date releaseDate, @NotNull Party issuer) {
+    public Regulation(@NotNull UniqueIdentifier linearId, @NotNull String name, @NotNull String description, @NotNull String version, @NotNull Date releaseDate, @NotNull Party issuer, @NotNull boolean isDeprecated) {
         this.linearId = linearId;
+        this.isDeprecated = isDeprecated;
         this.name = name;
         this.description = description;
         this.version = version;
@@ -61,6 +66,7 @@ public class Regulation implements LinearState {
         this.name = name;
         this.description = description;
         this.issuer = issuer;
+        this.isDeprecated = false;
         this.participants = new ArrayList<>();
         this.participants.add(issuer);
     }
@@ -102,4 +108,10 @@ public class Regulation implements LinearState {
     public Date getReleaseDate() {
         return releaseDate;
     }
+
+    @NotNull
+    public boolean getIsDeprecated() {
+        return isDeprecated;
+    }
+
 }

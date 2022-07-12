@@ -57,7 +57,8 @@ public class UpdateRule {
                         .withStatus(Vault.StateStatus.UNCONSUMED)
                         .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
 
-                final StateAndRef<Rule> input = getServiceHub().getVaultService().queryBy(Rule.class, inputCriteria).getStates().get(0);
+            final StateAndRef<Rule> input = getServiceHub().getVaultService().queryBy(Rule.class, inputCriteria).getStates().get(0);
+            Rule originalRule = input.getState().getData();
                 builder.addInputState(input);
             }
             catch (IndexOutOfBoundsException e) {
@@ -81,7 +82,7 @@ public class UpdateRule {
             // Remove notaries
             involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
 
-            final Rule output = new Rule(linearId, name, ruleSpecification, this.getOurIdentity(), involvedParties, new LinearPointer<>(parentRegulationLinearId, Regulation.class));
+            final Rule output = new Rule(linearId, name, ruleSpecification, this.getOurIdentity(), involvedParties, new LinearPointer<>(parentRegulationLinearId, Regulation.class), originalRule.getIsDeprecated());
 
 
             builder.addOutputState(output);

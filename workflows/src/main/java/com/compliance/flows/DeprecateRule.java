@@ -1,11 +1,9 @@
 package com.compliance.flows;
 
 import co.paralleluniverse.fibers.Suspendable;
-import com.compliance.contracts.ClaimTemplateContract;
-import com.compliance.states.ClaimTemplate;
-import com.compliance.states.ClaimTemplateSuggestion;
-import com.compliance.states.Regulation;
+import com.compliance.contracts.RuleContract;
 import com.compliance.states.Rule;
+import com.compliance.states.Regulation;
 import net.corda.core.contracts.LinearPointer;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
@@ -21,16 +19,16 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class AcceptClaimTemplateSuggestion {
+public class DeprecateRule {
 
     @InitiatingFlow
     @StartableByRPC
-    public static class AcceptClaimTemplateSuggestionInitiator extends FlowLogic<SignedTransaction> {
+    public static class DeprecateRuleInitiator extends FlowLogic<SignedTransaction> {
 
         @NotNull
         private final UniqueIdentifier linearId;
 
-        public AcceptClaimTemplateSuggestionInitiator(@NotNull UniqueIdentifier linearId) {
+        public DeprecateRuleInitiator(UniqueIdentifier linearId) {
             this.linearId = linearId;
         }
 
@@ -39,17 +37,15 @@ public class AcceptClaimTemplateSuggestion {
         public SignedTransaction call() throws FlowException {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
-            final TransactionBuilder builder = new TransactionBuilder(notary);
-            try {
-                QueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria()
-                        .withUuid(Collections.singletonList(UUID.fromString(linearId.toString())))
-                        .withStatus(Vault.StateStatus.UNCONSUMED)
-                        .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
 
-                final StateAndRef<ClaimTemplateSuggestion> input = getServiceHub().getVaultService().queryBy(ClaimTemplateSuggestion.class, inputCriteria).getStates().get(0);
-                builder.addInputState(input);
+            QueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria()
+                    .withUuid(Collections.singletonList(UUID.fromString(linearId.toString())))
+                    .withStatus(Vault.StateStatus.UNCONSUMED)
+                    .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
 
-            // Add all parties in the network
+            final StateAndRef<Rule> input = getServiceHub().getVaultService().queryBy(Rule.class, inputCriteria).getStates().get(0);
+            Rule originalRule = input.getState().getData();
+
             final List<Party> involvedParties = new ArrayList<>(getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList()));
 
             // Remove yourself
@@ -57,13 +53,13 @@ public class AcceptClaimTemplateSuggestion {
             // Remove notaries
             involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
 
-            ClaimTemplateSuggestion originalClaimTemplateSuggestion = (ClaimTemplateSuggestion) input.getState().getData();
+            final Rule output = new Rule(linearId, originalRule.getName(), originalRule.getRuleSpecification(), this.getOurIdentity(), involvedParties, originalRule.getParentRegulation(), true);
 
-            final ClaimTemplate output = new ClaimTemplate(originalClaimTemplateSuggestion.getName(), originalClaimTemplateSuggestion.getTemplateDescription(), this.getOurIdentity(), involvedParties, originalClaimTemplateSuggestion.getRule());
+            final TransactionBuilder builder = new TransactionBuilder(notary);
 
-
+            builder.addInputState(input);
             builder.addOutputState(output);
-            builder.addCommand(new ClaimTemplateContract.Commands.AcceptClaimTemplateSuggestion(),
+            builder.addCommand(new RuleContract.Commands.DeprecateRule(),
                     involvedParties.stream().map(Party::getOwningKey).collect(Collectors.toList())
             );
 
@@ -79,22 +75,17 @@ public class AcceptClaimTemplateSuggestion {
             SignedTransaction stx = subFlow(new CollectSignaturesFlow(signedTransaction, sessions));
 
             return subFlow(new FinalityFlow(stx, sessions));
-            }
-
-            catch (IndexOutOfBoundsException e) {
-                throw new FlowException("ERROR: No ClaimTemplateSuggestion with provided ID found!");
-            }
-
         }
     }
 
-    @InitiatedBy(AcceptClaimTemplateSuggestion.AcceptClaimTemplateSuggestionInitiator.class)
-    public static class AcceptClaimTemplateSuggestionResponder extends FlowLogic<Void> {
+
+    @InitiatedBy(DeprecateRule.DeprecateRuleInitiator.class)
+    public static class DeprecateRuleResponder extends FlowLogic<Void> {
         //private variable
         private final FlowSession counterpartySession;
 
         //Constructor
-        public AcceptClaimTemplateSuggestionResponder(FlowSession counterpartySession) {
+        public DeprecateRuleResponder(FlowSession counterpartySession) {
             this.counterpartySession = counterpartySession;
         }
 
@@ -121,5 +112,4 @@ public class AcceptClaimTemplateSuggestion {
         }
     }
 
-    
 }

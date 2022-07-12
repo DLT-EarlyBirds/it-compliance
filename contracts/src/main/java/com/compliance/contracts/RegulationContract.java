@@ -30,11 +30,14 @@ public class RegulationContract implements Contract {
             //Retrieve the output state of the transaction
             Regulation output = tx.outputsOfType(Regulation.class).get(0);
 
-            //No verification required!
             requireThat(require -> {
                 require.using(
                         "The regulation is not empty",
                         !Objects.equals(output.getName(), "") && !Objects.equals(output.getDescription(), "")
+                );
+                require.using(
+                        "The regulation is not already deprecated",
+                        !output.getIsDeprecated()
                 );
                 return null;
             });
@@ -55,9 +58,11 @@ public class RegulationContract implements Contract {
             });
         } else if (commandData instanceof Commands.DeprecateRegulation) {
             Regulation input = tx.inputsOfType(Regulation.class).get(0);
+            Regulation output = tx.outputsOfType(Regulation.class).get(0);
 
             requireThat(require -> {
-
+              require.using("The regulation input is not deprecated", !input.getIsDeprecated());
+              require.using("The regulation output is deprecated", output.getIsDeprecated());
                 return null;
             });
         }

@@ -4,7 +4,6 @@ import co.paralleluniverse.fibers.Suspendable;
 import com.compliance.contracts.SpecificClaimContract;
 import com.compliance.states.ClaimTemplate;
 import com.compliance.states.SpecificClaim;
-import com.compliance.states.Rule;
 import net.corda.core.contracts.LinearPointer;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
@@ -37,7 +36,7 @@ public class UpdateSpecificClaim {
 
         private final UniqueIdentifier claimTemplateLinearId;
 
-        private final Party supervisorAuthority;
+        private final Party supervisoryAuthority;
 
         // The specification that details what need to be fulfilled
         private final String description;
@@ -53,7 +52,7 @@ public class UpdateSpecificClaim {
             this.name = name;
             this.specificClaimLinearId = specificClaimLinearId;
             this.description = description;
-            this.supervisorAuthority = supervisoryAuthority;
+            this.supervisoryAuthority = supervisoryAuthority;
             this.claimTemplateLinearId = claimTemplateLinearId;
             this.supportingClaimsLinearIds = supportingClaimsLinearIds;
         }
@@ -70,7 +69,7 @@ public class UpdateSpecificClaim {
             this.name = name;
             this.specificClaimLinearId = specificClaimLinearId;
             this.description = description;
-            this.supervisorAuthority = supervisoryAuthority;
+            this.supervisoryAuthority = supervisoryAuthority;
             this.claimTemplateLinearId = claimTemplateLinearId;
             this.supportingClaimsLinearIds = supportingClaimsLinearIds;
             this.attachmentID = attachmentID;
@@ -105,7 +104,7 @@ public class UpdateSpecificClaim {
                         this.name,
                         this.description,
                         this.getOurIdentity(),
-                        this.supervisorAuthority,
+                        this.supervisoryAuthority,
                         new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class),
                         this.supportingClaimsLinearIds
                                 .stream()
@@ -125,7 +124,7 @@ public class UpdateSpecificClaim {
                         this.name,
                         this.description,
                         this.getOurIdentity(),
-                        this.supervisorAuthority,
+                        this.supervisoryAuthority,
                         new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class),
                         this.supportingClaimsLinearIds
                                 .stream()
@@ -145,7 +144,7 @@ public class UpdateSpecificClaim {
                     new SpecificClaimContract.Commands.UpdateSpecificClaim(),
                     Arrays.asList(
                             getOurIdentity().getOwningKey(),
-                            supervisorAuthority.getOwningKey()
+                            supervisoryAuthority.getOwningKey()
                     )
             );
 
@@ -157,9 +156,10 @@ public class UpdateSpecificClaim {
             final SignedTransaction partSignedTx = getServiceHub().signInitialTransaction(builder);
 
             // Send the state to the counterparty, and receive it back with their signature.
-            FlowSession otherPartySession = initiateFlow(supervisorAuthority);
+            FlowSession otherPartySession = initiateFlow(supervisoryAuthority);
             final SignedTransaction fullySignedTx = subFlow(
-                    new CollectSignaturesFlow(partSignedTx, Collections.singletonList(otherPartySession)));
+                    new CollectSignaturesFlow(partSignedTx, Collections.singletonList(otherPartySession))
+            );
 
             // Notarise and record the transaction in both parties' vaults.
             return subFlow(new FinalityFlow(fullySignedTx, Collections.singletonList(otherPartySession)));

@@ -52,7 +52,7 @@ public class CreateRule {
             // Remove notaries
             involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
 
-            final Rule output = new Rule(new UniqueIdentifier(), name, ruleSpecification, this.getOurIdentity(), involvedParties, new LinearPointer<>(parentRegulationLinearId, Regulation.class));
+            final Rule output = new Rule( name, ruleSpecification, this.getOurIdentity(), involvedParties, new LinearPointer<>(parentRegulationLinearId, Regulation.class));
 
             final TransactionBuilder builder = new TransactionBuilder(notary);
 
