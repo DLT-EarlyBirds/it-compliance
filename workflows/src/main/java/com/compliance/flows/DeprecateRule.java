@@ -44,9 +44,10 @@ public class DeprecateRule {
                     .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
 
             final StateAndRef<Rule> input = getServiceHub().getVaultService().queryBy(Rule.class, inputCriteria).getStates().get(0);
-            Rule originalRule = (Rule) input.getState().getData();
+            Rule originalRule = input.getState().getData();
 
             final List<Party> involvedParties = new ArrayList<>(getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList()));
+
             // Remove yourself
             involvedParties.remove(getOurIdentity());
             // Remove notaries

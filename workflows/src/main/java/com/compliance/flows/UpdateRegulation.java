@@ -53,7 +53,7 @@ public class UpdateRegulation {
                     .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
 
             final StateAndRef<Regulation> input = getServiceHub().getVaultService().queryBy(Regulation.class, inputCriteria).getStates().get(0);
-            Regulation originalRegulation = (Regulation) input.getState().getData();
+            Regulation originalRegulation = input.getState().getData();
 
             // Use the same linearID as the input Regulation
             final Regulation output = new Regulation(linearId, name, description, version, releaseDate, this.getOurIdentity(), originalRegulation.getIsDeprecated());
