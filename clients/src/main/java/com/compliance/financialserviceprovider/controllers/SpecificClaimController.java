@@ -52,7 +52,7 @@ public class SpecificClaimController {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
                 null,
                 Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)),
-                Vault.StateStatus.ALL,
+                Vault.StateStatus.UNCONSUMED,
                 Collections.singleton(SpecificClaim.class)
         );
         return proxy
@@ -71,7 +71,7 @@ public class SpecificClaimController {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
                 null,
                 Collections.singletonList(id),
-                Vault.StateStatus.ALL,
+                Vault.StateStatus.UNCONSUMED,
                 Collections.singleton(SpecificClaim.class));
         // Check if state with that linear ID exists
         // Todo: Should throw custom exception if no regulation with the ID exists
