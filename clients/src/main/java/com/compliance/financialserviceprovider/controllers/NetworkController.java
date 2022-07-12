@@ -1,6 +1,6 @@
-package com.compliance.finacialserviceprovider;
+package com.compliance.financialserviceprovider.controllers;
 
-import net.corda.core.contracts.ContractState;
+import com.compliance.supervisoryauthority.NodeRPCConnection;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.messaging.CordaRPCOps;
 import net.corda.core.node.NodeInfo;
@@ -26,22 +26,16 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
  * Define your API endpoints here.
  */
 @RestController
-@RequestMapping("/") // The paths for HTTP requests are relative to this base path.
-public class Controller {
+@RequestMapping("/network") // The paths for HTTP requests are relative to this base path.
+public class NetworkController {
     private final CordaRPCOps proxy;
     private final CordaX500Name me;
-    private final static Logger logger = LoggerFactory.getLogger(Controller.class);
+    private final static Logger logger = LoggerFactory.getLogger(RuleController.class);
 
-    public Controller(NodeRPCConnection rpc) {
+    public NetworkController(NodeRPCConnection rpc) {
         this.proxy = rpc.proxy;
         this.me = proxy.nodeInfo().getLegalIdentities().get(0).getName();
     }
-
-    @GetMapping(value = "/templateendpoint", produces = "text/plain")
-    private String templateendpoint() {
-        return "Define an endpoint here.";
-    }
-
 
     /**
      * Helpers for filtering the network map cache.
@@ -63,7 +57,6 @@ public class Controller {
     private boolean isNetworkMap(NodeInfo nodeInfo) {
         return nodeInfo.getLegalIdentities().get(0).getName().getOrganisation().equals("Network Map Service");
     }
-
 
     @GetMapping(value = "/status", produces = TEXT_PLAIN_VALUE)
     private String status() {
@@ -113,11 +106,6 @@ public class Controller {
     @GetMapping(value = "/flows", produces = TEXT_PLAIN_VALUE)
     private String flows() {
         return proxy.registeredFlows().toString();
-    }
-
-    @GetMapping(value = "/states", produces = TEXT_PLAIN_VALUE)
-    private String states() {
-        return proxy.vaultQuery(ContractState.class).getStates().toString();
     }
 
     @GetMapping(value = "/me", produces = APPLICATION_JSON_VALUE)
