@@ -1,12 +1,11 @@
 package com.compliance.auditor.controllers;
 
 
-import com.compliance.financialserviceprovider.models.ClaimTemplateSuggestionDTO;
-import com.compliance.flows.AcceptClaimTemplateSuggestion;
+import com.compliance.auditor.models.ClaimTemplateSuggestionDTO;
 import com.compliance.flows.CreateClaimTemplateSuggestion;
 import com.compliance.states.ClaimTemplate;
 import com.compliance.states.ClaimTemplateSuggestion;
-import com.compliance.supervisoryauthority.NodeRPCConnection;
+import com.compliance.auditor.NodeRPCConnection;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.messaging.CordaRPCOps;
 import net.corda.core.node.services.Vault;

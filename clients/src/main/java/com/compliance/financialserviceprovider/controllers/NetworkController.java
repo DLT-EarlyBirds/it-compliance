@@ -1,6 +1,6 @@
 package com.compliance.financialserviceprovider.controllers;
 
-import com.compliance.supervisoryauthority.NodeRPCConnection;
+import com.compliance.financialserviceprovider.NodeRPCConnection;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.messaging.CordaRPCOps;
 import net.corda.core.node.NodeInfo;

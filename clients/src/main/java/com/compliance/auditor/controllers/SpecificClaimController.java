@@ -1,7 +1,7 @@
 package com.compliance.auditor.controllers;
 
 import com.compliance.states.SpecificClaim;
-import com.compliance.supervisoryauthority.NodeRPCConnection;
+import com.compliance.auditor.NodeRPCConnection;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.Party;
 import net.corda.core.messaging.CordaRPCOps;
