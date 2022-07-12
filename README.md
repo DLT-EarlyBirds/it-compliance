@@ -55,6 +55,14 @@ The username is already provided with `user1`, the respective password is `test`
 
 `run vaultQuery contractStateType: com.compliance.states.ClaimTemplate`
 
+## Claim Template Suggestion Flow
+`flow start CreateClaimTemplateSuggestion name: TemplateSuggestion, description: This is template suggestion, supervisoryAuthority: SupervisoryAuthority, ruleLinearId: <ruleId>`
+
+`run vaultQuery contractStateType: com.compliance.states.ClaimTemplateSuggestion`
+
+## Accept Claim Template Suggestion Flow
+`flow start AcceptClaimTemplateSuggestion linearId: <claimTemplateSuggestionId>`
+
 ## SpecificClaim Flow 
 
 ### Without referencing an attachment:

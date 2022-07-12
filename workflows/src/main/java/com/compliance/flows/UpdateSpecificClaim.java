@@ -37,7 +37,7 @@ public class UpdateSpecificClaim {
         private final UniqueIdentifier claimTemplateLinearId;
 
         private final Party supervisoryAuthority;
-        
+
         // The specification that details what need to be fulfilled
         private final String description;
 
@@ -131,16 +131,17 @@ public class UpdateSpecificClaim {
                                 )
                                 .collect(Collectors.toList())
                 );
-                builder.addOutputState(output);
-                builder.addAttachment(attachmentID);
-                builder.addCommand(
-                        new SpecificClaimContract.Commands.CreateClaim(),
-                        Arrays.asList(
-                                getOurIdentity().getOwningKey(),
-                                supervisoryAuthority.getOwningKey()
-                        )
-                );
             }
+
+            builder.addOutputState(output);
+            builder.addAttachment(attachmentID);
+            builder.addCommand(
+                    new SpecificClaimContract.Commands.UpdateSpecificClaim(),
+                    Arrays.asList(
+                            getOurIdentity().getOwningKey(),
+                            supervisoryAuthority.getOwningKey()
+                    )
+            );
 
 
             // Verify that the transaction is valid.

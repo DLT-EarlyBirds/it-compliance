@@ -51,7 +51,10 @@ public class ClaimTemplateContract implements Contract {
             ClaimTemplate input = tx.inputsOfType(ClaimTemplate.class).get(0);
 
             requireThat(require -> {
-
+                return null;
+            });
+        } else if (commandData instanceof Commands.AcceptClaimTemplateSuggestion) {
+            requireThat(require -> {
                 return null;
             });
         }
@@ -64,6 +67,9 @@ public class ClaimTemplateContract implements Contract {
         class UpdateClaimTemplate implements Commands {
         }
         class DeprecateClaimTemplate implements Commands {
+
+        }
+        class AcceptClaimTemplateSuggestion implements Commands{
 
         }
     }
