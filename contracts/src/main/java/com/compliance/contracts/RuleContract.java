@@ -34,7 +34,7 @@ public class RuleContract implements Contract {
             Rule output = tx.outputsOfType(Rule.class).get(0);
             // Fetch the parent regulation via the linear pointer.
             StateAndRef<Regulation> parentRegulationStateAndRef = output.getParentRegulation().resolve(tx);
-            Regulation parentRegulation = (Regulation) parentRegulationStateAndRef.getState().getData();
+            Regulation parentRegulation = parentRegulationStateAndRef.getState().getData();
 
             requireThat(require -> {
                 require.using("The rule is not empty", !Objects.equals(output.getName(), "") && !Objects.equals(output.getRuleSpecification(), ""));
@@ -48,7 +48,7 @@ public class RuleContract implements Contract {
             Rule output = tx.outputsOfType(Rule.class).get(0);
             // Fetch the parent regulation via the linear pointer.
             StateAndRef<Regulation> parentRegulationStateAndRef =  output.getParentRegulation().resolve(tx);
-            Regulation parentRegulation = (Regulation) parentRegulationStateAndRef.getState().getData();
+            Regulation parentRegulation = parentRegulationStateAndRef.getState().getData();
 
             Rule input = tx.inputsOfType(Rule.class).get(0);
 

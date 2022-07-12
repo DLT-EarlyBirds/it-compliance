@@ -54,7 +54,7 @@ public class AcceptClaimTemplateSuggestion {
             // Remove notaries
             involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
 
-            ClaimTemplateSuggestion originalClaimTemplateSuggestion = (ClaimTemplateSuggestion) input.getState().getData();
+            ClaimTemplateSuggestion originalClaimTemplateSuggestion = input.getState().getData();
 
             final ClaimTemplate output = new ClaimTemplate(originalClaimTemplateSuggestion.getName(), originalClaimTemplateSuggestion.getTemplateDescription(), this.getOurIdentity(), involvedParties, originalClaimTemplateSuggestion.getRule());
 
