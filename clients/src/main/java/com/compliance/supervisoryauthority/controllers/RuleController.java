@@ -88,8 +88,7 @@ public class RuleController {
                 CreateRule.CreateRuleInitiator.class,
                 ruleDTO.getName(),
                 ruleDTO.getRuleSpecification(),
-                UniqueIdentifier.Companion.fromString(ruleDTO.getParentRegulation()),
-                new Date()
+                UniqueIdentifier.Companion.fromString(ruleDTO.getParentRegulation())
         );
 
         List<Rule> rules = proxy
@@ -100,7 +99,8 @@ public class RuleController {
                         ruleStateAndRef -> ruleStateAndRef.getState().getData())
                 .collect(Collectors.toList());
 
-        // Return regulation linear ID
+        rules.forEach(rule -> logger.info(rule.getName()));
+
         return rules
                 .stream()
                 .filter(
