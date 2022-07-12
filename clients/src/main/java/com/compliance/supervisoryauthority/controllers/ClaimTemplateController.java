@@ -2,9 +2,11 @@ package com.compliance.supervisoryauthority.controllers;
 
 
 
+import com.compliance.flows.AcceptClaimTemplateSuggestion;
 import com.compliance.flows.CreateClaimTemplate;
 import com.compliance.flows.UpdateClaimTemplate;
 import com.compliance.states.ClaimTemplate;
+import com.compliance.states.ClaimTemplateSuggestion;
 import com.compliance.supervisoryauthority.NodeRPCConnection;
 import com.compliance.supervisoryauthority.models.ClaimTemplateDTO;
 import net.corda.core.contracts.UniqueIdentifier;
@@ -107,5 +109,84 @@ public class ClaimTemplateController {
                 )
                 .collect(Collectors.toList())
                 .get(0);
+    }
+
+    @GetMapping(value = "/suggestions/", produces = APPLICATION_JSON_VALUE)
+    private List<ClaimTemplateSuggestion> getAllSuggestions() {
+        return proxy
+                .vaultQuery(ClaimTemplateSuggestion.class)
+                .getStates()
+                .stream()
+                .map(
+                        claimTemplateSuggestionStateAndRef -> claimTemplateSuggestionStateAndRef.getState().getData()
+                )
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping(value = "/suggestions/{linearId}", produces = APPLICATION_JSON_VALUE)
+    private List<ClaimTemplateSuggestion> getSuggestionByLinearId(@PathVariable String linearId) {
+        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
+                null,
+                Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)),
+                Vault.StateStatus.ALL,
+                Collections.singleton(ClaimTemplate.class)
+        );
+        return proxy
+                .vaultQueryByCriteria(queryCriteria, ClaimTemplateSuggestion.class)
+                .getStates()
+                .stream()
+                .map(
+                        claimTemplateSuggestionStateAndRef -> claimTemplateSuggestionStateAndRef.getState().getData()
+                )
+                .collect(Collectors.toList());
+    }
+
+    @PostMapping("/suggestions/{linearId}")
+    private ClaimTemplate acceptSuggestion(@PathVariable String linearId) throws ExecutionException, InterruptedException {
+        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
+                null,
+                Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)),
+                Vault.StateStatus.ALL,
+                Collections.singleton(ClaimTemplate.class)
+        );
+
+        ClaimTemplateSuggestion suggestion;
+
+        List<ClaimTemplateSuggestion> suggestions = proxy
+                .vaultQueryByCriteria(queryCriteria, ClaimTemplateSuggestion.class)
+                .getStates()
+                .stream()
+                .map(
+                        claimTemplateSuggestionStateAndRef -> claimTemplateSuggestionStateAndRef.getState().getData()
+                )
+                .collect(Collectors.toList());
+
+        if (!suggestions.isEmpty()) {
+
+            suggestion = suggestions.get(0);
+
+            proxy.startTrackedFlowDynamic(
+                    AcceptClaimTemplateSuggestion.AcceptClaimTemplateSuggestionInitiator.class,
+                    UniqueIdentifier.Companion.fromString(linearId)
+            ).getReturnValue().get();
+
+            List<ClaimTemplate> claimTemplates = proxy
+                    .vaultQuery(ClaimTemplate.class)
+                    .getStates()
+                    .stream()
+                    .map(
+                            ruleStateAndRef -> ruleStateAndRef.getState().getData())
+                    .collect(Collectors.toList());
+
+            // Return regulation linear ID
+            return claimTemplates
+                    .stream()
+                    .filter(
+                            claimTemplate -> claimTemplate.getName().equals(suggestion.getName()) && claimTemplate.getTemplateDescription().equals(suggestion.getTemplateDescription())
+                    )
+                    .collect(Collectors.toList())
+                    .get(0);
+
+        } else return null;
     }
 }
