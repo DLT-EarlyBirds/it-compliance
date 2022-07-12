@@ -24,7 +24,7 @@ public class ClaimTemplateDTO implements Serializable
     @JsonProperty("rule")
     private String rule;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
     private final static long serialVersionUID = -7129508973474007122L;
 
     /**

@@ -24,7 +24,7 @@ public class RuleDTO implements Serializable
     @JsonProperty("parentRegulation")
     private String parentRegulation;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
     private final static long serialVersionUID = -7129508973474007122L;
 
     /**
