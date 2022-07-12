@@ -27,12 +27,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/regulations") // The paths for HTTP requests are relative to this base path.
 public class RegulationController {
     private final CordaRPCOps proxy;
-    private final CordaX500Name me;
     private final static Logger logger = LoggerFactory.getLogger(RuleController.class);
 
     public RegulationController(NodeRPCConnection rpc) {
         this.proxy = rpc.proxy;
-        this.me = proxy.nodeInfo().getLegalIdentities().get(0).getName();
     }
 
     @GetMapping(value = "/", produces = APPLICATION_JSON_VALUE)
