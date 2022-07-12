@@ -19,6 +19,7 @@ import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -121,7 +122,7 @@ public class NetworkController {
         return myMap;
     }
 
-    @GetMapping(value = "/bootstrapGraph", produces = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/bootstrapGraph", produces = APPLICATION_JSON_VALUE)
     private void bootstrapGraph() {
         RegulationDTO mockRegulation1 = new RegulationDTO(
                 "",
