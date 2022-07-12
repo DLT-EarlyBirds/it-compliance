@@ -30,7 +30,7 @@ public class AcceptClaimTemplateSuggestion {
         @NotNull
         private final UniqueIdentifier linearId;
 
-        public AcceptClaimTemplateSuggestionInitiator(UniqueIdentifier linearId) {
+        public AcceptClaimTemplateSuggestionInitiator(@NotNull UniqueIdentifier linearId) {
             this.linearId = linearId;
         }
 

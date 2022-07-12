@@ -19,28 +19,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class UpdateRule {
+public class DeprecateRule {
 
     @InitiatingFlow
     @StartableByRPC
-    public static class UpdateRuleInitiator extends FlowLogic<SignedTransaction> {
+    public static class DeprecateRuleInitiator extends FlowLogic<SignedTransaction> {
+
         @NotNull
-        // Name of the rule
         private final UniqueIdentifier linearId;
 
-        private final String name;
-
-        // The specification that details what need to be fulfilled
-        private final String ruleSpecification;
-
-        private final UniqueIdentifier parentRegulationLinearId;
-
-
-        public UpdateRuleInitiator(UniqueIdentifier linearId, String name, String ruleSpecification, UniqueIdentifier parentRegulationLinearId) {
-            this.name = name;
+        public DeprecateRuleInitiator(UniqueIdentifier linearId) {
             this.linearId = linearId;
-            this.parentRegulationLinearId = parentRegulationLinearId;
-            this.ruleSpecification = ruleSpecification;
         }
 
         @Override
@@ -48,7 +37,6 @@ public class UpdateRule {
         public SignedTransaction call() throws FlowException {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
-
 
             QueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria()
                     .withUuid(Collections.singletonList(UUID.fromString(linearId.toString())))
@@ -58,30 +46,20 @@ public class UpdateRule {
             final StateAndRef<Rule> input = getServiceHub().getVaultService().queryBy(Rule.class, inputCriteria).getStates().get(0);
             Rule originalRule = input.getState().getData();
 
-            // Add all parties in the network
-            final List<Party> involvedParties = new ArrayList<>(
-                    getServiceHub()
-                            .getNetworkMapCache()
-                            .getAllNodes()
-                            .stream()
-                            .map(NodeInfo::getLegalIdentities)
-                            .collect(Collectors.toList())
-                            .stream()
-                            .flatMap(List::stream)
-                            .collect(Collectors.toList()));
+            final List<Party> involvedParties = new ArrayList<>(getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList()));
 
             // Remove yourself
             involvedParties.remove(getOurIdentity());
             // Remove notaries
             involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
 
-            final Rule output = new Rule(linearId, name, ruleSpecification, this.getOurIdentity(), involvedParties, new LinearPointer<>(parentRegulationLinearId, Regulation.class), originalRule.getIsDeprecated());
+            final Rule output = new Rule(linearId, originalRule.getName(), originalRule.getRuleSpecification(), this.getOurIdentity(), involvedParties, originalRule.getParentRegulation(), true);
 
             final TransactionBuilder builder = new TransactionBuilder(notary);
 
             builder.addInputState(input);
             builder.addOutputState(output);
-            builder.addCommand(new RuleContract.Commands.UpdateRule(),
+            builder.addCommand(new RuleContract.Commands.DeprecateRule(),
                     involvedParties.stream().map(Party::getOwningKey).collect(Collectors.toList())
             );
 
@@ -101,13 +79,13 @@ public class UpdateRule {
     }
 
 
-    @InitiatedBy(UpdateRule.UpdateRuleInitiator.class)
-    public static class UpdateRuleResponder extends FlowLogic<Void> {
+    @InitiatedBy(DeprecateRule.DeprecateRuleInitiator.class)
+    public static class DeprecateRuleResponder extends FlowLogic<Void> {
         //private variable
         private final FlowSession counterpartySession;
 
         //Constructor
-        public UpdateRuleResponder(FlowSession counterpartySession) {
+        public DeprecateRuleResponder(FlowSession counterpartySession) {
             this.counterpartySession = counterpartySession;
         }
 
