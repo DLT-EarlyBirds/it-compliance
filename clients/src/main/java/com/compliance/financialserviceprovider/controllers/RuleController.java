@@ -1,7 +1,7 @@
 package com.compliance.financialserviceprovider.controllers;
 
 import com.compliance.states.Rule;
-import com.compliance.supervisoryauthority.NodeRPCConnection;
+import com.compliance.financialserviceprovider.NodeRPCConnection;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.messaging.CordaRPCOps;
 import net.corda.core.node.services.Vault;
