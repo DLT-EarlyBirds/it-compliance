@@ -57,51 +57,53 @@ public class UpdateRule {
                         .withStatus(Vault.StateStatus.UNCONSUMED)
                         .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
 
-            final StateAndRef<Rule> input = getServiceHub().getVaultService().queryBy(Rule.class, inputCriteria).getStates().get(0);
-            Rule originalRule = input.getState().getData();
+                final StateAndRef<Rule> input = getServiceHub().getVaultService().queryBy(Rule.class, inputCriteria).getStates().get(0);
+                Rule originalRule = input.getState().getData();
                 builder.addInputState(input);
-            }
-            catch (IndexOutOfBoundsException e) {
+
+
+                // Add all parties in the network
+                final List<Party> involvedParties = new ArrayList<>(
+                        getServiceHub()
+                                .getNetworkMapCache()
+                                .getAllNodes()
+                                .stream()
+                                .map(NodeInfo::getLegalIdentities)
+                                .collect(Collectors.toList())
+                                .stream()
+                                .flatMap(List::stream)
+                                .collect(Collectors.toList()));
+
+                // Remove yourself
+                involvedParties.remove(getOurIdentity());
+                // Remove notaries
+                involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
+
+                final Rule output = new Rule(linearId, name, ruleSpecification, this.getOurIdentity(), involvedParties, new LinearPointer<>(parentRegulationLinearId, Regulation.class), originalRule.getIsDeprecated());
+
+
+                builder.addOutputState(output);
+                builder.addCommand(new RuleContract.Commands.UpdateRule(),
+                        involvedParties.stream().map(Party::getOwningKey).collect(Collectors.toList())
+                );
+
+
+                // Verify that the transaction is valid.
+                builder.verify(getServiceHub());
+
+                final SignedTransaction signedTransaction = getServiceHub().signInitialTransaction(builder);
+
+                involvedParties.remove(getOurIdentity());
+
+                List<FlowSession> sessions = involvedParties.stream().map(this::initiateFlow).collect(Collectors.toList());
+
+                SignedTransaction stx = subFlow(new CollectSignaturesFlow(signedTransaction, sessions));
+
+                return subFlow(new FinalityFlow(stx, sessions));
+
+            } catch (IndexOutOfBoundsException e) {
                 throw new FlowException("ERROR: No Rule with provided ID found!");
             }
-
-            // Add all parties in the network
-            final List<Party> involvedParties = new ArrayList<>(
-                    getServiceHub()
-                            .getNetworkMapCache()
-                            .getAllNodes()
-                            .stream()
-                            .map(NodeInfo::getLegalIdentities)
-                            .collect(Collectors.toList())
-                            .stream()
-                            .flatMap(List::stream)
-                            .collect(Collectors.toList()));
-
-            // Remove yourself
-            involvedParties.remove(getOurIdentity());
-            // Remove notaries
-            involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
-
-            final Rule output = new Rule(linearId, name, ruleSpecification, this.getOurIdentity(), involvedParties, new LinearPointer<>(parentRegulationLinearId, Regulation.class), originalRule.getIsDeprecated());
-
-
-            builder.addOutputState(output);
-            builder.addCommand(new RuleContract.Commands.UpdateRule(),
-                    involvedParties.stream().map(Party::getOwningKey).collect(Collectors.toList())
-            );
-
-            // Verify that the transaction is valid.
-            builder.verify(getServiceHub());
-
-            final SignedTransaction signedTransaction = getServiceHub().signInitialTransaction(builder);
-
-            involvedParties.remove(getOurIdentity());
-
-            List<FlowSession> sessions = involvedParties.stream().map(this::initiateFlow).collect(Collectors.toList());
-
-            SignedTransaction stx = subFlow(new CollectSignaturesFlow(signedTransaction, sessions));
-
-            return subFlow(new FinalityFlow(stx, sessions));
         }
     }
 
