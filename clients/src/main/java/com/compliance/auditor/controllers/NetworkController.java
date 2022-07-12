@@ -45,9 +45,8 @@ public class NetworkController {
     }
 
     private boolean isNotary(NodeInfo nodeInfo) {
-        return !proxy.notaryIdentities()
-                .stream().filter(el -> nodeInfo.isLegalIdentity(el))
-                .collect(Collectors.toList()).isEmpty();
+        return !(proxy.notaryIdentities()
+                .stream().filter(el -> nodeInfo.isLegalIdentity(el)).count() == 0);
     }
 
     private boolean isMe(NodeInfo nodeInfo) {
