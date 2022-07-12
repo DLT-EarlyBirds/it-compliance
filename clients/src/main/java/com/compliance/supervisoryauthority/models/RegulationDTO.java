@@ -31,7 +31,7 @@ public class RegulationDTO implements Serializable
     @JsonProperty("releaseDate")
     private Date releaseDate;
     @JsonIgnore
-    private final Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private final Map<String, Object> additionalProperties = new HashMap<>();
     private final static long serialVersionUID = -7129508973474007122L;
 
     /**

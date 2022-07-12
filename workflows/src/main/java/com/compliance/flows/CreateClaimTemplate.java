@@ -59,7 +59,7 @@ public class CreateClaimTemplate {
                     templateDescription,
                     this.getOurIdentity(),
                     involvedParties,
-                    new LinearPointer<Rule>(ruleLinearId, Rule.class)
+                    new LinearPointer<>(ruleLinearId, Rule.class)
             );
 
             final TransactionBuilder builder = new TransactionBuilder(notary);
