@@ -52,7 +52,12 @@ public class RuleController {
 
     @GetMapping(value = "/{linearId}", produces = APPLICATION_JSON_VALUE)
     private List<Rule> getByLinearId(@PathVariable String linearId) {
-        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)), Vault.StateStatus.ALL, Collections.singleton(Rule.class));
+        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
+                null,
+                Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)),
+                Vault.StateStatus.UNCONSUMED,
+                Collections.singleton(Rule.class)
+        );
         return proxy
                 .vaultQueryByCriteria(queryCriteria, Rule.class)
                 .getStates()
@@ -66,7 +71,12 @@ public class RuleController {
     @PutMapping(value = "/")
     private void update(@RequestBody RuleDTO ruleDTO) throws ExecutionException, InterruptedException {
         UniqueIdentifier id = UniqueIdentifier.Companion.fromString(ruleDTO.getLinearId());
-        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(id), Vault.StateStatus.ALL, Collections.singleton(Rule.class));
+        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
+                null,
+                Collections.singletonList(id),
+                Vault.StateStatus.UNCONSUMED,
+                Collections.singleton(Rule.class)
+        );
         // Check if state with that linear ID exists
         // Todo: Should throw custom exception if no regulation with the ID exists
         if (!proxy.vaultQueryByCriteria(queryCriteria, Rule.class).getStates().isEmpty()) {
