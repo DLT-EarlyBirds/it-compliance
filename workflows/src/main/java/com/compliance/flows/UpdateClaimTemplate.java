@@ -113,7 +113,7 @@ public class UpdateClaimTemplate {
             SignedTransaction signedTransaction = subFlow(new SignTransactionFlow(counterpartySession) {
                 @Suspendable
                 @Override
-                protected void checkTransaction(SignedTransaction stx) throws FlowException {
+                protected void checkTransaction(SignedTransaction stx) {
                     /*
                      * SignTransactionFlow will automatically verify the transaction and its signatures before signing it.
                      * However, just because a transaction is contractually valid doesn’t mean we necessarily want to sign.

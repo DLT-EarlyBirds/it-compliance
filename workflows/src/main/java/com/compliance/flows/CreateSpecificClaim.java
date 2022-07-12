@@ -147,7 +147,7 @@ public class CreateSpecificClaim {
             SignedTransaction signedTransaction = subFlow(new SignTransactionFlow(counterpartySession) {
                 @Override
                 @Suspendable
-                protected void checkTransaction(@NotNull SignedTransaction stx) throws FlowException {
+                protected void checkTransaction(@NotNull SignedTransaction stx) {
                 }
             });
 
