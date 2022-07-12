@@ -3,7 +3,7 @@ package com.compliance.flows;
 import co.paralleluniverse.fibers.Suspendable;
 import com.compliance.contracts.RegulationContract;
 import com.compliance.states.Regulation;
-import net.corda.core.contracts.LinearState;
+import java.lang.IndexOutOfBoundsException;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.*;
@@ -47,21 +47,27 @@ public class UpdateRegulation {
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
 
-            QueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria()
-                    .withUuid(Collections.singletonList(UUID.fromString(linearId.toString())))
-                    .withStatus(Vault.StateStatus.UNCONSUMED)
-                    .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
-
-            final StateAndRef<Regulation> input = getServiceHub().getVaultService().queryBy(Regulation.class, inputCriteria).getStates().get(0);
-            Regulation originalRegulation = input.getState().getData();
-
-            // Use the same linearID as the input Regulation
-            final Regulation output = new Regulation(linearId, name, description, version, releaseDate, this.getOurIdentity(), originalRegulation.getIsDeprecated());
-
             final TransactionBuilder builder = new TransactionBuilder(notary);
 
-            builder.addInputState(input);
-            builder.addOutputState(output);
+            try {
+                QueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria()
+                        .withUuid(Collections.singletonList(UUID.fromString(linearId.toString())))
+                        .withStatus(Vault.StateStatus.UNCONSUMED)
+                        .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
+
+                final StateAndRef<Regulation> input = getServiceHub().getVaultService().queryBy(Regulation.class, inputCriteria).getStates().get(0);
+                Regulation originalRegulation = input.getState().getData();
+
+                // Use the same linearID as the input Regulation
+                final Regulation output = new Regulation(linearId, name, description, version, releaseDate, this.getOurIdentity(), originalRegulation.getIsDeprecated());
+                builder.addInputState(input);
+                builder.addOutputState(output);
+            }
+            catch (IndexOutOfBoundsException e) {
+                throw new FlowException("ERROR: No Regulation with provided ID found!");
+            }
+
+
 
             builder.addCommand(new RegulationContract.Commands.UpdateRegulation(), getOurIdentity().getOwningKey());
 

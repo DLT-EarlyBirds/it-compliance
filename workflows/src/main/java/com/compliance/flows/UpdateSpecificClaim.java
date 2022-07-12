@@ -81,15 +81,20 @@ public class UpdateSpecificClaim {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
-
-            QueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria()
-                    .withUuid(Collections.singletonList(UUID.fromString(specificClaimLinearId.toString())))
-                    .withStatus(Vault.StateStatus.UNCONSUMED)
-                    .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
-
-            final StateAndRef<SpecificClaim> input = getServiceHub().getVaultService().queryBy(SpecificClaim.class, inputCriteria).getStates().get(0);
             final TransactionBuilder builder = new TransactionBuilder(notary);
-            builder.addInputState(input);
+
+            try {
+                QueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria()
+                        .withUuid(Collections.singletonList(UUID.fromString(specificClaimLinearId.toString())))
+                        .withStatus(Vault.StateStatus.UNCONSUMED)
+                        .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
+
+                final StateAndRef<SpecificClaim> input = getServiceHub().getVaultService().queryBy(SpecificClaim.class, inputCriteria).getStates().get(0);
+                builder.addInputState(input);
+            }
+            catch (IndexOutOfBoundsException e) {
+                throw new FlowException("ERROR: No SpecificClaim with provided ID found!");
+            }
 
             SpecificClaim output;
 
