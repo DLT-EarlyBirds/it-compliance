@@ -3,7 +3,6 @@ package com.compliance.flows;
 import co.paralleluniverse.fibers.Suspendable;
 import com.compliance.contracts.RegulationContract;
 import com.compliance.states.Regulation;
-import net.corda.core.contracts.LinearState;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.*;

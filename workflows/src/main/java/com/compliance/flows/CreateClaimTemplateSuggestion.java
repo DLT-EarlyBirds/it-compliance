@@ -8,15 +8,11 @@ import net.corda.core.contracts.LinearPointer;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
-import net.corda.core.node.NodeInfo;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 //Initiate this flow:
 //flow start CreateRegulation description: "test_description", supervisoryAuthority: Supervisory Authority

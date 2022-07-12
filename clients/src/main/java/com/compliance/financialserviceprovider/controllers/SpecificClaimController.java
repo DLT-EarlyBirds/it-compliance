@@ -6,7 +6,6 @@ import com.compliance.states.SpecificClaim;
 import com.compliance.supervisoryauthority.NodeRPCConnection;
 import com.compliance.supervisoryauthority.models.SpecificClaimDTO;
 import net.corda.core.contracts.UniqueIdentifier;
-import net.corda.core.identity.CordaX500Name;
 import net.corda.core.messaging.CordaRPCOps;
 import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
