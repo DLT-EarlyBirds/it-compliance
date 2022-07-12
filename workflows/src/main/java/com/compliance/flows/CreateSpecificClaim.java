@@ -86,13 +86,6 @@ public class CreateSpecificClaim {
 
                         txBuilder.addOutputState(newClaim);
                         txBuilder.addAttachment(this.attachmentID);
-                        txBuilder.addCommand(
-                                new SpecificClaimContract.Commands.CreateClaim(),
-                                Arrays.asList(
-                                        getOurIdentity().getOwningKey(),
-                                        supervisoryAuthority.getOwningKey()
-                                )
-                        );
             }
 
             else{
@@ -106,14 +99,14 @@ public class CreateSpecificClaim {
                         this.supportingClaimsLinearIds.stream().map(claimLinearId -> new LinearPointer<>(claimLinearId, SpecificClaim.class)).collect(Collectors.toList())
                 );
                         txBuilder.addOutputState(newClaim);
-                        txBuilder.addCommand(
-                                new SpecificClaimContract.Commands.CreateClaim(),
-                                Arrays.asList(
-                                        getOurIdentity().getOwningKey(),
-                                        supervisoryAuthority.getOwningKey()
-                                )
-                        );
             }
+            txBuilder.addCommand(
+                    new SpecificClaimContract.Commands.CreateClaim(),
+                    Arrays.asList(
+                            getOurIdentity().getOwningKey(),
+                            supervisoryAuthority.getOwningKey()
+                    )
+            );
 
             // Verify that the transaction is valid.
             txBuilder.verify(getServiceHub());
