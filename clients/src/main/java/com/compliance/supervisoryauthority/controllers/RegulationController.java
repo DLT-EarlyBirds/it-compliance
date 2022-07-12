@@ -1,6 +1,7 @@
 package com.compliance.supervisoryauthority.controllers;
 
 import com.compliance.flows.CreateRegulation;
+import com.compliance.flows.DeprecateRegulation;
 import com.compliance.flows.UpdateRegulation;
 import com.compliance.states.Regulation;
 import com.compliance.supervisoryauthority.NodeRPCConnection;
@@ -60,7 +61,7 @@ public class RegulationController {
     }
 
     @PutMapping(value = "/")
-    private void updateRegulation(@RequestBody RegulationDTO regulationDTO) throws ExecutionException, InterruptedException {
+    private void updateRegulation(@RequestBody RegulationDTO regulationDTO) {
         UniqueIdentifier id = UniqueIdentifier.Companion.fromString(regulationDTO.getLinearId());
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(id), Vault.StateStatus.ALL, Collections.singleton(Regulation.class));
         // Check if state with that linear ID exists
@@ -74,19 +75,19 @@ public class RegulationController {
                     regulationDTO.getDescription(),
                     regulationDTO.getVersion(),
                     regulationDTO.getReleaseDate()
-            ).getReturnValue().get();
+            );
         }
     }
 
     @PostMapping("/")
-    private Regulation createRegulation(@RequestBody RegulationDTO regulationDTO) throws ExecutionException, InterruptedException {
+    private Regulation createRegulation(@RequestBody RegulationDTO regulationDTO) {
         proxy.startTrackedFlowDynamic(
                 CreateRegulation.CreateRegulationInitiator.class,
                 regulationDTO.getName(),
                 regulationDTO.getDescription(),
                 regulationDTO.getVersion(),
                 regulationDTO.getReleaseDate()
-        ).getReturnValue().get();
+        );
 
         List<Regulation> regulations = proxy
                 .vaultQuery(Regulation.class)
@@ -104,6 +105,14 @@ public class RegulationController {
                 )
                 .collect(Collectors.toList())
                 .get(0);
+    }
+
+    @PutMapping("/deprecate/{linearId}")
+    private void deprecatedRegulation(@PathVariable String linearId) {
+        proxy.startTrackedFlowDynamic(
+                DeprecateRegulation.DeprecateRegulationInitiator.class,
+                UniqueIdentifier.Companion.fromString(linearId)
+        );
     }
 
 

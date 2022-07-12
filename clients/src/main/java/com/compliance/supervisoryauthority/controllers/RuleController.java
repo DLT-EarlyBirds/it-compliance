@@ -1,6 +1,8 @@
 package com.compliance.supervisoryauthority.controllers;
 
 import com.compliance.flows.CreateRule;
+import com.compliance.flows.DeprecateRegulation;
+import com.compliance.flows.DeprecateRule;
 import com.compliance.flows.UpdateRule;
 import com.compliance.states.Rule;
 import com.compliance.supervisoryauthority.NodeRPCConnection;
@@ -81,14 +83,14 @@ public class RuleController {
 
 
     @PostMapping("/")
-    private Rule create(@RequestBody RuleDTO ruleDTO) throws ExecutionException, InterruptedException {
+    private Rule create(@RequestBody RuleDTO ruleDTO) {
         proxy.startTrackedFlowDynamic(
                 CreateRule.CreateRuleInitiator.class,
                 ruleDTO.getName(),
                 ruleDTO.getRuleSpecification(),
                 UniqueIdentifier.Companion.fromString(ruleDTO.getParentRegulation()),
                 new Date()
-        ).getReturnValue().get();
+        );
 
         List<Rule> rules = proxy
                 .vaultQuery(Rule.class)
@@ -106,5 +108,13 @@ public class RuleController {
                 )
                 .collect(Collectors.toList())
                 .get(0);
+    }
+
+    @PutMapping("/deprecate/{linearId}")
+    private void deprecatedRule(@PathVariable String linearId) {
+        proxy.startTrackedFlowDynamic(
+                DeprecateRule.DeprecateRuleInitiator.class,
+                UniqueIdentifier.Companion.fromString(linearId)
+        );
     }
 }
