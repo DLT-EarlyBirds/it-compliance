@@ -1,14 +1,12 @@
-package com.compliance.finacialserviceprovider.controllers;
+package com.compliance.financialserviceprovider.controllers;
 
 import com.compliance.flows.CreateSpecificClaim;
 import com.compliance.flows.UpdateSpecificClaim;
-import com.compliance.states.SpecificClaim;
 import com.compliance.states.SpecificClaim;
 import com.compliance.supervisoryauthority.NodeRPCConnection;
 import com.compliance.supervisoryauthority.models.SpecificClaimDTO;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.CordaX500Name;
-import net.corda.core.identity.Party;
 import net.corda.core.messaging.CordaRPCOps;
 import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
@@ -17,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.compliance.finacialserviceprovider.models;
+package com.compliance.financialserviceprovider.models;
 
 import com.fasterxml.jackson.annotation.*;
 

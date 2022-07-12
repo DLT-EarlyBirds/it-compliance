@@ -1,4 +1,4 @@
-package com.compliance.finacialserviceprovider.models;
+package com.compliance.financialserviceprovider.models;
 
 import com.fasterxml.jackson.annotation.*;
 
@@ -9,20 +9,20 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "name",
-        "templateDescription",
-        "rule"
+        "ruleSpecification",
+        "parentRegulation"
 })
-public class ClaimTemplateDTO implements Serializable
+public class RuleDTO implements Serializable
 {
 
     @JsonProperty("linearId")
     private String linearId;
     @JsonProperty("name")
     private String name;
-    @JsonProperty("templateDescription")
-    private String templateDescription;
-    @JsonProperty("rule")
-    private String rule;
+    @JsonProperty("ruleSpecification")
+    private String ruleSpecification;
+    @JsonProperty("parentRegulation")
+    private String parentRegulation;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
     private final static long serialVersionUID = -7129508973474007122L;
@@ -31,24 +31,23 @@ public class ClaimTemplateDTO implements Serializable
      * No args constructor for use in serialization
      *
      */
-    public ClaimTemplateDTO() {
+    public RuleDTO() {
     }
 
     /**
      *
      * @param linearId
      * @param name
-     * @param templateDescription
-     * @param rule
+     * @param ruleSpecification
+     * @param parentRegulation
      */
-    public ClaimTemplateDTO(String linearId, String name, String templateDescription, String rule) {
+    public RuleDTO(String linearId, String name, String ruleSpecification, String parentRegulation) {
         super();
         this.linearId = linearId;
         this.name = name;
-        this.templateDescription = templateDescription;
-        this.rule = rule;
+        this.ruleSpecification = ruleSpecification;
+        this.parentRegulation = parentRegulation;
     }
-
 
     @JsonProperty("linearId")
     public String getLinearId() {
@@ -70,24 +69,24 @@ public class ClaimTemplateDTO implements Serializable
         this.name = name;
     }
 
-    @JsonProperty("templateDescription")
-    public String getTemplateDescription() {
-        return templateDescription;
+    @JsonProperty("ruleSpecification")
+    public String getRuleSpecification() {
+        return ruleSpecification;
     }
 
-    @JsonProperty("templateDescription")
-    public void setTemplateDescription(String templateDescription) {
-        this.templateDescription = templateDescription;
+    @JsonProperty("ruleSpecification")
+    public void setRuleSpecification(String ruleSpecification) {
+        this.ruleSpecification = ruleSpecification;
     }
 
-    @JsonProperty("rule")
-    public String getRule() {
-        return rule;
+    @JsonProperty("parentRegulation")
+    public String getParentRegulation() {
+        return parentRegulation;
     }
 
-    @JsonProperty("rule")
-    public void setRule(String rule) {
-        this.rule = rule;
+    @JsonProperty("parentRegulation")
+    public void setParentRegulation(String parentRegulation) {
+        this.parentRegulation = parentRegulation;
     }
 
     @JsonAnyGetter

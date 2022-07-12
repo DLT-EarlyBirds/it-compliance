@@ -1,4 +1,4 @@
-package com.compliance.finacialserviceprovider;
+package com.compliance.financialserviceprovider;
 
 import net.corda.client.rpc.CordaRPCClient;
 import net.corda.client.rpc.CordaRPCConnection;

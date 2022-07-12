@@ -1,4 +1,4 @@
-package com.compliance.finacialserviceprovider.configurations;
+package com.compliance.financialserviceprovider.configurations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.corda.client.jackson.JacksonSupport;

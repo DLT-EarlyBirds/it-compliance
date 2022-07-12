@@ -1,4 +1,4 @@
-package com.compliance.finacialserviceprovider;
+package com.compliance.financialserviceprovider;
 
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
