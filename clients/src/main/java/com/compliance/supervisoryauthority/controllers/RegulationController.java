@@ -67,7 +67,7 @@ public class RegulationController {
         // Todo: Should throw custom exception if no regulation with the ID exists
         if (!proxy.vaultQueryByCriteria(queryCriteria, Regulation.class).getStates().isEmpty()) {
             // Call the update flow
-            SignedTransaction tx = proxy.startTrackedFlowDynamic(
+            proxy.startTrackedFlowDynamic(
                     UpdateRegulation.UpdateRegulationInitiator.class,
                     id,
                     regulationDTO.getName(),
@@ -80,7 +80,7 @@ public class RegulationController {
 
     @PostMapping("/")
     private Regulation createRegulation(@RequestBody RegulationDTO regulationDTO) throws ExecutionException, InterruptedException {
-        SignedTransaction tx = proxy.startTrackedFlowDynamic(
+        proxy.startTrackedFlowDynamic(
                 CreateRegulation.CreateRegulationInitiator.class,
                 regulationDTO.getName(),
                 regulationDTO.getDescription(),

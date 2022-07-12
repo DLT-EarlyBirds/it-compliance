@@ -70,7 +70,7 @@ public class ClaimTemplateController {
         // Todo: Should throw custom exception if no regulation with the ID exists
         if (!proxy.vaultQueryByCriteria(queryCriteria, ClaimTemplate.class).getStates().isEmpty()) {
             // Call the update flow
-            SignedTransaction tx = proxy.startTrackedFlowDynamic(
+            proxy.startTrackedFlowDynamic(
                     UpdateClaimTemplate.UpdateClaimTemplateInitiator.class,
                     id,
                     claimTemplateDTO.getName(),
@@ -83,7 +83,7 @@ public class ClaimTemplateController {
 
     @PostMapping("/")
     private ClaimTemplate create(@RequestBody ClaimTemplateDTO claimTemplateDTO) throws ExecutionException, InterruptedException {
-        SignedTransaction tx = proxy.startTrackedFlowDynamic(
+        proxy.startTrackedFlowDynamic(
                 CreateClaimTemplate.CreateClaimTemplateInitiator.class,
                 claimTemplateDTO.getName(),
                 claimTemplateDTO.getTemplateDescription(),
