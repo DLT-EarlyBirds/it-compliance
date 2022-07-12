@@ -13,8 +13,8 @@ import static net.corda.testing.node.NodeTestUtils.ledger;
 
 public class ContractTests {
     private final MockServices ledgerServices = new MockServices(Arrays.asList("com.template"));
-    TestIdentity alice = new TestIdentity(new CordaX500Name("Alice",  "TestLand",  "US"));
-    TestIdentity bob = new TestIdentity(new CordaX500Name("Alice",  "TestLand",  "US"));
+    final TestIdentity alice = new TestIdentity(new CordaX500Name("Alice",  "TestLand",  "US"));
+    final TestIdentity bob = new TestIdentity(new CordaX500Name("Alice",  "TestLand",  "US"));
 
     @Test
     public void issuerAndRecipientCannotHaveSameEmail() {

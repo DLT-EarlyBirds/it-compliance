@@ -3,7 +3,6 @@ package com.compliance.flows;
 import co.paralleluniverse.fibers.Suspendable;
 import com.compliance.contracts.ClaimTemplateContract;
 import com.compliance.states.ClaimTemplate;
-import com.compliance.states.Regulation;
 import com.compliance.states.Rule;
 import net.corda.core.contracts.LinearPointer;
 import net.corda.core.contracts.StateAndRef;
@@ -68,7 +67,7 @@ public class UpdateClaimTemplate {
             }
 
             // Add all parties in the network
-            final List<Party> involvedParties = new ArrayList<>(getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList()));
+            final List<Party> involvedParties = getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList());
 
             final ClaimTemplate output = new ClaimTemplate(name, templateDescription, this.getOurIdentity(), involvedParties, new LinearPointer<>(rule, Rule.class));
             // Remove yourself
@@ -113,7 +112,7 @@ public class UpdateClaimTemplate {
             SignedTransaction signedTransaction = subFlow(new SignTransactionFlow(counterpartySession) {
                 @Suspendable
                 @Override
-                protected void checkTransaction(SignedTransaction stx) throws FlowException {
+                protected void checkTransaction(SignedTransaction stx) {
                     /*
                      * SignTransactionFlow will automatically verify the transaction and its signatures before signing it.
                      * However, just because a transaction is contractually valid doesn’t mean we necessarily want to sign.

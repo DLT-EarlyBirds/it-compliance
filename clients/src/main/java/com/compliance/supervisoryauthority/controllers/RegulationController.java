@@ -6,7 +6,6 @@ import com.compliance.states.Regulation;
 import com.compliance.supervisoryauthority.NodeRPCConnection;
 import com.compliance.supervisoryauthority.models.RegulationDTO;
 import net.corda.core.contracts.UniqueIdentifier;
-import net.corda.core.identity.CordaX500Name;
 import net.corda.core.messaging.CordaRPCOps;
 import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
@@ -29,12 +28,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/regulations") // The paths for HTTP requests are relative to this base path.
 public class RegulationController {
     private final CordaRPCOps proxy;
-    private final CordaX500Name me;
     private final static Logger logger = LoggerFactory.getLogger(RuleController.class);
 
     public RegulationController(NodeRPCConnection rpc) {
         this.proxy = rpc.proxy;
-        this.me = proxy.nodeInfo().getLegalIdentities().get(0).getName();
     }
 
     @GetMapping(value = "/", produces = APPLICATION_JSON_VALUE)
@@ -70,7 +67,7 @@ public class RegulationController {
         // Todo: Should throw custom exception if no regulation with the ID exists
         if (!proxy.vaultQueryByCriteria(queryCriteria, Regulation.class).getStates().isEmpty()) {
             // Call the update flow
-            SignedTransaction tx = proxy.startTrackedFlowDynamic(
+            proxy.startTrackedFlowDynamic(
                     UpdateRegulation.UpdateRegulationInitiator.class,
                     id,
                     regulationDTO.getName(),
@@ -83,7 +80,7 @@ public class RegulationController {
 
     @PostMapping("/")
     private Regulation createRegulation(@RequestBody RegulationDTO regulationDTO) throws ExecutionException, InterruptedException {
-        SignedTransaction tx = proxy.startTrackedFlowDynamic(
+        proxy.startTrackedFlowDynamic(
                 CreateRegulation.CreateRegulationInitiator.class,
                 regulationDTO.getName(),
                 regulationDTO.getDescription(),

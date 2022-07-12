@@ -6,7 +6,6 @@ import com.compliance.states.SpecificClaim;
 import com.compliance.supervisoryauthority.NodeRPCConnection;
 import com.compliance.supervisoryauthority.models.SpecificClaimDTO;
 import net.corda.core.contracts.UniqueIdentifier;
-import net.corda.core.identity.CordaX500Name;
 import net.corda.core.messaging.CordaRPCOps;
 import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
@@ -30,12 +29,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/claims") // The paths for HTTP requests are relative to this base path.
 public class SpecificClaimController {
     private final CordaRPCOps proxy;
-    private final CordaX500Name me;
     private final static Logger logger = LoggerFactory.getLogger(SpecificClaimController.class);
 
     public SpecificClaimController(NodeRPCConnection rpc) {
         this.proxy = rpc.proxy;
-        this.me = proxy.nodeInfo().getLegalIdentities().get(0).getName();
     }
 
     @GetMapping(value = "/", produces = APPLICATION_JSON_VALUE)
@@ -80,7 +77,7 @@ public class SpecificClaimController {
         // Todo: Should throw custom exception if no regulation with the ID exists
         if (!proxy.vaultQueryByCriteria(queryCriteria, SpecificClaim.class).getStates().isEmpty()) {
             // Call the update flow
-            SignedTransaction tx = proxy.startTrackedFlowDynamic(
+            proxy.startTrackedFlowDynamic(
                     UpdateSpecificClaim.UpdateSpecificClaimInitiator.class,
                     id,
                     specificClaimDTO.getName(),
@@ -93,7 +90,7 @@ public class SpecificClaimController {
 
     @PostMapping("/")
     private SpecificClaim create(@RequestBody SpecificClaimDTO specificClaimDTO) throws ExecutionException, InterruptedException {
-        SignedTransaction tx = proxy.startTrackedFlowDynamic(
+        proxy.startTrackedFlowDynamic(
                 CreateSpecificClaim.CreateSpecificClaimInitiator.class,
                 specificClaimDTO.getName(),
                 specificClaimDTO.getClaimSpecification(),

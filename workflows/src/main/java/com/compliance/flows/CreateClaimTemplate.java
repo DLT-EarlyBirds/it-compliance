@@ -12,7 +12,6 @@ import net.corda.core.node.NodeInfo;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +45,7 @@ public class CreateClaimTemplate {
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
             // Add all parties in the network
-            final List<Party> involvedParties = new ArrayList<>(getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList()));
+            final List<Party> involvedParties = getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList());
             // Remove yourself
             involvedParties.remove(getOurIdentity());
             // Remove notaries
@@ -59,7 +58,7 @@ public class CreateClaimTemplate {
                     templateDescription,
                     this.getOurIdentity(),
                     involvedParties,
-                    new LinearPointer<Rule>(ruleLinearId, Rule.class)
+                    new LinearPointer<>(ruleLinearId, Rule.class)
             );
 
             final TransactionBuilder builder = new TransactionBuilder(notary);
@@ -106,7 +105,7 @@ public class CreateClaimTemplate {
             SignedTransaction signedTransaction = subFlow(new SignTransactionFlow(counterpartySession) {
                 @Suspendable
                 @Override
-                protected void checkTransaction(SignedTransaction stx) throws FlowException {
+                protected void checkTransaction(SignedTransaction stx) {
                     /*
                      * SignTransactionFlow will automatically verify the transaction and its signatures before signing it.
                      * However, just because a transaction is contractually valid doesn’t mean we necessarily want to sign.

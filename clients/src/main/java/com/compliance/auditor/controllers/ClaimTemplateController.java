@@ -4,7 +4,6 @@ package com.compliance.auditor.controllers;
 import com.compliance.states.ClaimTemplate;
 import com.compliance.supervisoryauthority.NodeRPCConnection;
 import net.corda.core.contracts.UniqueIdentifier;
-import net.corda.core.identity.CordaX500Name;
 import net.corda.core.messaging.CordaRPCOps;
 import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
@@ -28,12 +27,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/claimtemplates") // The paths for HTTP requests are relative to this base path.
 public class ClaimTemplateController {
     private final CordaRPCOps proxy;
-    private final CordaX500Name me;
     private final static Logger logger = LoggerFactory.getLogger(ClaimTemplateController.class);
 
     public ClaimTemplateController(NodeRPCConnection rpc) {
         this.proxy = rpc.proxy;
-        this.me = proxy.nodeInfo().getLegalIdentities().get(0).getName();
     }
 
     @GetMapping(value = "/", produces = APPLICATION_JSON_VALUE)

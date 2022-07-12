@@ -57,9 +57,8 @@ public class NetworkController {
     }
 
     private boolean isNotary(NodeInfo nodeInfo) {
-        return !proxy.notaryIdentities()
-                .stream().filter(el -> nodeInfo.isLegalIdentity(el))
-                .collect(Collectors.toList()).isEmpty();
+        return !(proxy.notaryIdentities()
+                .stream().noneMatch(nodeInfo::isLegalIdentity));
     }
 
     private boolean isMe(NodeInfo nodeInfo) {
@@ -68,11 +67,6 @@ public class NetworkController {
 
     private boolean isNetworkMap(NodeInfo nodeInfo) {
         return nodeInfo.getLegalIdentities().get(0).getName().getOrganisation().equals("Network Map Service");
-    }
-
-    @GetMapping(value = "/status", produces = TEXT_PLAIN_VALUE)
-    private String status() {
-        return "200";
     }
 
     @GetMapping(value = "/servertime", produces = TEXT_PLAIN_VALUE)

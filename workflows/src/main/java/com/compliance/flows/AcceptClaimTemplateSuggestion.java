@@ -4,9 +4,6 @@ import co.paralleluniverse.fibers.Suspendable;
 import com.compliance.contracts.ClaimTemplateContract;
 import com.compliance.states.ClaimTemplate;
 import com.compliance.states.ClaimTemplateSuggestion;
-import com.compliance.states.Regulation;
-import com.compliance.states.Rule;
-import net.corda.core.contracts.LinearPointer;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.*;
@@ -50,14 +47,14 @@ public class AcceptClaimTemplateSuggestion {
                 builder.addInputState(input);
 
             // Add all parties in the network
-            final List<Party> involvedParties = new ArrayList<>(getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList()));
+            final List<Party> involvedParties = getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList());
 
             // Remove yourself
             involvedParties.remove(getOurIdentity());
             // Remove notaries
             involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
 
-            ClaimTemplateSuggestion originalClaimTemplateSuggestion = (ClaimTemplateSuggestion) input.getState().getData();
+            ClaimTemplateSuggestion originalClaimTemplateSuggestion = input.getState().getData();
 
             final ClaimTemplate output = new ClaimTemplate(originalClaimTemplateSuggestion.getName(), originalClaimTemplateSuggestion.getTemplateDescription(), this.getOurIdentity(), involvedParties, originalClaimTemplateSuggestion.getRule());
 
@@ -104,7 +101,7 @@ public class AcceptClaimTemplateSuggestion {
             SignedTransaction signedTransaction = subFlow(new SignTransactionFlow(counterpartySession) {
                 @Suspendable
                 @Override
-                protected void checkTransaction(SignedTransaction stx) throws FlowException {
+                protected void checkTransaction(SignedTransaction stx) {
                     /*
                      * SignTransactionFlow will automatically verify the transaction and its signatures before signing it.
                      * However, just because a transaction is contractually valid doesn’t mean we necessarily want to sign.
