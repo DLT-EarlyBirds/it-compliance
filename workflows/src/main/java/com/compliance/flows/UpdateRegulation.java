@@ -26,7 +26,6 @@ public class UpdateRegulation {
     @InitiatingFlow
     @StartableByRPC
     public static class UpdateRegulationInitiator extends FlowLogic<SignedTransaction>{
-        // Private variables
 
         private final UniqueIdentifier linearId;
         private final String name;
@@ -34,7 +33,6 @@ public class UpdateRegulation {
         private final String version;
         private final Date releaseDate;
 
-        //public constructor
         public UpdateRegulationInitiator(UniqueIdentifier linearId, String name, String description, String version, Date releaseDate) {
             this.linearId = linearId;
             this.version = version;
@@ -65,7 +63,6 @@ public class UpdateRegulation {
             builder.addInputState(input);
             builder.addOutputState(output);
 
-            //[MOH - 08.07.2022]: Corrected CreateRegulation() command to UpdateRegulation()
             builder.addCommand(new RegulationContract.Commands.UpdateRegulation(), getOurIdentity().getOwningKey());
 
             // Verify that the transaction is valid.
