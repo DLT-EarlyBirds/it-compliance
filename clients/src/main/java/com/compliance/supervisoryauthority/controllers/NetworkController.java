@@ -18,10 +18,7 @@ import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -39,6 +36,7 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
  * Define your API endpoints here.
  */
 @RestController
+@CrossOrigin(origins = "localhost:3000")
 @RequestMapping("/network") // The paths for HTTP requests are relative to this base path.
 public class NetworkController {
     private final CordaRPCOps proxy;
