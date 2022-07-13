@@ -8,6 +8,8 @@ import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,14 +48,15 @@ public class RuleController {
     }
 
     @GetMapping(value = "/{linearId}", produces = APPLICATION_JSON_VALUE)
-    private List<Rule> getByLinearId(@PathVariable String linearId) {
+    private ResponseEntity<Rule> getByLinearId(@PathVariable String linearId) {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
                 null,
                 Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)),
                 Vault.StateStatus.UNCONSUMED,
                 Collections.singleton(Rule.class)
         );
-        return proxy
+
+        List<Rule> rules = proxy
                 .vaultQueryByCriteria(queryCriteria, Rule.class)
                 .getStates()
                 .stream()
@@ -61,6 +64,9 @@ public class RuleController {
                         ruleStateAndRef -> ruleStateAndRef.getState().getData()
                 )
                 .collect(Collectors.toList());
+
+        if (rules.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        else return ResponseEntity.status(HttpStatus.FOUND).body(rules.get(0));
     }
 
 }
