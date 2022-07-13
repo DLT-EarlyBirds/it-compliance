@@ -13,8 +13,6 @@ import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.messaging.CordaRPCOps;
 import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
-import net.corda.core.transactions.SignedTransaction;
-import org.checkerframework.checker.units.qual.C;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -33,6 +31,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  * Define your API endpoints here.
  */
 @RestController
+@CrossOrigin(origins = "localhost:3000")
 @RequestMapping("/claimtemplates") // The paths for HTTP requests are relative to this base path.
 public class ClaimTemplateController {
     private final CordaRPCOps proxy;

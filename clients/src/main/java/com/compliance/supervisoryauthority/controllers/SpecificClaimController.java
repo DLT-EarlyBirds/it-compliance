@@ -11,10 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +24,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  * Define your API endpoints here.
  */
 @RestController
+@CrossOrigin(origins = "localhost:3000")
 @RequestMapping("/claims") // The paths for HTTP requests are relative to this base path.
 public class SpecificClaimController {
     private final CordaRPCOps proxy;
