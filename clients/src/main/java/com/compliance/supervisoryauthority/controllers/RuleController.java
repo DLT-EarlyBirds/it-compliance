@@ -71,7 +71,7 @@ public class RuleController {
                 .collect(Collectors.toList());
 
         if (rules.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        else return ResponseEntity.status(HttpStatus.FOUND).body(rules.get(0));
+        else return ResponseEntity.status(HttpStatus.OK).body(rules.get(0));
     }
 
     @PutMapping(value = "/")

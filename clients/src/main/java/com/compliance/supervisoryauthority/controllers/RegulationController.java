@@ -68,7 +68,7 @@ public class RegulationController {
                 )
                 .collect(Collectors.toList());
         if (regulations.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        else return ResponseEntity.status(HttpStatus.FOUND).body(regulations.get(0));
+        else return ResponseEntity.status(HttpStatus.OK).body(regulations.get(0));
     }
 
     @PutMapping(value = "/")
