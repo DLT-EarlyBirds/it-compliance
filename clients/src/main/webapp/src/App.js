@@ -14,9 +14,9 @@ import { DataProvider } from "./contexts/DataContext";
 const App = () => {
   return (
     <NodeProvider>
-      <DataProvider>
-        <Header />
-        <div className="mx-10">
+      <Header />
+      <div className="mx-10">
+        <DataProvider>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/regulations" element={<Regulation />} />
@@ -24,8 +24,8 @@ const App = () => {
             <Route path="/graph-regulations" element={<GraphRegulation />} />
             <Route path="/claim-templates" element={<ClaimTemplate />} />
           </Routes>
-        </div>
-      </DataProvider>
+        </DataProvider>
+      </div>
     </NodeProvider>
   );
 };

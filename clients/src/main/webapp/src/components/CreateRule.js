@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Modal, Button, Form, Input } from "antd";
+import { Modal, Button, Form, Input, Select } from "antd";
+const { Option } = Select;
 
 const CreateRule = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -74,6 +75,24 @@ const CreateRule = () => {
             ]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            label="Parent Regulation"
+            name="parentRegulation"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Select
+              style={{
+                width: 120,
+              }}
+            >
+              <Option value="m1">M1</Option>
+              <Option value="m2">M2</Option>
+            </Select>
           </Form.Item>
         </Form>
       </Modal>

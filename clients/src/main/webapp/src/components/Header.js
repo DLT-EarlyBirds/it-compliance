@@ -51,9 +51,12 @@ const Header = () => {
           <Link to="/claim-templates">Claim Templates</Link>
         </Menu.Item>
         <Menu.Item>
-          <Button type="primary" onClick={showDrawer}>
-            Change Node
-          </Button>
+          <div className="flex">
+            <h2 className="text-green-600">Node: {currentNode}</h2>
+            <Button className="ml-2 mt-2" type="primary" onClick={showDrawer}>
+              Change Node
+            </Button>
+          </div>
         </Menu.Item>
       </Menu>
       <Drawer
