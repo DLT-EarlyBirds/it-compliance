@@ -24,7 +24,7 @@ function useData() {
   if (context === undefined) {
     throw new Error("useData must be used within a Data Provider");
   }
-  console.log(context, "hii");
+
   return context;
 }
 
