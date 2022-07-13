@@ -123,4 +123,8 @@ public class SpecificClaim implements LinearState {
     public SecureHash getAttachmentID() {
         return attachmentID;
     }
+
+    public String getDescription() {
+        return description;
+    }
 }
