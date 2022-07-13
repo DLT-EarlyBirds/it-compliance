@@ -14,6 +14,8 @@ import net.corda.core.node.services.vault.QueryCriteria;
 import net.corda.core.transactions.SignedTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -51,14 +53,15 @@ public class RuleController {
     }
 
     @GetMapping(value = "/{linearId}", produces = APPLICATION_JSON_VALUE)
-    private List<Rule> getByLinearId(@PathVariable String linearId) {
+    private ResponseEntity<Rule> getByLinearId(@PathVariable String linearId) {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
                 null,
                 Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)),
                 Vault.StateStatus.UNCONSUMED,
                 Collections.singleton(Rule.class)
         );
-        return proxy
+
+        List<Rule> rules = proxy
                 .vaultQueryByCriteria(queryCriteria, Rule.class)
                 .getStates()
                 .stream()
@@ -66,10 +69,13 @@ public class RuleController {
                         ruleStateAndRef -> ruleStateAndRef.getState().getData()
                 )
                 .collect(Collectors.toList());
+
+        if (rules.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        else return ResponseEntity.status(HttpStatus.FOUND).body(rules.get(0));
     }
 
     @PutMapping(value = "/")
-    private void update(@RequestBody RuleDTO ruleDTO) throws ExecutionException, InterruptedException {
+    private ResponseEntity<Rule> update(@RequestBody RuleDTO ruleDTO) throws ExecutionException, InterruptedException {
         UniqueIdentifier id = UniqueIdentifier.Companion.fromString(ruleDTO.getLinearId());
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
                 null,
@@ -78,53 +84,37 @@ public class RuleController {
                 Collections.singleton(Rule.class)
         );
         // Check if state with that linear ID exists
-        // Todo: Should throw custom exception if no regulation with the ID exists
         if (!proxy.vaultQueryByCriteria(queryCriteria, Rule.class).getStates().isEmpty()) {
             // Call the update flow
-            proxy.startTrackedFlowDynamic(
+            Rule rule = (Rule) proxy.startTrackedFlowDynamic(
                     UpdateRule.UpdateRuleInitiator.class,
                     id,
                     ruleDTO.getName(),
                     ruleDTO.getRuleSpecification(),
                     UniqueIdentifier.Companion.fromString(ruleDTO.getParentRegulation())
-            ).getReturnValue().get();
-        }
+            ).getReturnValue().get().getTx().getOutput(0);
+            return ResponseEntity.status(HttpStatus.OK).body(rule);
+        } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
 
     @PostMapping("/")
-    private Rule create(@RequestBody RuleDTO ruleDTO) {
-        proxy.startTrackedFlowDynamic(
+    private ResponseEntity<Rule> create(@RequestBody RuleDTO ruleDTO) throws ExecutionException, InterruptedException {
+        Rule rule = (Rule) proxy.startTrackedFlowDynamic(
                 CreateRule.CreateRuleInitiator.class,
                 ruleDTO.getName(),
                 ruleDTO.getRuleSpecification(),
                 UniqueIdentifier.Companion.fromString(ruleDTO.getParentRegulation())
-        );
-
-        List<Rule> rules = proxy
-                .vaultQuery(Rule.class)
-                .getStates()
-                .stream()
-                .map(
-                        ruleStateAndRef -> ruleStateAndRef.getState().getData())
-                .collect(Collectors.toList());
-
-        rules.forEach(rule -> logger.info(rule.getName()));
-
-        return rules
-                .stream()
-                .filter(
-                        rule -> rule.getName().equals(ruleDTO.getName()) && rule.getRuleSpecification().equals(ruleDTO.getRuleSpecification())
-                )
-                .collect(Collectors.toList())
-                .get(0);
+        ).getReturnValue().get().getTx().getOutput(0);
+        return ResponseEntity.status(HttpStatus.CREATED).body(rule);
     }
 
     @PutMapping("/deprecate/{linearId}")
-    private void deprecatedRule(@PathVariable String linearId) {
-        proxy.startTrackedFlowDynamic(
+    private ResponseEntity<Rule> deprecatedRule(@PathVariable String linearId) throws ExecutionException, InterruptedException {
+        Rule rule = (Rule) proxy.startTrackedFlowDynamic(
                 DeprecateRule.DeprecateRuleInitiator.class,
                 UniqueIdentifier.Companion.fromString(linearId)
-        );
+        ).getReturnValue().get().getTx().getOutput(0);
+        return ResponseEntity.status(HttpStatus.OK).body(rule);
     }
 }

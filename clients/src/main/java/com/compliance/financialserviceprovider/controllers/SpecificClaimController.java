@@ -12,6 +12,8 @@ import net.corda.core.node.services.vault.QueryCriteria;
 import net.corda.core.transactions.SignedTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -48,14 +50,14 @@ public class SpecificClaimController {
     }
 
     @GetMapping(value = "/{linearId}", produces = APPLICATION_JSON_VALUE)
-    private List<SpecificClaim> getByLinearId(@PathVariable String linearId) {
+    private ResponseEntity<SpecificClaim> getByLinearId(@PathVariable String linearId) {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
                 null,
                 Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)),
                 Vault.StateStatus.UNCONSUMED,
                 Collections.singleton(SpecificClaim.class)
         );
-        return proxy
+        List<SpecificClaim> specificClaims = proxy
                 .vaultQueryByCriteria(queryCriteria, SpecificClaim.class)
                 .getStates()
                 .stream()
@@ -63,10 +65,13 @@ public class SpecificClaimController {
                         claimTemplateStateAndRef -> claimTemplateStateAndRef.getState().getData()
                 )
                 .collect(Collectors.toList());
+
+        if (specificClaims.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        else return ResponseEntity.status(HttpStatus.FOUND).body(specificClaims.get(0));
     }
 
     @PutMapping(value = "/")
-    private void update(@RequestBody SpecificClaimDTO specificClaimDTO) throws ExecutionException, InterruptedException {
+    private ResponseEntity<SpecificClaim> update(@RequestBody SpecificClaimDTO specificClaimDTO) throws ExecutionException, InterruptedException {
         UniqueIdentifier id = UniqueIdentifier.Companion.fromString(specificClaimDTO.getLinearId());
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
                 null,
@@ -74,45 +79,29 @@ public class SpecificClaimController {
                 Vault.StateStatus.UNCONSUMED,
                 Collections.singleton(SpecificClaim.class));
         // Check if state with that linear ID exists
-        // Todo: Should throw custom exception if no regulation with the ID exists
         if (!proxy.vaultQueryByCriteria(queryCriteria, SpecificClaim.class).getStates().isEmpty()) {
             // Call the update flow
-            proxy.startTrackedFlowDynamic(
+            SpecificClaim specificClaim = (SpecificClaim) proxy.startTrackedFlowDynamic(
                     UpdateSpecificClaim.UpdateSpecificClaimInitiator.class,
                     id,
                     specificClaimDTO.getName(),
                     specificClaimDTO.getClaimSpecification(),
                     UniqueIdentifier.Companion.fromString(specificClaimDTO.getClaimTemplateLinearId())
-            ).getReturnValue().get();
-        }
+            ).getReturnValue().get().getTx().getOutput(0);
+            return ResponseEntity.status(HttpStatus.OK).body(specificClaim);
+        } return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
 
     @PostMapping("/")
-    private SpecificClaim create(@RequestBody SpecificClaimDTO specificClaimDTO) throws ExecutionException, InterruptedException {
-        proxy.startTrackedFlowDynamic(
+    private ResponseEntity<SpecificClaim> create(@RequestBody SpecificClaimDTO specificClaimDTO) throws ExecutionException, InterruptedException {
+        SpecificClaim specificClaim = (SpecificClaim) proxy.startTrackedFlowDynamic(
                 CreateSpecificClaim.CreateSpecificClaimInitiator.class,
                 specificClaimDTO.getName(),
                 specificClaimDTO.getClaimSpecification(),
                 UniqueIdentifier.Companion.fromString(specificClaimDTO.getClaimTemplateLinearId()),
                 new Date()
-        ).getReturnValue().get();
-
-        List<SpecificClaim> specificClaims = proxy
-                .vaultQuery(SpecificClaim.class)
-                .getStates()
-                .stream()
-                .map(
-                        specificClaimStateAndRef -> specificClaimStateAndRef.getState().getData())
-                .collect(Collectors.toList());
-
-        // Return regulation linear ID
-        return specificClaims
-                .stream()
-                .filter(
-                        specificClaim -> specificClaim.getName().equals(specificClaimDTO.getName())
-                )
-                .collect(Collectors.toList())
-                .get(0);
+        ).getReturnValue().get().getTx().getOutput(0);
+        return ResponseEntity.status(HttpStatus.CREATED).body(specificClaim);
     }
 }
