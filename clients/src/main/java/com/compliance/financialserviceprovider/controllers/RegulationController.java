@@ -8,6 +8,8 @@ import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -42,15 +44,23 @@ public class RegulationController {
     }
 
     @GetMapping(value = "/{linearId}", produces = APPLICATION_JSON_VALUE)
-    private List<Regulation> getByLinearId(@PathVariable String linearId) {
-        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)), Vault.StateStatus.ALL, Collections.singleton(Regulation.class));
-        return proxy
-                .vaultQueryByCriteria(queryCriteria, Regulation.class)
+    private ResponseEntity<Regulation> getByLinearId(@PathVariable String linearId) {
+        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
+                null,
+                Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)),
+                Vault.StateStatus.UNCONSUMED,
+                Collections.singleton(Regulation.class)
+        );
+
+        // Get all regulations with this linear ID and status UNCONSUMED
+        List<Regulation> regulations = proxy.vaultQueryByCriteria(queryCriteria, Regulation.class)
                 .getStates()
                 .stream()
                 .map(
                         regulationStateAndRef -> regulationStateAndRef.getState().getData()
                 )
                 .collect(Collectors.toList());
+        if (regulations.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        else return ResponseEntity.status(HttpStatus.OK).body(regulations.get(0));
     }
 }

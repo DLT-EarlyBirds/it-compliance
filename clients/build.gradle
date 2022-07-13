@@ -44,7 +44,7 @@ task runTestClient(type: JavaExec, dependsOn: assemble) {
 task runSupervisoryAuthorityServer(type: JavaExec, dependsOn: assemble) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.compliance.supervisoryauthority.Starter'
-    args '--server.port=10050', '--config.rpc.host=localhost', '--config.rpc.port=52726', '--config.rpc.username=user1', '--config.rpc.password=test'
+    args '--server.port=10050', '--config.rpc.host=localhost', '--config.rpc.port=49960', '--config.rpc.username=user1', '--config.rpc.password=test'
 }
 
 
@@ -54,7 +54,7 @@ task runSupervisoryAuthorityServer(type: JavaExec, dependsOn: assemble) {
 task runFinancialServiceProviderServer(type: JavaExec, dependsOn: assemble) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.compliance.financialserviceprovider.Starter'
-    args '--server.port=10051', '--config.rpc.host=localhost', '--config.rpc.port=52725', '--config.rpc.username=user1', '--config.rpc.password=test'
+    args '--server.port=10051', '--config.rpc.host=localhost', '--config.rpc.port=49958', '--config.rpc.username=user1', '--config.rpc.password=test'
 }
 
 
@@ -64,5 +64,5 @@ task runFinancialServiceProviderServer(type: JavaExec, dependsOn: assemble) {
 task runAuditorServer(type: JavaExec, dependsOn: assemble) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.compliance.auditor.Starter'
-    args '--server.port=10052', '--config.rpc.host=localhost', '--config.rpc.port=52727', '--config.rpc.username=user1', '--config.rpc.password=test'
+    args '--server.port=10052', '--config.rpc.host=localhost', '--config.rpc.port=49962', '--config.rpc.username=user1', '--config.rpc.password=test'
 }

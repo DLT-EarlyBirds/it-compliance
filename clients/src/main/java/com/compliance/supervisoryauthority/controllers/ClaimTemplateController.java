@@ -14,8 +14,11 @@ import net.corda.core.messaging.CordaRPCOps;
 import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
 import net.corda.core.transactions.SignedTransaction;
+import org.checkerframework.checker.units.qual.C;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -52,9 +55,9 @@ public class ClaimTemplateController {
     }
 
     @GetMapping(value = "/{linearId}", produces = APPLICATION_JSON_VALUE)
-    private List<ClaimTemplate> getByLinearId(@PathVariable String linearId) {
-        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)), Vault.StateStatus.ALL, Collections.singleton(ClaimTemplate.class));
-        return proxy
+    private ResponseEntity<ClaimTemplate> getByLinearId(@PathVariable String linearId) {
+        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)), Vault.StateStatus.UNCONSUMED, Collections.singleton(ClaimTemplate.class));
+        List<ClaimTemplate> claimTemplates = proxy
                 .vaultQueryByCriteria(queryCriteria, ClaimTemplate.class)
                 .getStates()
                 .stream()
@@ -62,53 +65,40 @@ public class ClaimTemplateController {
                         claimTemplateStateAndRef -> claimTemplateStateAndRef.getState().getData()
                 )
                 .collect(Collectors.toList());
+
+        if (claimTemplates.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        else return ResponseEntity.status(HttpStatus.OK).body(claimTemplates.get(0));
     }
 
     @PutMapping(value = "/")
-    private void update(@RequestBody ClaimTemplateDTO claimTemplateDTO) throws ExecutionException, InterruptedException {
+    private ResponseEntity<ClaimTemplate> update(@RequestBody ClaimTemplateDTO claimTemplateDTO) throws ExecutionException, InterruptedException {
         UniqueIdentifier id = UniqueIdentifier.Companion.fromString(claimTemplateDTO.getLinearId());
-        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(id), Vault.StateStatus.ALL, Collections.singleton(ClaimTemplate.class));
+        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(id), Vault.StateStatus.UNCONSUMED, Collections.singleton(ClaimTemplate.class));
         // Check if state with that linear ID exists
-        // Todo: Should throw custom exception if no regulation with the ID exists
         if (!proxy.vaultQueryByCriteria(queryCriteria, ClaimTemplate.class).getStates().isEmpty()) {
             // Call the update flow
-            proxy.startTrackedFlowDynamic(
+            ClaimTemplate claimTemplate = (ClaimTemplate) proxy.startTrackedFlowDynamic(
                     UpdateClaimTemplate.UpdateClaimTemplateInitiator.class,
                     id,
                     claimTemplateDTO.getName(),
                     claimTemplateDTO.getTemplateDescription(),
                     UniqueIdentifier.Companion.fromString(claimTemplateDTO.getRule())
-            ).getReturnValue().get();
-        }
+            ).getReturnValue().get().getTx().getOutput(0);
+            return ResponseEntity.status(HttpStatus.OK).body(claimTemplate);
+        } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
 
     @PostMapping("/")
-    private ClaimTemplate create(@RequestBody ClaimTemplateDTO claimTemplateDTO) throws ExecutionException, InterruptedException {
-        proxy.startTrackedFlowDynamic(
+    private ResponseEntity<ClaimTemplate> create(@RequestBody ClaimTemplateDTO claimTemplateDTO) throws ExecutionException, InterruptedException {
+        ClaimTemplate claimTemplate = (ClaimTemplate) proxy.startTrackedFlowDynamic(
                 CreateClaimTemplate.CreateClaimTemplateInitiator.class,
                 claimTemplateDTO.getName(),
                 claimTemplateDTO.getTemplateDescription(),
                 UniqueIdentifier.Companion.fromString(claimTemplateDTO.getRule()),
                 new Date()
-        ).getReturnValue().get();
-
-        List<ClaimTemplate> claimTemplates = proxy
-                .vaultQuery(ClaimTemplate.class)
-                .getStates()
-                .stream()
-                .map(
-                        ruleStateAndRef -> ruleStateAndRef.getState().getData())
-                .collect(Collectors.toList());
-
-        // Return regulation linear ID
-        return claimTemplates
-                .stream()
-                .filter(
-                        claimTemplate -> claimTemplate.getName().equals(claimTemplateDTO.getName()) && claimTemplate.getTemplateDescription().equals(claimTemplateDTO.getTemplateDescription())
-                )
-                .collect(Collectors.toList())
-                .get(0);
+        ).getReturnValue().get().getTx().getOutput(0);
+        return ResponseEntity.status(HttpStatus.CREATED).body(claimTemplate);
     }
 
     @GetMapping(value = "/suggestions/", produces = APPLICATION_JSON_VALUE)
@@ -124,14 +114,14 @@ public class ClaimTemplateController {
     }
 
     @GetMapping(value = "/suggestions/{linearId}", produces = APPLICATION_JSON_VALUE)
-    private List<ClaimTemplateSuggestion> getSuggestionByLinearId(@PathVariable String linearId) {
+    private ResponseEntity<ClaimTemplateSuggestion> getSuggestionByLinearId(@PathVariable String linearId) {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
                 null,
                 Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)),
-                Vault.StateStatus.ALL,
+                Vault.StateStatus.UNCONSUMED,
                 Collections.singleton(ClaimTemplate.class)
         );
-        return proxy
+        List<ClaimTemplateSuggestion> claimTemplateSuggestions =  proxy
                 .vaultQueryByCriteria(queryCriteria, ClaimTemplateSuggestion.class)
                 .getStates()
                 .stream()
@@ -139,18 +129,18 @@ public class ClaimTemplateController {
                         claimTemplateSuggestionStateAndRef -> claimTemplateSuggestionStateAndRef.getState().getData()
                 )
                 .collect(Collectors.toList());
+        if (claimTemplateSuggestions.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        else return ResponseEntity.status(HttpStatus.OK).body(claimTemplateSuggestions.get(0));
     }
 
     @PostMapping("/suggestions/{linearId}")
-    private ClaimTemplate acceptSuggestion(@PathVariable String linearId) throws ExecutionException, InterruptedException {
+    private ResponseEntity<ClaimTemplate> acceptSuggestion(@PathVariable String linearId) throws ExecutionException, InterruptedException {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
                 null,
                 Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)),
-                Vault.StateStatus.ALL,
+                Vault.StateStatus.UNCONSUMED,
                 Collections.singleton(ClaimTemplate.class)
         );
-
-        ClaimTemplateSuggestion suggestion;
 
         List<ClaimTemplateSuggestion> suggestions = proxy
                 .vaultQueryByCriteria(queryCriteria, ClaimTemplateSuggestion.class)
@@ -162,31 +152,12 @@ public class ClaimTemplateController {
                 .collect(Collectors.toList());
 
         if (!suggestions.isEmpty()) {
-
-            suggestion = suggestions.get(0);
-
-            proxy.startTrackedFlowDynamic(
+            ClaimTemplate claimTemplate = (ClaimTemplate) proxy.startTrackedFlowDynamic(
                     AcceptClaimTemplateSuggestion.AcceptClaimTemplateSuggestionInitiator.class,
                     UniqueIdentifier.Companion.fromString(linearId)
-            ).getReturnValue().get();
+            ).getReturnValue().get().getTx().getOutput(0);
 
-            List<ClaimTemplate> claimTemplates = proxy
-                    .vaultQuery(ClaimTemplate.class)
-                    .getStates()
-                    .stream()
-                    .map(
-                            ruleStateAndRef -> ruleStateAndRef.getState().getData())
-                    .collect(Collectors.toList());
-
-            // Return regulation linear ID
-            return claimTemplates
-                    .stream()
-                    .filter(
-                            claimTemplate -> claimTemplate.getName().equals(suggestion.getName()) && claimTemplate.getTemplateDescription().equals(suggestion.getTemplateDescription())
-                    )
-                    .collect(Collectors.toList())
-                    .get(0);
-
-        } else return null;
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(claimTemplate);
+        } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 }

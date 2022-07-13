@@ -61,38 +61,37 @@ public class UpdateClaimTemplate {
 
                 final StateAndRef<ClaimTemplate> input = getServiceHub().getVaultService().queryBy(ClaimTemplate.class, inputCriteria).getStates().get(0);
                 builder.addInputState(input);
+
+                // Add all parties in the network
+                final List<Party> involvedParties = getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList());
+                // Remove yourself
+                involvedParties.remove(getOurIdentity());
+                // Remove notaries
+                involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
+
+                final ClaimTemplate output = new ClaimTemplate(input.getState().getData().getLinearId(), name, templateDescription, this.getOurIdentity(), involvedParties, new LinearPointer<>(rule, Rule.class));
+
+                builder.addOutputState(output);
+                builder.addCommand(new ClaimTemplateContract.Commands.UpdateClaimTemplate(),
+                        involvedParties.stream().map(Party::getOwningKey).collect(Collectors.toList())
+                );
+
+                // Verify that the transaction is valid.
+                builder.verify(getServiceHub());
+
+                final SignedTransaction signedTransaction = getServiceHub().signInitialTransaction(builder);
+
+                involvedParties.remove(getOurIdentity());
+
+                List<FlowSession> sessions = involvedParties.stream().map(this::initiateFlow).collect(Collectors.toList());
+
+                SignedTransaction stx = subFlow(new CollectSignaturesFlow(signedTransaction, sessions));
+
+                return subFlow(new FinalityFlow(stx, sessions));
             }
             catch (IndexOutOfBoundsException e) {
                 throw new FlowException("ERROR: No ClaimTemplate with provided ID found!");
             }
-
-            // Add all parties in the network
-            final List<Party> involvedParties = getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList());
-
-            final ClaimTemplate output = new ClaimTemplate(name, templateDescription, this.getOurIdentity(), involvedParties, new LinearPointer<>(rule, Rule.class));
-            // Remove yourself
-            involvedParties.remove(getOurIdentity());
-            // Remove notaries
-            involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
-
-
-            builder.addOutputState(output);
-            builder.addCommand(new ClaimTemplateContract.Commands.UpdateClaimTemplate(),
-                    involvedParties.stream().map(Party::getOwningKey).collect(Collectors.toList())
-            );
-
-            // Verify that the transaction is valid.
-            builder.verify(getServiceHub());
-
-            final SignedTransaction signedTransaction = getServiceHub().signInitialTransaction(builder);
-
-            involvedParties.remove(getOurIdentity());
-
-            List<FlowSession> sessions = involvedParties.stream().map(this::initiateFlow).collect(Collectors.toList());
-
-            SignedTransaction stx = subFlow(new CollectSignaturesFlow(signedTransaction, sessions));
-
-            return subFlow(new FinalityFlow(stx, sessions));
         }
     }
 

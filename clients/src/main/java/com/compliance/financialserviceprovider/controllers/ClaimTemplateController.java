@@ -7,16 +7,17 @@ import com.compliance.states.ClaimTemplate;
 import com.compliance.states.ClaimTemplateSuggestion;
 import com.compliance.financialserviceprovider.NodeRPCConnection;
 import net.corda.core.contracts.UniqueIdentifier;
+import net.corda.core.identity.Party;
 import net.corda.core.messaging.CordaRPCOps;
 import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -48,9 +49,9 @@ public class ClaimTemplateController {
     }
 
     @GetMapping(value = "/{linearId}", produces = APPLICATION_JSON_VALUE)
-    private List<ClaimTemplate> getByLinearId(@PathVariable String linearId) {
-        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)), Vault.StateStatus.ALL, Collections.singleton(ClaimTemplate.class));
-        return proxy
+    private ResponseEntity<ClaimTemplate> getByLinearId(@PathVariable String linearId) {
+        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)), Vault.StateStatus.UNCONSUMED, Collections.singleton(ClaimTemplate.class));
+        List<ClaimTemplate> claimTemplates = proxy
                 .vaultQueryByCriteria(queryCriteria, ClaimTemplate.class)
                 .getStates()
                 .stream()
@@ -58,6 +59,9 @@ public class ClaimTemplateController {
                         claimTemplateStateAndRef -> claimTemplateStateAndRef.getState().getData()
                 )
                 .collect(Collectors.toList());
+
+        if (claimTemplates.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        else return ResponseEntity.status(HttpStatus.FOUND).body(claimTemplates.get(0));
     }
 
     @GetMapping(value = "/suggestions/", produces = APPLICATION_JSON_VALUE)
@@ -73,14 +77,14 @@ public class ClaimTemplateController {
     }
 
     @GetMapping(value = "/suggestions/{linearId}", produces = APPLICATION_JSON_VALUE)
-    private List<ClaimTemplateSuggestion> getSuggestionByLinearId(@PathVariable String linearId) {
+    private ResponseEntity<ClaimTemplateSuggestion> getSuggestionByLinearId(@PathVariable String linearId) {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
                 null,
                 Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)),
-                Vault.StateStatus.ALL,
+                Vault.StateStatus.UNCONSUMED,
                 Collections.singleton(ClaimTemplate.class)
         );
-        return proxy
+        List<ClaimTemplateSuggestion> claimTemplateSuggestions =  proxy
                 .vaultQueryByCriteria(queryCriteria, ClaimTemplateSuggestion.class)
                 .getStates()
                 .stream()
@@ -88,34 +92,25 @@ public class ClaimTemplateController {
                         claimTemplateSuggestionStateAndRef -> claimTemplateSuggestionStateAndRef.getState().getData()
                 )
                 .collect(Collectors.toList());
+        if (claimTemplateSuggestions.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        else return ResponseEntity.status(HttpStatus.FOUND).body(claimTemplateSuggestions.get(0));
     }
 
     @PostMapping("/suggestions/")
-    private ClaimTemplateSuggestion createSuggestion(@RequestBody ClaimTemplateSuggestionDTO claimTemplateSuggestionDTO) throws ExecutionException, InterruptedException {
-        proxy.startTrackedFlowDynamic(
-                CreateClaimTemplateSuggestion.CreateClaimTemplateSuggestionInitiator.class,
-                claimTemplateSuggestionDTO.getName(),
-                claimTemplateSuggestionDTO.getTemplateDescription(),
-                UniqueIdentifier.Companion.fromString(claimTemplateSuggestionDTO.getRule()),
-                new Date()
-        ).getReturnValue().get();
+    private ResponseEntity<ClaimTemplateSuggestion> createSuggestion(@RequestBody ClaimTemplateSuggestionDTO claimTemplateSuggestionDTO) throws ExecutionException, InterruptedException {
+        Set<Party> partySet = proxy.partiesFromName("Supervisory Authority", true);
 
-        List<ClaimTemplateSuggestion> claimTemplateSuggestions = proxy
-                .vaultQuery(ClaimTemplateSuggestion.class)
-                .getStates()
-                .stream()
-                .map(
-                        claimTemplateSuggestionStateAndRef -> claimTemplateSuggestionStateAndRef.getState().getData())
-                .collect(Collectors.toList());
+        if (!partySet.isEmpty()) {
+            Party supervisoryAuthority = new ArrayList<>(partySet).get(0);
 
-        // Return regulation linear ID
-        return claimTemplateSuggestions
-                .stream()
-                .filter(
-                        claimTemplateSuggestion -> claimTemplateSuggestion.getName().equals(claimTemplateSuggestionDTO.getName()) && claimTemplateSuggestion.getTemplateDescription().equals(claimTemplateSuggestionDTO.getTemplateDescription())
-                )
-                .collect(Collectors.toList())
-                .get(0);
-
+            ClaimTemplateSuggestion claimTemplateSuggestion = (ClaimTemplateSuggestion) proxy.startTrackedFlowDynamic(
+                    CreateClaimTemplateSuggestion.CreateClaimTemplateSuggestionInitiator.class,
+                    claimTemplateSuggestionDTO.getName(),
+                    claimTemplateSuggestionDTO.getTemplateDescription(),
+                    supervisoryAuthority,
+                    UniqueIdentifier.Companion.fromString(claimTemplateSuggestionDTO.getRule())
+                    ).getReturnValue().get().getTx().getOutput(0);
+            return ResponseEntity.status(HttpStatus.CREATED).body(claimTemplateSuggestion);
+        } else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
 }
