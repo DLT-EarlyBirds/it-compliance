@@ -47,22 +47,6 @@ public class UpdateSpecificClaim {
                 String description,
                 Party supervisoryAuthority,
                 UniqueIdentifier claimTemplateLinearId,
-                List<UniqueIdentifier> supportingClaimsLinearIds
-        ) {
-            this.name = name;
-            this.specificClaimLinearId = specificClaimLinearId;
-            this.description = description;
-            this.supervisoryAuthority = supervisoryAuthority;
-            this.claimTemplateLinearId = claimTemplateLinearId;
-            this.supportingClaimsLinearIds = supportingClaimsLinearIds;
-        }
-
-        public UpdateSpecificClaimInitiator(
-                @NotNull UniqueIdentifier specificClaimLinearId,
-                String name,
-                String description,
-                Party supervisoryAuthority,
-                UniqueIdentifier claimTemplateLinearId,
                 List<UniqueIdentifier> supportingClaimsLinearIds,
                 SecureHash attachmentID
         ) {
