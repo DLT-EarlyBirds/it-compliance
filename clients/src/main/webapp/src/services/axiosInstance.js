@@ -1,11 +1,11 @@
 import axios from "axios";
 
 const axiosFSA = axios.create({
-  baseURL: "",
+  baseURL: "http://localhost:10050",
 });
 
 const axiosBrainFinance = axios.create({
-  baseURL: "",
+  baseURL: "http://localhost:10051",
 });
 
 const axiosCapitalHolding = axios.create({
