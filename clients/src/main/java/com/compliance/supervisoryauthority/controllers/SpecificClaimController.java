@@ -65,7 +65,7 @@ public class SpecificClaimController {
                 .collect(Collectors.toList());
 
         if (specificClaims.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        else return ResponseEntity.status(HttpStatus.FOUND).body(specificClaims.get(0));
+        else return ResponseEntity.status(HttpStatus.OK).body(specificClaims.get(0));
      }
 
     @GetMapping(value = "/{name}/", produces = APPLICATION_JSON_VALUE)
@@ -87,7 +87,7 @@ public class SpecificClaimController {
                     )
                     .collect(Collectors.toList());
 
-            return ResponseEntity.status(HttpStatus.FOUND).body(specificClaims);
+            return ResponseEntity.status(HttpStatus.OK).body(specificClaims);
         } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
@@ -110,7 +110,7 @@ public class SpecificClaimController {
                     )
                     .collect(Collectors.toList());
             if (specificClaims.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            else return ResponseEntity.status(HttpStatus.FOUND).body(specificClaims.get(0));
+            else return ResponseEntity.status(HttpStatus.OK).body(specificClaims.get(0));
         } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 }

@@ -61,7 +61,7 @@ public class ClaimTemplateController {
                 .collect(Collectors.toList());
 
         if (claimTemplates.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        else return ResponseEntity.status(HttpStatus.FOUND).body(claimTemplates.get(0));
+        else return ResponseEntity.status(HttpStatus.OK).body(claimTemplates.get(0));
     }
 
     @GetMapping(value = "/suggestions/", produces = APPLICATION_JSON_VALUE)
@@ -93,7 +93,7 @@ public class ClaimTemplateController {
                 )
                 .collect(Collectors.toList());
         if (claimTemplateSuggestions.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        else return ResponseEntity.status(HttpStatus.FOUND).body(claimTemplateSuggestions.get(0));
+        else return ResponseEntity.status(HttpStatus.OK).body(claimTemplateSuggestions.get(0));
     }
 
     @PostMapping("/suggestions/")
