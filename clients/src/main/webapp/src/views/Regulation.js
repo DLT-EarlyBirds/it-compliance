@@ -1,16 +1,16 @@
 import React from "react";
 import { Table, Button } from "antd";
-import regulationData from "../data/regulations.json";
 import CreateRegulation from "../components/CreateRegulation";
+import { useData } from "../contexts/DataContext";
 
 const columns = [
   {
-    title: "Name",
-    dataIndex: "name",
+    title: "Linear id",
+    dataIndex: ["linearId", "id"],
   },
   {
-    title: "Name Abbreviated",
-    dataIndex: "nameAbbreviated",
+    title: "Name",
+    dataIndex: "name",
   },
   {
     title: "Description",
@@ -26,11 +26,15 @@ const columns = [
   },
   {
     title: "Deprecate",
-    dataIndex: "id",
-    render: (id) => {
+    dataIndex: "isDeprecated",
+    render: ({ isDeprecated, linearId }) => {
       return (
-        <Button type="primary" onClick={() => console.log(id)}>
-          Deprecate
+        <Button
+          type="primary"
+          disabled={isDeprecated}
+          onClick={() => console.log(linearId.id)}
+        >
+          {isDeprecated ? "Deprecate" : "Deprecated"}
         </Button>
       );
     },
@@ -38,10 +42,12 @@ const columns = [
 ];
 
 function Regulation() {
+  const { regulations } = useData();
+
   return (
     <div>
       <CreateRegulation />
-      <Table columns={columns} dataSource={regulationData} />
+      <Table columns={columns} dataSource={regulations} />
     </div>
   );
 }

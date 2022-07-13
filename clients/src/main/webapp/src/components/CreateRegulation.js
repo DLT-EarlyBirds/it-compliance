@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Modal, Button, Form, Input } from "antd";
+import RegulationService from "../services/Regulation.service";
 
 const CreateRegulation = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -18,7 +19,7 @@ const CreateRegulation = () => {
   };
 
   const onFinish = (values) => {
-    console.log("Success:", values);
+    console.log(values);
   };
 
   const onFinishFailed = (errorInfo) => {

@@ -8,21 +8,25 @@ import Home from "./views/Home";
 import Rule from "./views/Rule";
 import ClaimTemplate from "./views/ClaimTemplate";
 import { Routes, Route } from "react-router-dom";
+import { NodeProvider } from "./contexts/NodeContext";
+import { DataProvider } from "./contexts/DataContext";
 
 const App = () => {
   return (
-    <>
-      <Header />
-      <div className="mx-10">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/regulations" element={<Regulation />} />
-          <Route path="/rules" element={<Rule />} />
-          <Route path="/graph-regulations" element={<GraphRegulation />} />
-          <Route path="/claim-templates" element={<ClaimTemplate />} />
-        </Routes>
-      </div>
-    </>
+    <NodeProvider>
+      <DataProvider>
+        <Header />
+        <div className="mx-10">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/regulations" element={<Regulation />} />
+            <Route path="/rules" element={<Rule />} />
+            <Route path="/graph-regulations" element={<GraphRegulation />} />
+            <Route path="/claim-templates" element={<ClaimTemplate />} />
+          </Routes>
+        </div>
+      </DataProvider>
+    </NodeProvider>
   );
 };
 
