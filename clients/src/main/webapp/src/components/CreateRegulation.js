@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { Modal, Button, Form, Input } from "antd";
 import RegulationService from "../services/Regulation.service";
+import { useNode } from "../contexts/NodeContext";
+import { useData } from "../contexts/DataContext";
 
 const CreateRegulation = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [regulationForm] = Form.useForm();
+  const { axiosInstance } = useNode();
+  const { regulations, setRegulations } = useData();
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -19,7 +23,9 @@ const CreateRegulation = () => {
   };
 
   const onFinish = (values) => {
-    console.log(values);
+    RegulationService.createRegulation(axiosInstance, values).then((response) =>
+      setRegulations([...regulations, response])
+    );
   };
 
   const onFinishFailed = (errorInfo) => {

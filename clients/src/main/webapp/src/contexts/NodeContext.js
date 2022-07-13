@@ -5,7 +5,7 @@ const NodeContext = React.createContext();
 
 function NodeProvider(props) {
   const [currentNode, setCurrentNode] = useState("Supervisory Authority");
-  console.log(currentNode);
+
   const axiosInstance = getAxiosInstance(currentNode);
 
   return (

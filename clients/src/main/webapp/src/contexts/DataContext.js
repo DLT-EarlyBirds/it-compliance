@@ -14,7 +14,7 @@ function DataProvider(props) {
   const [claimTemplates, setClaimTemplates] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const data = { regulations, rules, claimTemplates };
+  const data = { regulations, rules, claimTemplates, setRegulations };
 
   const fetchData = async () => {
     setIsLoading(true);
