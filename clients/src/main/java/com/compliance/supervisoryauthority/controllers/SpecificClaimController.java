@@ -9,6 +9,8 @@ import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,14 +48,14 @@ public class SpecificClaimController {
     }
 
     @GetMapping(value = "/{linearId}", produces = APPLICATION_JSON_VALUE)
-    private List<SpecificClaim> getByLinearId(@PathVariable String linearId) {
+    private ResponseEntity<SpecificClaim> getByLinearId(@PathVariable String linearId) {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
                 null,
                 Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)),
                 Vault.StateStatus.UNCONSUMED,
                 Collections.singleton(SpecificClaim.class)
         );
-        return proxy
+        List<SpecificClaim> specificClaims = proxy
                 .vaultQueryByCriteria(queryCriteria, SpecificClaim.class)
                 .getStates()
                 .stream()
@@ -61,10 +63,13 @@ public class SpecificClaimController {
                         claimTemplateStateAndRef -> claimTemplateStateAndRef.getState().getData()
                 )
                 .collect(Collectors.toList());
-    }
+
+        if (specificClaims.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        else return ResponseEntity.status(HttpStatus.FOUND).body(specificClaims.get(0));
+     }
 
     @GetMapping(value = "/{name}/", produces = APPLICATION_JSON_VALUE)
-    private List<SpecificClaim> getAllForOrg(@PathVariable String name) {
+    private ResponseEntity<List<SpecificClaim>> getAllForOrg(@PathVariable String name) {
         if (!proxy.partiesFromName(name, true).isEmpty()) {
             List<Party> issuer = new ArrayList<>(proxy.partiesFromName(name, true));
             QueryCriteria criteria = new QueryCriteria.LinearStateQueryCriteria(
@@ -73,7 +78,7 @@ public class SpecificClaimController {
                     Vault.StateStatus.UNCONSUMED,
                     Collections.singleton(SpecificClaim.class)
             );
-            return proxy
+            List<SpecificClaim> specificClaims = proxy
                     .vaultQueryByCriteria(criteria, SpecificClaim.class)
                     .getStates()
                     .stream()
@@ -81,11 +86,13 @@ public class SpecificClaimController {
                             specificClaimStateAndRef -> specificClaimStateAndRef.getState().getData()
                     )
                     .collect(Collectors.toList());
-        } else return new ArrayList<>();
+
+            return ResponseEntity.status(HttpStatus.FOUND).body(specificClaims);
+        } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @GetMapping(value = "/{name}/{linearId}", produces = APPLICATION_JSON_VALUE)
-    private List<SpecificClaim> getAllForOrg(@PathVariable String name, @PathVariable String linearId) {
+    private ResponseEntity<SpecificClaim> getAllForOrg(@PathVariable String name, @PathVariable String linearId) {
         if (!proxy.partiesFromName(name, true).isEmpty()) {
             List<Party> issuer = new ArrayList<>(proxy.partiesFromName(name, true));
             QueryCriteria criteria = new QueryCriteria.LinearStateQueryCriteria(
@@ -94,7 +101,7 @@ public class SpecificClaimController {
                     Vault.StateStatus.UNCONSUMED,
                     Collections.singleton(SpecificClaim.class)
             );
-            return proxy
+            List<SpecificClaim> specificClaims = proxy
                     .vaultQueryByCriteria(criteria, SpecificClaim.class)
                     .getStates()
                     .stream()
@@ -102,6 +109,8 @@ public class SpecificClaimController {
                             specificClaimStateAndRef -> specificClaimStateAndRef.getState().getData()
                     )
                     .collect(Collectors.toList());
-        } else return new ArrayList<>();
+            if (specificClaims.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            else return ResponseEntity.status(HttpStatus.FOUND).body(specificClaims.get(0));
+        } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 }

@@ -92,7 +92,7 @@ public class RegulationController {
                     regulationDTO.getReleaseDate()
             ).getReturnValue().get().getTx().getOutput(0);
             return ResponseEntity.status(HttpStatus.OK).body(regulation);
-        } else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @PostMapping("/")
