@@ -7,6 +7,7 @@ import com.compliance.states.ClaimTemplate;
 import com.compliance.states.ClaimTemplateSuggestion;
 import com.compliance.financialserviceprovider.NodeRPCConnection;
 import net.corda.core.contracts.UniqueIdentifier;
+import net.corda.core.identity.Party;
 import net.corda.core.messaging.CordaRPCOps;
 import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
@@ -14,9 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -92,30 +91,35 @@ public class ClaimTemplateController {
 
     @PostMapping("/suggestions/")
     private ClaimTemplateSuggestion createSuggestion(@RequestBody ClaimTemplateSuggestionDTO claimTemplateSuggestionDTO) throws ExecutionException, InterruptedException {
-        proxy.startTrackedFlowDynamic(
-                CreateClaimTemplateSuggestion.CreateClaimTemplateSuggestionInitiator.class,
-                claimTemplateSuggestionDTO.getName(),
-                claimTemplateSuggestionDTO.getTemplateDescription(),
-                UniqueIdentifier.Companion.fromString(claimTemplateSuggestionDTO.getRule()),
-                new Date()
-        ).getReturnValue().get();
+        Set<Party> partySet = proxy.partiesFromName("Supervisory Authority", true);
 
-        List<ClaimTemplateSuggestion> claimTemplateSuggestions = proxy
-                .vaultQuery(ClaimTemplateSuggestion.class)
-                .getStates()
-                .stream()
-                .map(
-                        claimTemplateSuggestionStateAndRef -> claimTemplateSuggestionStateAndRef.getState().getData())
-                .collect(Collectors.toList());
+        if (!partySet.isEmpty()) {
+            Party supervisoryAuthority = new ArrayList<>(partySet).get(0);
 
-        // Return regulation linear ID
-        return claimTemplateSuggestions
-                .stream()
-                .filter(
-                        claimTemplateSuggestion -> claimTemplateSuggestion.getName().equals(claimTemplateSuggestionDTO.getName()) && claimTemplateSuggestion.getTemplateDescription().equals(claimTemplateSuggestionDTO.getTemplateDescription())
-                )
-                .collect(Collectors.toList())
-                .get(0);
+            proxy.startTrackedFlowDynamic(
+                    CreateClaimTemplateSuggestion.CreateClaimTemplateSuggestionInitiator.class,
+                    claimTemplateSuggestionDTO.getName(),
+                    claimTemplateSuggestionDTO.getTemplateDescription(),
+                    supervisoryAuthority,
+                    UniqueIdentifier.Companion.fromString(claimTemplateSuggestionDTO.getRule())
+                    ).getReturnValue().get();
 
+            List<ClaimTemplateSuggestion> claimTemplateSuggestions = proxy
+                    .vaultQuery(ClaimTemplateSuggestion.class)
+                    .getStates()
+                    .stream()
+                    .map(
+                            claimTemplateSuggestionStateAndRef -> claimTemplateSuggestionStateAndRef.getState().getData())
+                    .collect(Collectors.toList());
+
+            // Return regulation linear ID
+            return claimTemplateSuggestions
+                    .stream()
+                    .filter(
+                            claimTemplateSuggestion -> claimTemplateSuggestion.getName().equals(claimTemplateSuggestionDTO.getName()) && claimTemplateSuggestion.getTemplateDescription().equals(claimTemplateSuggestionDTO.getTemplateDescription())
+                    )
+                    .collect(Collectors.toList())
+                    .get(0);
+        } else return null;
     }
 }
