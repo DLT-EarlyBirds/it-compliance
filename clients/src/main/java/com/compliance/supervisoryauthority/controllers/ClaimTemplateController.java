@@ -53,7 +53,7 @@ public class ClaimTemplateController {
 
     @GetMapping(value = "/{linearId}", produces = APPLICATION_JSON_VALUE)
     private List<ClaimTemplate> getByLinearId(@PathVariable String linearId) {
-        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)), Vault.StateStatus.ALL, Collections.singleton(ClaimTemplate.class));
+        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)), Vault.StateStatus.UNCONSUMED, Collections.singleton(ClaimTemplate.class));
         return proxy
                 .vaultQueryByCriteria(queryCriteria, ClaimTemplate.class)
                 .getStates()
@@ -67,7 +67,7 @@ public class ClaimTemplateController {
     @PutMapping(value = "/")
     private void update(@RequestBody ClaimTemplateDTO claimTemplateDTO) throws ExecutionException, InterruptedException {
         UniqueIdentifier id = UniqueIdentifier.Companion.fromString(claimTemplateDTO.getLinearId());
-        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(id), Vault.StateStatus.ALL, Collections.singleton(ClaimTemplate.class));
+        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(id), Vault.StateStatus.UNCONSUMED, Collections.singleton(ClaimTemplate.class));
         // Check if state with that linear ID exists
         // Todo: Should throw custom exception if no regulation with the ID exists
         if (!proxy.vaultQueryByCriteria(queryCriteria, ClaimTemplate.class).getStates().isEmpty()) {
@@ -128,7 +128,7 @@ public class ClaimTemplateController {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
                 null,
                 Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)),
-                Vault.StateStatus.ALL,
+                Vault.StateStatus.UNCONSUMED,
                 Collections.singleton(ClaimTemplate.class)
         );
         return proxy
@@ -146,7 +146,7 @@ public class ClaimTemplateController {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
                 null,
                 Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)),
-                Vault.StateStatus.ALL,
+                Vault.StateStatus.UNCONSUMED,
                 Collections.singleton(ClaimTemplate.class)
         );
 

@@ -51,7 +51,7 @@ public class SpecificClaimController {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
                 null,
                 Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)),
-                Vault.StateStatus.ALL,
+                Vault.StateStatus.UNCONSUMED,
                 Collections.singleton(SpecificClaim.class)
         );
         return proxy
@@ -71,7 +71,7 @@ public class SpecificClaimController {
             QueryCriteria criteria = new QueryCriteria.LinearStateQueryCriteria(
                     issuer,
                     null,
-                    Vault.StateStatus.ALL,
+                    Vault.StateStatus.UNCONSUMED,
                     Collections.singleton(SpecificClaim.class)
             );
             return proxy
@@ -92,7 +92,7 @@ public class SpecificClaimController {
             QueryCriteria criteria = new QueryCriteria.LinearStateQueryCriteria(
                     issuer,
                     Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)),
-                    Vault.StateStatus.ALL,
+                    Vault.StateStatus.UNCONSUMED,
                     Collections.singleton(SpecificClaim.class)
             );
             return proxy

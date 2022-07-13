@@ -49,7 +49,11 @@ public class ClaimTemplateController {
 
     @GetMapping(value = "/{linearId}", produces = APPLICATION_JSON_VALUE)
     private List<ClaimTemplate> getByLinearId(@PathVariable String linearId) {
-        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)), Vault.StateStatus.ALL, Collections.singleton(ClaimTemplate.class));
+        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
+                null, 
+                Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)), 
+                Vault.StateStatus.UNCONSUMED, 
+                Collections.singleton(ClaimTemplate.class));
         return proxy
                 .vaultQueryByCriteria(queryCriteria, ClaimTemplate.class)
                 .getStates()
@@ -77,7 +81,7 @@ public class ClaimTemplateController {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
                 null,
                 Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)),
-                Vault.StateStatus.ALL,
+                Vault.StateStatus.UNCONSUMED,
                 Collections.singleton(ClaimTemplate.class)
         );
         return proxy

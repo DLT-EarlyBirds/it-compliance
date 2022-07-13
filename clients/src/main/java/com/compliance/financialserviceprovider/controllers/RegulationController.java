@@ -43,7 +43,12 @@ public class RegulationController {
 
     @GetMapping(value = "/{linearId}", produces = APPLICATION_JSON_VALUE)
     private List<Regulation> getByLinearId(@PathVariable String linearId) {
-        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)), Vault.StateStatus.ALL, Collections.singleton(Regulation.class));
+        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
+                null,
+                Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)),
+                Vault.StateStatus.UNCONSUMED,
+                Collections.singleton(Regulation.class)
+        );
         return proxy
                 .vaultQueryByCriteria(queryCriteria, Regulation.class)
                 .getStates()
