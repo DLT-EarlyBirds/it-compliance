@@ -28,6 +28,7 @@ public class UpdateSpecificClaim {
         // Name of the SpecificClaim
         private final String name;
 
+        private final Party auditor;
         private SecureHash attachmentID;
         @NotNull
         private final UniqueIdentifier specificClaimLinearId;
@@ -46,11 +47,30 @@ public class UpdateSpecificClaim {
                 String name,
                 String description,
                 Party supervisoryAuthority,
+                Party auditor,
+                UniqueIdentifier claimTemplateLinearId,
+                List<UniqueIdentifier> supportingClaimsLinearIds
+        ) {
+            this.name = name;
+            this.auditor = auditor;
+            this.specificClaimLinearId = specificClaimLinearId;
+            this.description = description;
+            this.supervisoryAuthority = supervisoryAuthority;
+            this.claimTemplateLinearId = claimTemplateLinearId;
+            this.supportingClaimsLinearIds = supportingClaimsLinearIds;
+        }
+        public UpdateSpecificClaimInitiator(
+                @NotNull UniqueIdentifier specificClaimLinearId,
+                String name,
+                String description,
+                Party supervisoryAuthority,
+                Party auditor,
                 UniqueIdentifier claimTemplateLinearId,
                 List<UniqueIdentifier> supportingClaimsLinearIds,
                 SecureHash attachmentID
         ) {
             this.name = name;
+            this.auditor = auditor;
             this.specificClaimLinearId = specificClaimLinearId;
             this.description = description;
             this.supervisoryAuthority = supervisoryAuthority;
@@ -89,6 +109,7 @@ public class UpdateSpecificClaim {
                         this.description,
                         this.getOurIdentity(),
                         this.supervisoryAuthority,
+                        this.auditor,
                         new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class),
                         this.supportingClaimsLinearIds
                                 .stream()
@@ -109,6 +130,7 @@ public class UpdateSpecificClaim {
                         this.description,
                         this.getOurIdentity(),
                         this.supervisoryAuthority,
+                        this.auditor,
                         new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class),
                         this.supportingClaimsLinearIds
                                 .stream()
