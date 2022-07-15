@@ -1,6 +1,7 @@
 package com.compliance.contracts;
 
 import com.compliance.states.ClaimTemplate;
+import com.compliance.states.Rule;
 import com.compliance.states.SpecificClaim;
 import net.corda.core.contracts.CommandData;
 import net.corda.core.contracts.Contract;
@@ -8,6 +9,7 @@ import net.corda.core.contracts.StateAndRef;
 import net.corda.core.transactions.LedgerTransaction;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static net.corda.core.contracts.ContractsDSL.requireThat;
@@ -40,18 +42,18 @@ public class SpecificClaimContract implements Contract {
             // Using Corda DSL function requireThat to replicate conditions-checks
             requireThat(require -> {
                 require.using("The transaction should have exactly one Claim as output", tx.getOutputs().size() == 1);
-                require.using("The output of Claim must have a name value", !output.getName().equals(""));
+                require.using("The specific claim must have a name value", !output.getName().equals(""));
                 return null;
             });
 
-        } else if (commandData instanceof Commands.ResubmitClaim) {
 
-            requireThat(require -> {
-                return null;
-            });
         } else if (commandData instanceof Commands.UpdateSpecificClaim) {
+            //Retrieve the output state of the transaction
+            ClaimTemplate input = tx.inputsOfType(ClaimTemplate.class).get(0);
 
             requireThat(require -> {
+                require.using("The transaction is only allowed to modify the input specific claim", output.getLinearId().equals(input.getLinearId()));
+                require.using("The specific claim is not empty", !Objects.equals(output.getName(), "") && !Objects.equals(output.getDescription(), ""));
                 return null;
             });
         }
@@ -61,8 +63,6 @@ public class SpecificClaimContract implements Contract {
     public interface Commands extends CommandData {
         //In our hello-world app, We will only have one command.
         class CreateClaim implements Commands {
-        }
-        class ResubmitClaim implements Commands {
         }
         class UpdateSpecificClaim implements Commands {
         }

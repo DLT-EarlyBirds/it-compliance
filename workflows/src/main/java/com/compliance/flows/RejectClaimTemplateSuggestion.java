@@ -1,7 +1,7 @@
 package com.compliance.flows;
 
 import co.paralleluniverse.fibers.Suspendable;
-import com.compliance.contracts.ClaimTemplateContract;
+import com.compliance.contracts.ClaimTemplateSuggestionContract;
 import com.compliance.states.ClaimTemplateSuggestion;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
@@ -53,7 +53,7 @@ public class RejectClaimTemplateSuggestion {
                 // Remove notaries
                 involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
 
-                builder.addCommand(new ClaimTemplateContract.Commands.RejectClaimTemplateSuggestion(),
+                builder.addCommand(new ClaimTemplateSuggestionContract.Commands.RejectClaimTemplateSuggestion(),
                         involvedParties.stream().map(Party::getOwningKey).collect(Collectors.toList())
                 );
 
