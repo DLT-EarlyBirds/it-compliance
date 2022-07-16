@@ -97,30 +97,42 @@ task deployNodes(type: net.corda.plugins.Dockerform, dependsOn: ['jar']) {
     dockerImage = "corda/corda-zulu-java1.8-4.8.6"
 
     def fspPermissions = [
-                      "StartFlow.com.compliance.flows.CreateClaimTemplateSuggestion",
-                      "StartFlow.com.compliance.flows.CreateSpecificClaim",
-                      "StartFlow.com.compliance.flows.UpdateSpecificClaim",
+                      "InvokeRpc.nodeInfo",
+                      "InvokeRpc.registeredFlows",
+                      "InvokeRpc.partiesFromName",
+                      "InvokeRpc.wellKnownPartyFromX500Name",
+                      "StartFlow.com.compliance.flows.CreateClaimTemplateSuggestion\$CreateClaimTemplateSuggestionInitiator",
+                      "StartFlow.com.compliance.flows.CreateSpecificClaim\$CreateSpecificClaimInitiator",
+                      "StartFlow.com.compliance.flows.UpdateSpecificClaim\$UpdateSpecificClaimInitiator",
                       "StartFlow.net.corda.core.flows.ContractUpgradeFlow",
                       "StartFlow.net.corda.core.flows.ContractUpgradeFlowe"
     ]
 
     def auditorPermissions = [
-                      "StartFlow.com.compliance.flows.CreateClaimTemplateSuggestion",
+                      "InvokeRpc.nodeInfo",
+                      "InvokeRpc.registeredFlows",
+                      "InvokeRpc.partiesFromName",
+                      "InvokeRpc.wellKnownPartyFromX500Name",
+                      "StartFlow.com.compliance.flows.CreateClaimTemplateSuggestion\$CreateClaimTemplateSuggestionInitiator",
                       "StartFlow.net.corda.core.flows.ContractUpgradeFlow",
                       "StartFlow.net.corda.core.flows.ContractUpgradeFlowe"
     ]
 
     def supervisoryAuthorityPermissions = [
-                      "StartFlow.com.compliance.flows.AcceptClaimTemplateSuggestion",
-                      "StartFlow.com.compliance.flows.CreateClaimTemplate",
-                      "StartFlow.com.compliance.flows.CreateRegulation",
-                      "StartFlow.com.compliance.flows.CreateRule",
-                      "StartFlow.com.compliance.flows.DeprecateRegulation",
-                      "StartFlow.com.compliance.flows.DeprecateRule",
-                      "StartFlow.com.compliance.flows.RejectClaimTemplateSuggestion",
-                      "StartFlow.com.compliance.flows.UpdateClaimTemplate",
-                      "StartFlow.com.compliance.flows.UpdateRegulation",
-                      "StartFlow.com.compliance.flows.UpdateRule",
+                      "InvokeRpc.nodeInfo",
+                      "InvokeRpc.registeredFlows",
+                      "InvokeRpc.partiesFromName",
+                      "InvokeRpc.wellKnownPartyFromX500Name",
+                      "StartFlow.com.compliance.flows.AcceptClaimTemplateSuggestion\$AcceptClaimTemplateSuggestionInitiator",
+                      "StartFlow.com.compliance.flows.CreateClaimTemplate\$CreateClaimTemplateInitiator",
+                      "StartFlow.com.compliance.flows.CreateRegulation\$CreateRegulationInitiator",
+                      "StartFlow.com.compliance.flows.CreateRule\$CreateRuleInitiator",
+                      "StartFlow.com.compliance.flows.DeprecateRegulation\$DeprecateRegulationInitiator",
+                      "StartFlow.com.compliance.flows.DeprecateRule\$DeprecateRuleInitiator",
+                      "StartFlow.com.compliance.flows.RejectClaimTemplateSuggestion\$RejectClaimTemplateSuggestionInitiator",
+                      "StartFlow.com.compliance.flows.UpdateClaimTemplate\$UpdateClaimTemplateInitiator",
+                      "StartFlow.com.compliance.flows.UpdateRegulation\$UpdateRegulationInitiator",
+                      "StartFlow.com.compliance.flows.UpdateRule\$UpdateRuleInitiator",
                       "StartFlow.net.corda.core.flows.ContractUpgradeFlow",
                       "StartFlow.net.corda.core.flows.ContractUpgradeFlowe"
     ]
