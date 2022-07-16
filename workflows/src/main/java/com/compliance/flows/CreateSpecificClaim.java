@@ -25,24 +25,25 @@ public class CreateSpecificClaim {
     public static class CreateSpecificClaimInitiator extends FlowLogic<SignedTransaction> {
 
         private final String name;
-        private SecureHash attachmentID;
 
+        private final Party auditor;
+        private SecureHash attachmentID;
         private final String description;
         private final Party supervisoryAuthority;
-
         private final UniqueIdentifier claimTemplateLinearId;
-
         private final List<UniqueIdentifier> supportingClaimsLinearIds;
 
         public CreateSpecificClaimInitiator(
                 String name,
                 String description,
                 Party supervisoryAuthority,
+                Party auditor,
                 UniqueIdentifier claimTemplateLinearId,
                 List<UniqueIdentifier> supportingClaimsLinearIds
         ) {
             this.name = name;
             this.description = description;
+            this.auditor = auditor;
             this.supervisoryAuthority = supervisoryAuthority;
             this.claimTemplateLinearId = claimTemplateLinearId;
             this.supportingClaimsLinearIds = supportingClaimsLinearIds;
@@ -52,6 +53,7 @@ public class CreateSpecificClaim {
                 String name,
                 String description,
                 Party supervisoryAuthority,
+                Party auditor,
                 UniqueIdentifier claimTemplateLinearId,
                 List<UniqueIdentifier> supportingClaimsLinearIds,
                 SecureHash attachmentID
@@ -59,6 +61,7 @@ public class CreateSpecificClaim {
             this.name = name;
             this.description = description;
             this.attachmentID = attachmentID;
+            this.auditor = auditor;
             this.supervisoryAuthority = supervisoryAuthority;
             this.claimTemplateLinearId = claimTemplateLinearId;
             this.supportingClaimsLinearIds = supportingClaimsLinearIds;
@@ -79,6 +82,7 @@ public class CreateSpecificClaim {
                         this.description,
                         this.getOurIdentity(),
                         this.supervisoryAuthority,
+                        this.auditor,
                         new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class),
                         this.supportingClaimsLinearIds.stream().map(claimLinearId -> new LinearPointer<>(claimLinearId, SpecificClaim.class)).collect(Collectors.toList()),
                         this.attachmentID
@@ -95,6 +99,7 @@ public class CreateSpecificClaim {
                         this.description,
                         this.getOurIdentity(),
                         this.supervisoryAuthority,
+                        this.auditor,
                         new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class),
                         this.supportingClaimsLinearIds.stream().map(claimLinearId -> new LinearPointer<>(claimLinearId, SpecificClaim.class)).collect(Collectors.toList())
                 );

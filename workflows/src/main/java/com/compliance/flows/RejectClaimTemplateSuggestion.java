@@ -2,7 +2,6 @@ package com.compliance.flows;
 
 import co.paralleluniverse.fibers.Suspendable;
 import com.compliance.contracts.ClaimTemplateSuggestionContract;
-import com.compliance.states.ClaimTemplate;
 import com.compliance.states.ClaimTemplateSuggestion;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
@@ -18,16 +17,16 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class AcceptClaimTemplateSuggestion {
+public class RejectClaimTemplateSuggestion {
 
     @InitiatingFlow
     @StartableByRPC
-    public static class AcceptClaimTemplateSuggestionInitiator extends FlowLogic<SignedTransaction> {
+    public static class RejectClaimTemplateSuggestionInitiator extends FlowLogic<SignedTransaction> {
 
         @NotNull
         private final UniqueIdentifier linearId;
 
-        public AcceptClaimTemplateSuggestionInitiator(@NotNull UniqueIdentifier linearId) {
+        public RejectClaimTemplateSuggestionInitiator(@NotNull UniqueIdentifier linearId) {
             this.linearId = linearId;
         }
 
@@ -46,36 +45,30 @@ public class AcceptClaimTemplateSuggestion {
                 final StateAndRef<ClaimTemplateSuggestion> input = getServiceHub().getVaultService().queryBy(ClaimTemplateSuggestion.class, inputCriteria).getStates().get(0);
                 builder.addInputState(input);
 
-            // Add all parties in the network
-            final List<Party> involvedParties = getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList());
+                // Add all parties in the network
+                final List<Party> involvedParties = getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList());
 
-            // Remove yourself
-            involvedParties.remove(getOurIdentity());
-            // Remove notaries
-            involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
+                // Remove yourself
+                involvedParties.remove(getOurIdentity());
+                // Remove notaries
+                involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
 
-            ClaimTemplateSuggestion originalClaimTemplateSuggestion = input.getState().getData();
+                builder.addCommand(new ClaimTemplateSuggestionContract.Commands.RejectClaimTemplateSuggestion(),
+                        involvedParties.stream().map(Party::getOwningKey).collect(Collectors.toList())
+                );
 
-            final ClaimTemplate output = new ClaimTemplate(originalClaimTemplateSuggestion.getName(), originalClaimTemplateSuggestion.getTemplateDescription(), this.getOurIdentity(), involvedParties, originalClaimTemplateSuggestion.getRule());
+                // Verify that the transaction is valid.
+                builder.verify(getServiceHub());
 
+                final SignedTransaction signedTransaction = getServiceHub().signInitialTransaction(builder);
 
-            builder.addOutputState(output);
-            builder.addCommand(new ClaimTemplateSuggestionContract.Commands.AcceptClaimTemplateSuggestion(),
-                    involvedParties.stream().map(Party::getOwningKey).collect(Collectors.toList())
-            );
+                involvedParties.remove(getOurIdentity());
 
-            // Verify that the transaction is valid.
-            builder.verify(getServiceHub());
+                List<FlowSession> sessions = involvedParties.stream().map(this::initiateFlow).collect(Collectors.toList());
 
-            final SignedTransaction signedTransaction = getServiceHub().signInitialTransaction(builder);
+                SignedTransaction stx = subFlow(new CollectSignaturesFlow(signedTransaction, sessions));
 
-            involvedParties.remove(getOurIdentity());
-
-            List<FlowSession> sessions = involvedParties.stream().map(this::initiateFlow).collect(Collectors.toList());
-
-            SignedTransaction stx = subFlow(new CollectSignaturesFlow(signedTransaction, sessions));
-
-            return subFlow(new FinalityFlow(stx, sessions));
+                return subFlow(new FinalityFlow(stx, sessions));
             }
 
             catch (IndexOutOfBoundsException e) {
@@ -85,13 +78,13 @@ public class AcceptClaimTemplateSuggestion {
         }
     }
 
-    @InitiatedBy(AcceptClaimTemplateSuggestion.AcceptClaimTemplateSuggestionInitiator.class)
-    public static class AcceptClaimTemplateSuggestionResponder extends FlowLogic<Void> {
+    @InitiatedBy(RejectClaimTemplateSuggestion.RejectClaimTemplateSuggestionInitiator.class)
+    public static class RejectClaimTemplateSuggestionResponder extends FlowLogic<Void> {
         //private variable
         private final FlowSession counterpartySession;
 
         //Constructor
-        public AcceptClaimTemplateSuggestionResponder(FlowSession counterpartySession) {
+        public RejectClaimTemplateSuggestionResponder(FlowSession counterpartySession) {
             this.counterpartySession = counterpartySession;
         }
 
@@ -118,5 +111,5 @@ public class AcceptClaimTemplateSuggestion {
         }
     }
 
-    
+
 }
