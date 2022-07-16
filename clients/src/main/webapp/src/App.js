@@ -7,6 +7,7 @@ import GraphRegulation from "./views/GraphRegulation";
 import Home from "./views/Home";
 import Rule from "./views/Rule";
 import ClaimTemplate from "./views/ClaimTemplate";
+import SpecificClaim from "./views/SpecificClaim";
 import { Routes, Route } from "react-router-dom";
 import { NodeProvider } from "./contexts/NodeContext";
 import { DataProvider } from "./contexts/DataContext";
@@ -23,6 +24,7 @@ const App = () => {
             <Route path="/rules" element={<Rule />} />
             <Route path="/graph-regulations" element={<GraphRegulation />} />
             <Route path="/claim-templates" element={<ClaimTemplate />} />
+            <Route path="/specific-claims" element={<SpecificClaim />} />
           </Routes>
         </DataProvider>
       </div>

@@ -50,6 +50,9 @@ const Header = () => {
         <Menu.Item key="/claim-templates" icon={<FileTextOutlined />}>
           <Link to="/claim-templates">Claim Templates</Link>
         </Menu.Item>
+        <Menu.Item key="/specific-claims" icon={<FileTextOutlined />}>
+          <Link to="/specific-claims">Specific Claims</Link>
+        </Menu.Item>
         <Menu.Item>
           <div className="flex">
             <h2 className="text-green-600">Node: {currentNode}</h2>
