@@ -1,5 +1,5 @@
 import React from "react";
-import { Table } from "antd";
+import { Table, Button } from "antd";
 import { useData } from "../contexts/DataContext";
 
 const columns = [
@@ -22,6 +22,20 @@ const columns = [
   {
     title: "Rule",
     dataIndex: "rule",
+  },
+  {
+    title: "Action",
+    dataIndex: ["linearId", "id"],
+    render: ({ linearId }) => {
+      return (
+        <>
+          <Button onClick={() => console.log(linearId.id)}>Reject</Button>
+          <Button type="primary" onClick={() => console.log(linearId.id)}>
+            Approve
+          </Button>
+        </>
+      );
+    },
   },
 ];
 
