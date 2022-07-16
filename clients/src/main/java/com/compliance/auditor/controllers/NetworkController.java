@@ -27,7 +27,7 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
  * Define your API endpoints here.
  */
 @RestController
-@CrossOrigin(origins = "localhost:3000")
+@CrossOrigin(origins = "*")
 @RequestMapping("/network") // The paths for HTTP requests are relative to this base path.
 public class NetworkController {
     private final CordaRPCOps proxy;

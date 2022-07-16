@@ -1,24 +1,36 @@
 import React from "react";
 import { Table, Button } from "antd";
-import ruleData from "../data/rules.json";
 import CreateRule from "../components/CreateRule";
+import { useData } from "../contexts/DataContext";
 
 const columns = [
+  {
+    title: "Linear id",
+    dataIndex: ["linearId", "id"],
+  },
   {
     title: "Name",
     dataIndex: "name",
   },
   {
     title: "Rule Specification",
-    dataIndex: "ruleSpecification1",
+    dateIndex: "ruleSpecification",
+  },
+  {
+    title: "Parent regulation",
+    dataIndex: "parentRegulation",
   },
   {
     title: "Deprecate",
-    dataIndex: "name",
-    render: (id) => {
+    dataIndex: "isDeprecated",
+    render: ({ isDeprecated, linearId }) => {
       return (
-        <Button type="primary" onClick={() => console.log(id)}>
-          Deprecate
+        <Button
+          type="primary"
+          disabled={isDeprecated}
+          onClick={() => console.log(linearId.id)}
+        >
+          {isDeprecated ? "Deprecate" : "Deprecated"}
         </Button>
       );
     },
@@ -26,10 +38,12 @@ const columns = [
 ];
 
 function Rule() {
+  const { rules } = useData();
+
   return (
     <div>
       <CreateRule />
-      <Table columns={columns} dataSource={ruleData} />
+      <Table columns={columns} dataSource={rules} />
     </div>
   );
 }

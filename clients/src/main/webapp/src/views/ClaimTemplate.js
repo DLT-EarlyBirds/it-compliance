@@ -1,18 +1,36 @@
 import React from "react";
+import { Table } from "antd";
+import { useData } from "../contexts/DataContext";
+
+const columns = [
+  {
+    title: "Linear id",
+    dataIndex: ["linearId", "id"],
+  },
+  {
+    title: "Name",
+    dataIndex: "name",
+  },
+  {
+    title: "Template Description",
+    dataIndex: "templateDescription",
+  },
+  {
+    title: "Rule Specification",
+    dateIndex: "ruleSpecification",
+  },
+  {
+    title: "Rule",
+    dataIndex: "rule",
+  },
+];
 
 function ClaimTemplate() {
-  const isFSA = true;
+  const { claimTemplates } = useData();
 
   return (
     <div>
-      {isFSA && (
-        <div>
-          <h1>Claim Template Suggestions</h1>
-        </div>
-      )}
-      <div>
-        <h1>Claim Template</h1>
-      </div>
+      <Table columns={columns} dataSource={claimTemplates} />
     </div>
   );
 }
