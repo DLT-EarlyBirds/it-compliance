@@ -45,8 +45,6 @@ public class DeprecateRegulation {
             Regulation originalRegulation = input.getState().getData();
 
 
-
-
             // Use the same linearID as the input Regulation
             final Regulation output = new Regulation(linearId,
                     originalRegulation.getName(),
@@ -56,19 +54,33 @@ public class DeprecateRegulation {
                     this.getOurIdentity(),
                     true);
 
-            // Find related rules
+            final TransactionBuilder builder = new TransactionBuilder(notary);
+
             QueryCriteria rulesInputCriteria = new QueryCriteria.LinearStateQueryCriteria()
                     .withStatus(Vault.StateStatus.UNCONSUMED)
                     .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
 
-            final List<StateAndRef<Rule>> relatedRules = getServiceHub().getVaultService().queryBy(Rule.class,
-                    inputCriteria).getStates();
+            // Find related rules
+            final List<StateAndRef<Rule>> relatedRules = getServiceHub().getVaultService().queryBy(Rule.class, rulesInputCriteria).getStates();
 
-            for (StateAndRef<Rule> temp : relatedRules) {
-                System.out.println(temp);
+            for (StateAndRef<Rule> tempRule : relatedRules) {
+                Rule originalRule = tempRule.getState().getData();
+                Regulation parentRegulation = originalRule.getParentRegulation().resolve(getServiceHub()).getState().getData();
+
+                // Deprecate rules related to the given regulation
+                if (parentRegulation.getLinearId().equals(linearId))
+                {
+                Rule rule = new Rule(originalRule.getLinearId(),
+                        originalRule.getName(),
+                        originalRule.getRuleSpecification(),
+                        originalRule.getIssuer(),
+                        originalRule.getInvolvedParties(),
+                        originalRule.getParentRegulation(),
+                        true);
+                builder.addInputState(tempRule);
+                builder.addOutputState(rule);
+                }
             }
-
-            final TransactionBuilder builder = new TransactionBuilder(notary);
 
             builder.addInputState(input);
             builder.addOutputState(output);
