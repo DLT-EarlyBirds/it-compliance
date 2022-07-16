@@ -101,6 +101,7 @@ task deployNodes(type: net.corda.plugins.Dockerform, dependsOn: ['jar']) {
                       "InvokeRpc.registeredFlows",
                       "InvokeRpc.partiesFromName",
                       "InvokeRpc.wellKnownPartyFromX500Name",
+                      "InvokeRpc:net.corda.core.messaging.CordaRPCOps#vaultQuery",
                       "StartFlow.com.compliance.flows.CreateClaimTemplateSuggestion\$CreateClaimTemplateSuggestionInitiator",
                       "StartFlow.com.compliance.flows.CreateSpecificClaim\$CreateSpecificClaimInitiator",
                       "StartFlow.com.compliance.flows.UpdateSpecificClaim\$UpdateSpecificClaimInitiator",
@@ -113,6 +114,7 @@ task deployNodes(type: net.corda.plugins.Dockerform, dependsOn: ['jar']) {
                       "InvokeRpc.registeredFlows",
                       "InvokeRpc.partiesFromName",
                       "InvokeRpc.wellKnownPartyFromX500Name",
+                      "InvokeRpc:net.corda.core.messaging.CordaRPCOps#vaultQuery",
                       "StartFlow.com.compliance.flows.CreateClaimTemplateSuggestion\$CreateClaimTemplateSuggestionInitiator",
                       "StartFlow.net.corda.core.flows.ContractUpgradeFlow",
                       "StartFlow.net.corda.core.flows.ContractUpgradeFlowe"
@@ -123,6 +125,7 @@ task deployNodes(type: net.corda.plugins.Dockerform, dependsOn: ['jar']) {
                       "InvokeRpc.registeredFlows",
                       "InvokeRpc.partiesFromName",
                       "InvokeRpc.wellKnownPartyFromX500Name",
+                      "InvokeRpc:net.corda.core.messaging.CordaRPCOps#vaultQuery",
                       "StartFlow.com.compliance.flows.AcceptClaimTemplateSuggestion\$AcceptClaimTemplateSuggestionInitiator",
                       "StartFlow.com.compliance.flows.CreateClaimTemplate\$CreateClaimTemplateInitiator",
                       "StartFlow.com.compliance.flows.CreateRegulation\$CreateRegulationInitiator",
@@ -134,7 +137,7 @@ task deployNodes(type: net.corda.plugins.Dockerform, dependsOn: ['jar']) {
                       "StartFlow.com.compliance.flows.UpdateRegulation\$UpdateRegulationInitiator",
                       "StartFlow.com.compliance.flows.UpdateRule\$UpdateRuleInitiator",
                       "StartFlow.net.corda.core.flows.ContractUpgradeFlow",
-                      "StartFlow.net.corda.core.flows.ContractUpgradeFlowe"
+                      "StartFlow.net.corda.core.flows.ContractUpgradeFlowe",
     ]
 
     nodeDefaults {
