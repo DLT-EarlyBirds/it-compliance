@@ -96,6 +96,35 @@ task deployNodes(type: net.corda.plugins.Dockerform, dependsOn: ['jar']) {
      */
     dockerImage = "corda/corda-zulu-java1.8-4.8.6"
 
+    def fspPermissions = [
+                      "StartFlow.com.compliance.flows.CreateClaimTemplateSuggestion",
+                      "StartFlow.com.compliance.flows.CreateSpecificClaim",
+                      "StartFlow.com.compliance.flows.UpdateSpecificClaim",
+                      "StartFlow.net.corda.core.flows.ContractUpgradeFlow",
+                      "StartFlow.net.corda.core.flows.ContractUpgradeFlowe"
+    ]
+
+    def auditorPermissions = [
+                      "StartFlow.com.compliance.flows.CreateClaimTemplateSuggestion",
+                      "StartFlow.net.corda.core.flows.ContractUpgradeFlow",
+                      "StartFlow.net.corda.core.flows.ContractUpgradeFlowe"
+    ]
+
+    def supervisoryAuthorityPermissions = [
+                      "StartFlow.com.compliance.flows.AcceptClaimTemplateSuggestion",
+                      "StartFlow.com.compliance.flows.CreateClaimTemplate",
+                      "StartFlow.com.compliance.flows.CreateRegulation",
+                      "StartFlow.com.compliance.flows.CreateRule",
+                      "StartFlow.com.compliance.flows.DeprecateRegulation",
+                      "StartFlow.com.compliance.flows.DeprecateRule",
+                      "StartFlow.com.compliance.flows.RejectClaimTemplateSuggestion",
+                      "StartFlow.com.compliance.flows.UpdateClaimTemplate",
+                      "StartFlow.com.compliance.flows.UpdateRegulation",
+                      "StartFlow.com.compliance.flows.UpdateRule",
+                      "StartFlow.net.corda.core.flows.ContractUpgradeFlow",
+                      "StartFlow.net.corda.core.flows.ContractUpgradeFlowe"
+    ]
+
     nodeDefaults {
         projectCordapp {
             deploy = false
@@ -124,7 +153,7 @@ task deployNodes(type: net.corda.plugins.Dockerform, dependsOn: ['jar']) {
             address("localhost:10006")
             adminAddress("localhost:10046")
         }
-        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": auditorPermissions]]
         sshdPort 2223
     }
     node {
@@ -134,7 +163,7 @@ task deployNodes(type: net.corda.plugins.Dockerform, dependsOn: ['jar']) {
             address("localhost:10009")
             adminAddress("localhost:10049")
         }
-        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        rpcUsers = [[ user: "user1", "password": "test", "permissions": supervisoryAuthorityPermissions]]
         sshdPort 2224
     }
 
@@ -145,7 +174,8 @@ task deployNodes(type: net.corda.plugins.Dockerform, dependsOn: ['jar']) {
             address("localhost:10009")
             adminAddress("localhost:10049")
         }
-        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        rpcUsers = [[ user: "user1", "password": "test",
+                      "permissions": fspPermissions]]
         sshdPort 2225
     }
 
@@ -156,7 +186,8 @@ task deployNodes(type: net.corda.plugins.Dockerform, dependsOn: ['jar']) {
             address("localhost:10009")
             adminAddress("localhost:10049")
         }
-        rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        rpcUsers = [[ user: "user1", "password": "test",
+                      "permissions": fspPermissions]]
         sshdPort 2226
     }
 }
