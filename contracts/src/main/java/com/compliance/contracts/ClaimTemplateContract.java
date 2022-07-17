@@ -57,6 +57,10 @@ public class ClaimTemplateContract implements Contract {
             requireThat(require -> {
                 return null;
             });
+        } else if (commandData instanceof Commands.RejectClaimTemplateSuggestion) {
+            requireThat(require -> {
+                return null;
+            });
         }
     }
 
@@ -70,6 +74,9 @@ public class ClaimTemplateContract implements Contract {
 
         }
         class AcceptClaimTemplateSuggestion implements Commands{
+
+        }
+        class RejectClaimTemplateSuggestion implements Commands{
 
         }
     }
