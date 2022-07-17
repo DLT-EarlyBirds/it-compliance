@@ -54,6 +54,11 @@ public class RegulationContract implements Contract {
                         "The regulation is not empty",
                         !Objects.equals(output.getName(), "") && !Objects.equals(output.getDescription(), "")
                 );
+                require.using(
+                        "The releaseDate for updated regulation must be after the releaseDate for old regulation",
+                        output.getReleaseDate().after(input.getReleaseDate())
+                        );
+
                 return null;
             });
         } else if (commandData instanceof Commands.DeprecateRegulation) {
@@ -63,6 +68,10 @@ public class RegulationContract implements Contract {
             requireThat(require -> {
               require.using("The regulation input is not deprecated", !input.getIsDeprecated());
               require.using("The regulation output is deprecated", output.getIsDeprecated());
+                require.using(
+                        "The transaction is only allowed to modify the input regulation",
+                        output.getLinearId().equals(input.getLinearId())
+                );
                 return null;
             });
         }

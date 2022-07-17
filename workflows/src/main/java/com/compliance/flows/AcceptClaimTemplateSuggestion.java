@@ -1,7 +1,7 @@
 package com.compliance.flows;
 
 import co.paralleluniverse.fibers.Suspendable;
-import com.compliance.contracts.ClaimTemplateContract;
+import com.compliance.contracts.ClaimTemplateSuggestionContract;
 import com.compliance.states.ClaimTemplate;
 import com.compliance.states.ClaimTemplateSuggestion;
 import net.corda.core.contracts.StateAndRef;
@@ -60,7 +60,7 @@ public class AcceptClaimTemplateSuggestion {
 
 
             builder.addOutputState(output);
-            builder.addCommand(new ClaimTemplateContract.Commands.AcceptClaimTemplateSuggestion(),
+            builder.addCommand(new ClaimTemplateSuggestionContract.Commands.AcceptClaimTemplateSuggestion(),
                     involvedParties.stream().map(Party::getOwningKey).collect(Collectors.toList())
             );
 

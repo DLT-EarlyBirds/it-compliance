@@ -2,6 +2,7 @@ package com.compliance.contracts;
 
 import com.compliance.states.ClaimTemplateSuggestion;
 import com.compliance.states.Rule;
+import com.compliance.states.SpecificClaim;
 import net.corda.core.contracts.CommandData;
 import net.corda.core.contracts.Contract;
 import net.corda.core.contracts.StateAndRef;
@@ -37,6 +38,23 @@ public class ClaimTemplateSuggestionContract implements Contract {
                 return null;
             });
         }
+        else if (commandData instanceof ClaimTemplateSuggestionContract.Commands.AcceptClaimTemplateSuggestion) {
+            SpecificClaim output = tx.outputsOfType(SpecificClaim.class).get(0);
+
+            requireThat(require -> {
+                require.using("The transaction should have exactly one Claim as output", tx.getOutputs().size() == 1);
+                require.using("The specific claim must have a name value", !output.getName().equals(""));
+
+                return null;
+            });
+        } else if (commandData instanceof ClaimTemplateSuggestionContract.Commands.RejectClaimTemplateSuggestion) {
+
+            requireThat(require -> {
+                require.using("The transaction should consume exactly one ClaimTemplateSuggestion ", tx.getInputs().size() == 1);
+                require.using("The transaction should have no outputs", tx.getOutputs().size() == 0);
+                return null;
+            });
+        }
     }
 
     // Used to indicate the transaction's intent.
@@ -48,5 +66,12 @@ public class ClaimTemplateSuggestionContract implements Contract {
         class DeprecateClaimTemplateSuggestion implements Commands {
 
         }
+        class AcceptClaimTemplateSuggestion implements ClaimTemplateSuggestionContract.Commands {
+
+        }
+        class RejectClaimTemplateSuggestion implements ClaimTemplateSuggestionContract.Commands {
+
+        }
+
     }
 }

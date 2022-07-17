@@ -53,9 +53,9 @@ public class RuleContract implements Contract {
             Rule input = tx.inputsOfType(Rule.class).get(0);
 
             requireThat(require -> {
+                require.using("The parent regulation should not be deprecated", !parentRegulation.getIsDeprecated() );
                 require.using("The transaction is only allowed to modify the input rule", output.getLinearId().equals(input.getLinearId()));
                 require.using("The rule is not empty", !Objects.equals(output.getName(), "") && !Objects.equals(output.getRuleSpecification(), ""));
-                require.using("The parent regulation should not be deprecated", !parentRegulation.getIsDeprecated() );
                 return null;
             });
         } else if (commandData instanceof Commands.DeprecateRule) {
@@ -65,6 +65,7 @@ public class RuleContract implements Contract {
             requireThat(require -> {
               require.using("The rule input is not deprecated", !input.getIsDeprecated());
               require.using("The rule output is deprecated", output.getIsDeprecated());
+              require.using("The transaction is only allowed to modify the input rule", output.getLinearId().equals(input.getLinearId()));
                 return null;
             });
         }
