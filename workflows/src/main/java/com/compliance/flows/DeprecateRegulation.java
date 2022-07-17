@@ -70,15 +70,7 @@ public class DeprecateRegulation {
                 // Deprecate rules related to the given regulation
                 if (parentRegulation.getLinearId().equals(linearId))
                 {
-                Rule rule = new Rule(originalRule.getLinearId(),
-                        originalRule.getName(),
-                        originalRule.getRuleSpecification(),
-                        originalRule.getIssuer(),
-                        originalRule.getInvolvedParties(),
-                        originalRule.getParentRegulation(),
-                        true);
-                builder.addInputState(tempRule);
-                builder.addOutputState(rule);
+                    subFlow(new DeprecateRule.DeprecateRuleInitiator(originalRule.getLinearId()));
                 }
             }
 
