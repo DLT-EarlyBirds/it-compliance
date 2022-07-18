@@ -66,14 +66,23 @@ The username is already provided with `user1`, the respective password is `test`
 ## SpecificClaim Flow 
 
 ### Without referencing an attachment:
-`flow start CreateSpecificClaim name: SpecificClaim, supervisoryAuthority: Supervisory Authority, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: []`
+`flow start CreateSpecificClaim name: SpecificClaim, supervisoryAuthority: Supervisory Authority, auditor: Auditor, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: []`
 
 `run vaultQuery contractStateType: com.compliance.states.SpecificClaim`
 
 ### With referencing an attachment:
-`flow start CreateSpecificClaim name: SpecificClaim, supervisoryAuthority: Supervisory Authority, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: [], attachmentID: <attachmentID>`
+`flow start CreateSpecificClaim name: SpecificClaim, supervisoryAuthority: Supervisory Authority, auditor: Auditor, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: [], attachmentID: <attachmentID>`
 
 `run vaultQuery contractStateType: com.compliance.states.SpecificClaim`
+
+## UpdateSpecificClaim Flow
+
+### Without referencing an attachment:
+`flow start UpdateSpecificClaim specificClaimLinearId: <linearID>, name: SpecificClaim, supervisoryAuthority: Supervisory Authority, auditor: Auditor, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: []`
+
+### With referencing an attachment:
+`flow start UpdateSpecificClaim specificClaimLinearId: <linearID>, name: SpecificClaim, supervisoryAuthority: Supervisory Authority, auditor: Auditor, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: [], attachmentID: <attachmentID>`
+
 
 
 # Handling Attachments

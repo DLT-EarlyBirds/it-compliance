@@ -1,6 +1,7 @@
 package com.compliance.contracts;
 
 import com.compliance.states.ClaimTemplate;
+import com.compliance.states.Regulation;
 import com.compliance.states.Rule;
 import net.corda.core.contracts.CommandData;
 import net.corda.core.contracts.Contract;
@@ -31,30 +32,39 @@ public class ClaimTemplateContract implements Contract {
         if (commandData instanceof Commands.CreateClaimTemplate) {
             //Retrieve the output state of the transaction
             ClaimTemplate output = tx.outputsOfType(ClaimTemplate.class).get(0);
-            StateAndRef<Rule> rule = output.getRule().resolve(tx);
+            StateAndRef<Rule> ruleStateAndRef = output.getRule().resolve(tx);
+            Rule rule = ruleStateAndRef.getState().getData();
             requireThat(require -> {
-                require.using("The regulation is not empty", !Objects.equals(output.getName(), "") && !Objects.equals(output.getTemplateDescription(), ""));
+                require.using("The claim template is not empty", !Objects.equals(output.getName(), "") && !Objects.equals(output.getTemplateDescription(), ""));
+                require.using("The parent rule should not be deprecated", !rule.getIsDeprecated() );
+
                 return null;
             });
         } else if (commandData instanceof Commands.UpdateClaimTemplate) {
             //Retrieve the output state of the transaction
             ClaimTemplate output = tx.outputsOfType(ClaimTemplate.class).get(0);
-            StateAndRef<Rule> rule = output.getRule().resolve(tx);
+            StateAndRef<Rule> ruleStateAndRef = output.getRule().resolve(tx);
+            Rule rule = ruleStateAndRef.getState().getData();
             ClaimTemplate input = tx.inputsOfType(ClaimTemplate.class).get(0);
 
             requireThat(require -> {
                 require.using("The transaction is only allowed to modify the input claim template", output.getLinearId().equals(input.getLinearId()));
                 require.using("The claim template is not empty", !Objects.equals(output.getName(), "") && !Objects.equals(output.getTemplateDescription(), ""));
+                require.using("The parent rule should not be deprecated", !rule.getIsDeprecated() );
                 return null;
             });
         } else if (commandData instanceof Commands.DeprecateClaimTemplate) {
             ClaimTemplate input = tx.inputsOfType(ClaimTemplate.class).get(0);
+            ClaimTemplate output = tx.outputsOfType(ClaimTemplate.class).get(0);
 
             requireThat(require -> {
-                return null;
-            });
-        } else if (commandData instanceof Commands.AcceptClaimTemplateSuggestion) {
-            requireThat(require -> {
+                //TODO [MOH - 15.07.2022]: Uncomment these checks after implementing the deprecation flow for claim templates
+//                require.using("The specific claim input is not deprecated", !input.getIsDeprecated());
+//                require.using("The specific claim output is deprecated", output.getIsDeprecated());
+                require.using(
+                        "The transaction is only allowed to modify the input regulation",
+                        output.getLinearId().equals(input.getLinearId())
+                );
                 return null;
             });
         }
@@ -67,9 +77,6 @@ public class ClaimTemplateContract implements Contract {
         class UpdateClaimTemplate implements Commands {
         }
         class DeprecateClaimTemplate implements Commands {
-
-        }
-        class AcceptClaimTemplateSuggestion implements Commands{
 
         }
     }

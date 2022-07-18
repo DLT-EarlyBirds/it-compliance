@@ -33,6 +33,9 @@ public class SpecificClaim implements LinearState {
     private final Party financialServiceProvider;
     @NotNull
     private final Party supervisoryAuthority;
+
+    @NotNull
+    private final Party auditor;
     private final List<AbstractParty> participants;
 
     // A reference to the claim template that is implemented by this specific claim.
@@ -48,9 +51,11 @@ public class SpecificClaim implements LinearState {
                          String description,
                          @NotNull Party financialServiceProvider,
                          @NotNull Party supervisoryAuthority,
+                         Party auditor,
                          LinearPointer<ClaimTemplate> claimTemplate,
                          List<LinearPointer<SpecificClaim>> supportingClaims) {
         this.name = name;
+        this.auditor = auditor;
         this.linearId = linearId;
         this.description = description;
         this.claimTemplate = claimTemplate;
@@ -69,10 +74,12 @@ public class SpecificClaim implements LinearState {
                          String description,
                          @NotNull Party financialServiceProvider,
                          @NotNull Party supervisoryAuthority,
+                         Party auditor,
                          LinearPointer<ClaimTemplate> claimTemplate,
                          List<LinearPointer<SpecificClaim>> supportingClaims,
                          SecureHash attachmentID) {
         this.name = name;
+        this.auditor = auditor;
         this.linearId = linearId;
         this.description = description;
         this.attachmentID = attachmentID;
@@ -127,4 +134,6 @@ public class SpecificClaim implements LinearState {
     public String getDescription() {
         return description;
     }
+
+    public Party getAuditor(){return auditor;}
 }
