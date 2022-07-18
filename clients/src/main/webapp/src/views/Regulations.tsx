@@ -3,7 +3,7 @@ import { Table, Button } from "antd";
 import CreateRegulation from "../components/CreateRegulation";
 import UpdateRegulation from "../components/UpdateRegulation";
 import { useData } from "../contexts/DataContext";
-import { Regulation } from "types";
+import { Regulation } from "models";
 import { EditOutlined } from "@ant-design/icons";
 
 const columns = [

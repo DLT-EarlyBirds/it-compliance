@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Form, Input, Drawer } from "antd";
-import { Regulation } from "types";
+import { Regulation } from "models";
 
 interface UpdateRegulationProps {
   regulation: Regulation;
