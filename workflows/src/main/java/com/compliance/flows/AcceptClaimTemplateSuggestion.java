@@ -51,6 +51,7 @@ public class AcceptClaimTemplateSuggestion {
 
             // Remove yourself
             involvedParties.remove(getOurIdentity());
+
             // Remove notaries
             involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
 
