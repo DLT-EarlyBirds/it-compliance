@@ -84,16 +84,18 @@ public class SpecificClaimController {
         // Check if state with that linear ID exists
         if (!proxy.vaultQueryByCriteria(queryCriteria, SpecificClaim.class).getStates().isEmpty()) {
             // Call the update flow
-            Set<Party> partySet = proxy.partiesFromName("Supervisory Authority", true);
+            Set<Party> authority = proxy.partiesFromName("Supervisory Authority", true);
+            Set<Party> auditor = proxy.partiesFromName("Auditor", true);
 
-            if (!partySet.isEmpty()) {
-                Party supervisoryAuthority = new ArrayList<>(partySet).get(0);
+
+            if (!authority.isEmpty()) {
                 SpecificClaim specificClaim = (SpecificClaim) proxy.startTrackedFlowDynamic(
                         UpdateSpecificClaim.UpdateSpecificClaimInitiator.class,
                         id,
                         specificClaimDTO.getName(),
                         specificClaimDTO.getClaimSpecification(),
-                        supervisoryAuthority,
+                        new ArrayList<>(authority).get(0),
+                        new ArrayList<>(auditor).get(0),
                         UniqueIdentifier.Companion.fromString(specificClaimDTO.getClaimTemplateLinearId()),
                         new ArrayList<UniqueIdentifier>(),
                         null
@@ -106,15 +108,16 @@ public class SpecificClaimController {
 
     @PostMapping("/")
     private ResponseEntity<SpecificClaim> create(@RequestBody SpecificClaimDTO specificClaimDTO) throws ExecutionException, InterruptedException {
-        Set<Party> partySet = proxy.partiesFromName("Supervisory Authority", true);
+        Set<Party> authority = proxy.partiesFromName("Supervisory Authority", true);
+        Set<Party> auditor = proxy.partiesFromName("Auditor", true);
 
-        if (!partySet.isEmpty()) {
-            Party supervisoryAuthority = new ArrayList<>(partySet).get(0);
+        if (!authority.isEmpty() && !auditor.isEmpty()) {
             SpecificClaim specificClaim = (SpecificClaim) proxy.startTrackedFlowDynamic(
                     CreateSpecificClaim.CreateSpecificClaimInitiator.class,
                     specificClaimDTO.getName(),
                     specificClaimDTO.getClaimSpecification(),
-                    supervisoryAuthority,
+                    new ArrayList<>(authority).get(0),
+                    new ArrayList<>(auditor).get(0),
                     UniqueIdentifier.Companion.fromString(specificClaimDTO.getClaimTemplateLinearId()),
                     new ArrayList<UniqueIdentifier>()
             ).getReturnValue().get().getTx().getOutput(0);
