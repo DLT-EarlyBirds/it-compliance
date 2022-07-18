@@ -4,7 +4,7 @@ import RuleService from "../services/Rule.service";
 import ClaimTemplateService from "../services/ClaimTemplate.service";
 import { useNode } from "./NodeContext";
 import { Spin } from "antd";
-import { Regulation, Rule, ClaimTemplate } from "../types";
+import { Regulation, Rule, ClaimTemplate } from "../models";
 
 interface DataContextInteface {
   regulations: Regulation[];
