@@ -19,7 +19,15 @@ const columns = [
   },
   {
     title: "Parent regulation",
-    dataIndex: "parentRegulation",
+    dataIndex: ["parentRegulation", "pointer", "id"],
+  },
+  {
+    issuer: "Issuer",
+    dataIndex: "issuer",
+  },
+  {
+    title: "Involved parties",
+    dataIndex: "involvedParties",
   },
   {
     title: "Deprecate",

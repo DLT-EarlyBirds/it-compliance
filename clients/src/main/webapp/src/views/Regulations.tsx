@@ -1,54 +1,86 @@
-import React from "react";
+import React, { useState } from "react";
 import { Table, Button } from "antd";
 import CreateRegulation from "../components/CreateRegulation";
+import UpdateRegulation from "../components/UpdateRegulation";
 import { useData } from "../contexts/DataContext";
 import { Regulation } from "types";
-
-const columns = [
-  {
-    title: "Linear id",
-    dataIndex: ["linearId", "id"],
-  },
-  {
-    title: "Name",
-    dataIndex: "name",
-  },
-  {
-    title: "Description",
-    dataIndex: "description",
-  },
-  {
-    title: "Release date",
-    dataIndex: "releaseDate",
-  },
-  {
-    title: "Version",
-    dataIndex: "version",
-  },
-  {
-    title: "Deprecate",
-    dataIndex: "isDeprecated",
-    render: ({ isDeprecated, linearId }: Regulation) => {
-      return (
-        <Button
-          type="primary"
-          disabled={isDeprecated}
-          onClick={() => console.log(linearId.id)}
-        >
-          {isDeprecated ? "Deprecate" : "Deprecated"}
-        </Button>
-      );
-    },
-  },
-];
+import { EditOutlined } from "@ant-design/icons";
 
 function Regulations() {
   const { regulations } = useData();
+  const [isDrawerVisible, setIsDrawerVisible] = useState(false);
+  const [regulation, setCurrentRegulation] = useState<Regulation | undefined>(
+    undefined
+  );
+
+  const columns = [
+    {
+      title: "Linear id",
+      dataIndex: ["linearId", "id"],
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+    },
+    {
+      title: "Release date",
+      dataIndex: "releaseDate",
+    },
+    {
+      title: "Version",
+      dataIndex: "version",
+    },
+    {
+      title: "Issuer",
+      dateIndex: "issuer",
+    },
+    {
+      title: "Deprecate",
+      dataIndex: "isDeprecated",
+      render: ({ isDeprecated, linearId }: Regulation) => {
+        return (
+          <Button
+            type="primary"
+            disabled={isDeprecated}
+            onClick={() => console.log(linearId.id)}
+          >
+            {isDeprecated ? "Deprecate" : "Deprecated"}
+          </Button>
+        );
+      },
+    },
+    {
+      title: "Actions",
+      dataIndex: ["linearId", "id"],
+      render: (regulation: Regulation) => {
+        return (
+          <Button
+            type="primary"
+            onClick={() => {
+              setIsDrawerVisible(true);
+              setCurrentRegulation(regulation);
+            }}
+          >
+            <EditOutlined />
+          </Button>
+        );
+      },
+    },
+  ];
 
   return (
     <div>
       <CreateRegulation />
       <Table columns={columns} dataSource={regulations} />
+      <UpdateRegulation
+        regulation={regulation as Regulation}
+        isVisible={isDrawerVisible}
+        setIsVisible={setIsDrawerVisible}
+      />
     </div>
   );
 }

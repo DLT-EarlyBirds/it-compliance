@@ -1,7 +1,6 @@
 import React from "react";
-import { Table, Button } from "antd";
+import { Table } from "antd";
 import { useData } from "../contexts/DataContext";
-import { ClaimTemplate } from "types";
 
 const columns = [
   {
@@ -17,26 +16,8 @@ const columns = [
     dataIndex: "templateDescription",
   },
   {
-    title: "Rule Specification",
-    dateIndex: "ruleSpecification",
-  },
-  {
-    title: "Rule",
-    dataIndex: "rule",
-  },
-  {
-    title: "Action",
-    dataIndex: ["linearId", "id"],
-    render: ({ linearId }: ClaimTemplate) => {
-      return (
-        <>
-          <Button onClick={() => console.log(linearId.id)}>Reject</Button>
-          <Button type="primary" onClick={() => console.log(linearId.id)}>
-            Approve
-          </Button>
-        </>
-      );
-    },
+    title: "Issuer",
+    dateIndex: "issuer",
   },
 ];
 
