@@ -40,13 +40,13 @@ function DataProvider(props: any) {
   const fetchData = async () => {
     setIsLoading(true);
     await Promise.allSettled([
-      RegulationService.getRegulations(axiosInstance).then((response) =>
+      RegulationService.getAll(axiosInstance).then((response) =>
         setRegulations(response)
       ),
-      RuleService.getRules(axiosInstance).then((response) =>
+      RuleService.getAll(axiosInstance).then((response) =>
         setRules(response)
       ),
-      ClaimTemplateService.getClaimTemplates(axiosInstance).then((response) =>
+      ClaimTemplateService.getAll(axiosInstance).then((response) =>
         setClaimTemplates(response)
       ),
     ]);

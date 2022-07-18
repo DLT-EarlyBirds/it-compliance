@@ -20,7 +20,7 @@ export interface Regulation {
 }
 
 export interface RegulationDTO {
-    linearId: string;
+    linearId?: string;
     name: string;
     description: string;
     version: string;
@@ -38,7 +38,7 @@ export interface Rule {
 }
 
 export interface RuleDTO {
-    linearId: string;
+    linearId?: string;
     name: string;
     ruleSpecification: string;
     parentRegulation: string; // parent regulation linear id
@@ -54,7 +54,7 @@ export interface ClaimTemplate {
 }
 
 export interface ClaimTemplateDTO {
-    linearId: string;
+    linearId?: string;
     name: string;
     templateDescription: string;
     rule: string; // linear id of the rule
@@ -70,7 +70,7 @@ export interface ClaimTemplateSuggestion {
 }
 
 export interface ClaimTemplateSuggestionDTO {
-    linearId: string;
+    linearId?: string;
     name: string;
     templateDescription: string;
     rule: string; // linear id of the rule
@@ -89,7 +89,7 @@ export interface SpecificClaim {
 }
 
 export interface SpecificClaimDTO {
-    linearId: string;
+    linearId?: string;
     name: string;
     claimSpecification: string;
     claimTemplate: string; // claim template linear id
