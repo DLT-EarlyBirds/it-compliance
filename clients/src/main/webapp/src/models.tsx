@@ -45,7 +45,7 @@ export interface RuleDTO {
 }
 
 export interface ClaimTemplate {
-    linearId: LinearId | string;
+    linearId: LinearId;
     name: string;
     templateDescription: string;
     issuer: string;
