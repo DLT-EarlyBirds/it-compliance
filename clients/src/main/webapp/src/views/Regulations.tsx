@@ -114,11 +114,13 @@ function Regulations() {
     <div>
       <CreateRegulation />
       <Table columns={columns} dataSource={regulations} />
-      <UpdateRegulation
-        regulation={regulation as Regulation}
-        isVisible={isDrawerVisible}
-        setIsVisible={setIsDrawerVisible}
-      />
+      {isDrawerVisible && (
+        <UpdateRegulation
+          regulation={regulation as Regulation}
+          isVisible={isDrawerVisible}
+          setIsVisible={setIsDrawerVisible}
+        />
+      )}
     </div>
   );
 }
