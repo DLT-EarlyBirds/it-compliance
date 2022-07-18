@@ -4,6 +4,7 @@ import { useData } from "../contexts/DataContext";
 import { useNode } from "../contexts/NodeContext";
 import { NodeEnum } from "enums";
 import { Regulation } from "models";
+import CreateClaimTemplate from "../components/CreateClaimTemplate";
 
 const claimTemplateColumns = [
   {
@@ -65,7 +66,7 @@ function ClaimTemplates() {
   return (
     <div>
       {currentNode === NodeEnum.SUPERVISORY_AUTHORITY ? (
-        <h1>Create Claim Template</h1>
+        <CreateClaimTemplate />
       ) : (
         <h1>Create Claim Template Suggestion</h1>
       )}
