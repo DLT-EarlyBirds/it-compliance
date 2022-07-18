@@ -1,6 +1,8 @@
 import React from "react";
 import { Button, Form, Input, Drawer } from "antd";
-import { Regulation } from "models";
+import {Regulation, RegulationDTO} from "models";
+import {useNode} from "../contexts/NodeContext";
+import RegulationService from "../services/Regulation.service";
 
 interface UpdateRegulationProps {
   regulation: Regulation;
@@ -13,9 +15,11 @@ const UpdateRegulation = ({
   isVisible,
   setIsVisible,
 }: UpdateRegulationProps) => {
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
+  const { axiosInstance } = useNode();
+  const onFinish = (values: RegulationDTO) => {
+    RegulationService.update(axiosInstance, {...values, linearId: regulation.linearId.id});
   };
+  console.log(regulation, 'from update')
 
   return (
     <Drawer
