@@ -1,9 +1,9 @@
 package com.compliance.supervisoryauthority.controllers;
 
 
-
 import com.compliance.flows.AcceptClaimTemplateSuggestion;
 import com.compliance.flows.CreateClaimTemplate;
+import com.compliance.flows.RejectClaimTemplateSuggestion;
 import com.compliance.flows.UpdateClaimTemplate;
 import com.compliance.states.ClaimTemplate;
 import com.compliance.states.ClaimTemplateSuggestion;
@@ -13,6 +13,7 @@ import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.messaging.CordaRPCOps;
 import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
+import net.corda.core.transactions.SignedTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -120,7 +121,7 @@ public class ClaimTemplateController {
                 Vault.StateStatus.UNCONSUMED,
                 Collections.singleton(ClaimTemplate.class)
         );
-        List<ClaimTemplateSuggestion> claimTemplateSuggestions =  proxy
+        List<ClaimTemplateSuggestion> claimTemplateSuggestions = proxy
                 .vaultQueryByCriteria(queryCriteria, ClaimTemplateSuggestion.class)
                 .getStates()
                 .stream()
@@ -158,5 +159,31 @@ public class ClaimTemplateController {
 
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(claimTemplate);
         } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+    @DeleteMapping("/suggestions/{linearId}")
+    private void rejectSuggestion(@PathVariable String linearId) throws ExecutionException, InterruptedException {
+        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
+                null,
+                Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)),
+                Vault.StateStatus.UNCONSUMED,
+                Collections.singleton(ClaimTemplate.class)
+        );
+
+        List<ClaimTemplateSuggestion> suggestions = proxy
+                .vaultQueryByCriteria(queryCriteria, ClaimTemplateSuggestion.class)
+                .getStates()
+                .stream()
+                .map(
+                        claimTemplateSuggestionStateAndRef -> claimTemplateSuggestionStateAndRef.getState().getData()
+                )
+                .collect(Collectors.toList());
+
+        if (!suggestions.isEmpty()) {
+            SignedTransaction tx = proxy.startTrackedFlowDynamic(
+                    RejectClaimTemplateSuggestion.RejectClaimTemplateSuggestionInitiator.class,
+                    UniqueIdentifier.Companion.fromString(linearId)
+            ).getReturnValue().get();
+        }
     }
 }
