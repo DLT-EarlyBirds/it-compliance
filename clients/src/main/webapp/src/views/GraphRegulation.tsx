@@ -1,5 +1,6 @@
 import React from "react";
 import { useData } from "../contexts/DataContext";
+import { ForceGraph2D } from "react-force-graph";
 
 function GraphRegulation() {
   const { regulations, rules, claimTemplates } = useData();
@@ -27,7 +28,13 @@ function GraphRegulation() {
     })),
   ];
 
-  return <h1>Graph Regulation</h1>;
+  return (
+    <ForceGraph2D
+      width={1100}
+      height={1000}
+      graphData={{ nodes: graphNodes, links: graphEdges }}
+    />
+  );
 }
 
 export default GraphRegulation;
