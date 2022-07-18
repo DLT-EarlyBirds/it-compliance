@@ -22,6 +22,8 @@ public class SpecificClaimDTO implements Serializable
     private String claimSpecification;
     @JsonProperty("claimTemplateLinearId")
     private String claimTemplateLinearId;
+    @JsonProperty("supportingClaimIds")
+    private String[] supportingClaimIds;
     @JsonIgnore
     private final Map<String, Object> additionalProperties = new HashMap<>();
     private final static long serialVersionUID = -7129508973474007122L;
@@ -34,18 +36,19 @@ public class SpecificClaimDTO implements Serializable
     }
 
     /**
-     *
-     * @param linearId
+     *  @param linearId
      * @param name
      * @param claimSpecification
      * @param claimTemplateLinearId
+     * @param supportingClaimIds
      */
-    public SpecificClaimDTO(String linearId, String name, String claimSpecification, String claimTemplateLinearId) {
+    public SpecificClaimDTO(String linearId, String name, String claimSpecification, String claimTemplateLinearId, String[] supportingClaimIds) {
         super();
         this.linearId = linearId;
         this.name = name;
         this.claimSpecification = claimSpecification;
         this.claimTemplateLinearId = claimTemplateLinearId;
+        this.supportingClaimIds = supportingClaimIds;
     }
     
     @JsonProperty("linearId")
@@ -98,4 +101,13 @@ public class SpecificClaimDTO implements Serializable
         this.additionalProperties.put(name, value);
     }
 
+    @JsonProperty("supportingClaimIds")
+    public String[] getSupportingClaimIds() {
+        return supportingClaimIds;
+    }
+
+    @JsonProperty("supportingClaimIds")
+    public void setSupportingClaimIds(String[] supportingClaimIds) {
+        this.supportingClaimIds = supportingClaimIds;
+    }
 }

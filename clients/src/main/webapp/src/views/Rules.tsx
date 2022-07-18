@@ -2,7 +2,7 @@ import React from "react";
 import { Table, Button } from "antd";
 import CreateRule from "../components/CreateRule";
 import { useData } from "../contexts/DataContext";
-import { Rule } from "types";
+import { Rule } from "models";
 
 const columns = [
   {
