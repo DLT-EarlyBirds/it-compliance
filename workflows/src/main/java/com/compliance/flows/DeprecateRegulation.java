@@ -61,9 +61,9 @@ public class DeprecateRegulation {
                     .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
 
             // Find related rules
-            final List<StateAndRef<Rule>> relatedRules = getServiceHub().getVaultService().queryBy(Rule.class, rulesInputCriteria).getStates();
+            final List<StateAndRef<Rule>> allRules = getServiceHub().getVaultService().queryBy(Rule.class, rulesInputCriteria).getStates();
 
-            for (StateAndRef<Rule> tempRule : relatedRules) {
+            for (StateAndRef<Rule> tempRule : allRules) {
                 Rule originalRule = tempRule.getState().getData();
                 Regulation parentRegulation = originalRule.getParentRegulation().resolve(getServiceHub()).getState().getData();
 
