@@ -19,7 +19,7 @@ function GraphRegulation() {
   const graphEdges = [
     ...rules.map((rule) => ({
       source: rule.parentRegulation,
-      target: rule.id,
+      target: rule.linearId.id,
     })),
     ...claimTemplates.map((claimTemplate) => ({
       source: claimTemplate.rule,

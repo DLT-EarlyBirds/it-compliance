@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import { Modal, Button, Form, Input, Select } from "antd";
-const { Option } = Select;
+import { Modal, Button, Form, Input } from "antd";
+import RegulationService from "../services/Regulation.service";
+import { useNode } from "../contexts/NodeContext";
+import { useData } from "../contexts/DataContext";
 
-const CreateRule = () => {
+const CreateRegulation = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [ruleForm] = Form.useForm();
+  const [regulationForm] = Form.useForm();
+  const { axiosInstance } = useNode();
+  const { regulations, setRegulations } = useData();
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -18,18 +22,16 @@ const CreateRule = () => {
     setIsModalVisible(false);
   };
 
-  const onFinish = (values) => {
-    console.log("Success:", values);
-  };
-
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+  const onFinish = (values: any) => {
+    RegulationService.createRegulation(axiosInstance, values).then((response) =>
+      setRegulations([...regulations, response])
+    );
   };
 
   return (
     <>
       <Button type="primary" className="my-3" onClick={showModal}>
-        Create Rule
+        Create Regulation
       </Button>
       <Modal
         title="Create Regulation"
@@ -40,19 +42,22 @@ const CreateRule = () => {
           <Button className="btn-default" key="back" onClick={handleCancel}>
             Cancel
           </Button>,
-          <Button key="submit" type="primary" onClick={() => ruleForm.submit()}>
-            Create Rule
+          <Button
+            key="submit"
+            type="primary"
+            onClick={() => regulationForm.submit()}
+          >
+            Create Regulation
           </Button>,
         ]}
       >
         <Form
-          form={ruleForm}
+          form={regulationForm}
           name="basic"
           labelCol={{
             span: 8,
           }}
           onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
         >
           <Form.Item
             label="Name"
@@ -66,8 +71,8 @@ const CreateRule = () => {
             <Input />
           </Form.Item>
           <Form.Item
-            label="Rule Specification"
-            name="ruleSpecification"
+            label="Description"
+            name="description"
             rules={[
               {
                 required: true,
@@ -77,22 +82,26 @@ const CreateRule = () => {
             <Input />
           </Form.Item>
           <Form.Item
-            label="Parent Regulation"
-            name="parentRegulation"
+            label="Version"
+            name="version"
             rules={[
               {
                 required: true,
               },
             ]}
           >
-            <Select
-              style={{
-                width: 120,
-              }}
-            >
-              <Option value="m1">M1</Option>
-              <Option value="m2">M2</Option>
-            </Select>
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Release Date"
+            name="releaseDate"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input />
           </Form.Item>
         </Form>
       </Modal>
@@ -100,4 +109,4 @@ const CreateRule = () => {
   );
 };
 
-export default CreateRule;
+export default CreateRegulation;

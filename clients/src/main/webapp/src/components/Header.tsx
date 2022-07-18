@@ -9,6 +9,7 @@ import {
 } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
 import { useNode } from "../contexts/NodeContext";
+import { NodeEnum } from "enums";
 
 const Header = () => {
   const { pathname } = useLocation();
@@ -24,7 +25,7 @@ const Header = () => {
     setVisible(false);
   };
 
-  const handleNodeChange = (e) => {
+  const handleNodeChange = (e: any) => {
     setCurrentNode(e.target.value);
   };
 
@@ -76,12 +77,18 @@ const Header = () => {
           buttonStyle="solid"
           onChange={handleNodeChange}
         >
-          <Radio.Button value="Supervisory Authority">
-            Supervisory Authority
+          <Radio.Button value={NodeEnum.SUPERVISORY_AUTHORITY}>
+            {NodeEnum.SUPERVISORY_AUTHORITY}
           </Radio.Button>
-          <Radio.Button value="Brain Finance">Brain Finance</Radio.Button>
-          <Radio.Button value="Capitals Holding">Capitals Holding</Radio.Button>
-          <Radio.Button value="Auditor">Auditor</Radio.Button>
+          <Radio.Button value={NodeEnum.BRAIN_FINANCE}>
+            {NodeEnum.BRAIN_FINANCE}
+          </Radio.Button>
+          <Radio.Button value={NodeEnum.CAPITALS_HOLDING}>
+            {NodeEnum.CAPITALS_HOLDING}
+          </Radio.Button>
+          <Radio.Button value={NodeEnum.AUDITOR}>
+            {NodeEnum.AUDITOR}
+          </Radio.Button>
         </Radio.Group>
       </Drawer>
     </>

@@ -4,14 +4,31 @@ import RuleService from "../services/Rule.service";
 import ClaimTemplateService from "../services/ClaimTemplate.service";
 import { useNode } from "./NodeContext";
 import { Spin } from "antd";
+import { Regulation, Rule, ClaimTemplate } from "../types";
 
-const DataContext = React.createContext();
+interface DataContextInteface {
+  regulations: Regulation[];
+  rules: Rule[];
+  claimTemplates: ClaimTemplate[];
+  setRegulations: (regulations: Regulation[]) => void;
+  setRules: (rules: Rule[]) => void;
+  setClaimTemplates: (claimTemplates: ClaimTemplate[]) => void;
+}
 
-function DataProvider(props) {
+const DataContext = React.createContext<DataContextInteface>({
+  regulations: [],
+  rules: [],
+  claimTemplates: [],
+  setRegulations: () => {},
+  setRules: () => {},
+  setClaimTemplates: () => {},
+});
+
+function DataProvider(props: any) {
   const { currentNode, axiosInstance } = useNode();
-  const [regulations, setRegulations] = useState([]);
-  const [rules, setRules] = useState([]);
-  const [claimTemplates, setClaimTemplates] = useState([]);
+  const [regulations, setRegulations] = useState<Regulation[]>([]);
+  const [rules, setRules] = useState<Rule[]>([]);
+  const [claimTemplates, setClaimTemplates] = useState<ClaimTemplate[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const data = { regulations, rules, claimTemplates, setRegulations };

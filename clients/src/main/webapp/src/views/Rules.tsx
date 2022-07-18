@@ -1,7 +1,8 @@
 import React from "react";
 import { Table, Button } from "antd";
-import CreateRegulation from "../components/CreateRegulation";
+import CreateRule from "../components/CreateRule";
 import { useData } from "../contexts/DataContext";
+import { Rule } from "types";
 
 const columns = [
   {
@@ -13,21 +14,17 @@ const columns = [
     dataIndex: "name",
   },
   {
-    title: "Description",
-    dataIndex: "description",
+    title: "Rule Specification",
+    dateIndex: "ruleSpecification",
   },
   {
-    title: "Release date",
-    dataIndex: "releaseDate",
-  },
-  {
-    title: "Version",
-    dataIndex: "version",
+    title: "Parent regulation",
+    dataIndex: "parentRegulation",
   },
   {
     title: "Deprecate",
     dataIndex: "isDeprecated",
-    render: ({ isDeprecated, linearId }) => {
+    render: ({ isDeprecated, linearId }: Rule) => {
       return (
         <Button
           type="primary"
@@ -41,15 +38,15 @@ const columns = [
   },
 ];
 
-function Regulation() {
-  const { regulations } = useData();
+function Rules() {
+  const { rules } = useData();
 
   return (
     <div>
-      <CreateRegulation />
-      <Table columns={columns} dataSource={regulations} />
+      <CreateRule />
+      <Table columns={columns} dataSource={rules} />
     </div>
   );
 }
 
-export default Regulation;
+export default Rules;

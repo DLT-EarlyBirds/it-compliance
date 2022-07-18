@@ -1,7 +1,7 @@
 import React from "react";
 
-function SpecificClaim() {
+function SpecificClaims() {
   return <h1>Specfic Claim</h1>;
 }
 
-export default SpecificClaim;
+export default SpecificClaims;
