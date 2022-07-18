@@ -4,24 +4,28 @@ import RuleService from "../services/Rule.service";
 import ClaimTemplateService from "../services/ClaimTemplate.service";
 import { useNode } from "./NodeContext";
 import { Spin } from "antd";
-import { Regulation, Rule, ClaimTemplate } from "../models";
+import { Regulation, Rule, ClaimTemplate, SpecificClaim } from "../models";
 
 interface DataContextInteface {
   regulations: Regulation[];
   rules: Rule[];
   claimTemplates: ClaimTemplate[];
+  specificClaims: SpecificClaim[];
   setRegulations: (regulations: Regulation[]) => void;
   setRules: (rules: Rule[]) => void;
   setClaimTemplates: (claimTemplates: ClaimTemplate[]) => void;
+  setSpecificClaims: (specificClaims: SpecificClaim[]) => void;
 }
 
 const DataContext = React.createContext<DataContextInteface>({
   regulations: [],
   rules: [],
   claimTemplates: [],
+  specificClaims: [],
   setRegulations: () => {},
   setRules: () => {},
   setClaimTemplates: () => {},
+  setSpecificClaims: () => {},
 });
 
 function DataProvider(props: any) {

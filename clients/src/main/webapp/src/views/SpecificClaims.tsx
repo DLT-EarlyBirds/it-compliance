@@ -26,12 +26,11 @@ const columns = [
 ];
 
 function SpecificClaims() {
-  // TODO: Change to specific claims
-  const { claimTemplates } = useData();
+  const { specificClaims } = useData();
 
   return (
     <div>
-      <Table columns={columns} dataSource={claimTemplates} />
+      <Table columns={columns} dataSource={specificClaims} />
     </div>
   );
 }
