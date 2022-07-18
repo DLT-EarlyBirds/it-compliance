@@ -9,7 +9,7 @@ const RegulationService = {
         return data;
     },
     getByLinearId: async (axios: AxiosInstance, linearId: string) => {
-        const { data } = await axios.get(`/${MODEL}/${linearId}`);
+        const { data } = await axios.get(`/${MODEL}/${linearId}/`);
         return data;
     },
     create: async (axios: AxiosInstance, regulation: RegulationDTO) => {
@@ -21,7 +21,7 @@ const RegulationService = {
         return data;
     },
     deprecate: async (axios: AxiosInstance, linearId: string) => {
-        const { data } = await axios.put(`/${MODEL}/${linearId}`);
+        const { data } = await axios.put(`/${MODEL}/${linearId}/`);
         return data;
     },
 };

@@ -9,15 +9,15 @@ const SpecificClaimService = {
         return data;
     },
     getAllForOrg: async (axios: AxiosInstance, orgName: string) => {
-        const {data} = await axios.get(`/${MODEL}/${orgName}`);
+        const {data} = await axios.get(`/${MODEL}/${orgName}/`);
         return data;
     },
     getByLinearId: async (axios: AxiosInstance, linearId: string) => {
-        const {data} = await axios.get(`/${MODEL}/${linearId}`);
+        const {data} = await axios.get(`/${MODEL}/${linearId}/`);
         return data;
     },
     getForOrgByLinearId: async (axios: AxiosInstance, linearId: string, orgName: string) => {
-        const {data} = await axios.get(`/${MODEL}/${orgName}/${linearId}`);
+        const {data} = await axios.get(`/${MODEL}/${orgName}/${linearId}/`);
         return data;
     },
     create: async (axios: AxiosInstance, specificClaimDTO: SpecificClaimDTO) => {
@@ -30,7 +30,7 @@ const SpecificClaimService = {
     },
     // The file property should be form data
     uploadAttachment: async (axios: AxiosInstance, linearId: string, file: string) => {
-        const {data} = await axios.put(`/${MODEL}/${linearId}`, file);
+        const {data} = await axios.put(`/${MODEL}/${linearId}/`, file);
         return data;
     },
 };

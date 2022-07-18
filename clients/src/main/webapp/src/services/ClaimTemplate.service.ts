@@ -22,28 +22,28 @@ const ClaimTemplateService = {
   },
   createSuggestion: async (axios: AxiosInstance, claimTemplateSuggestion: ClaimTemplateSuggestionDTO) => {
     const { data } = await axios.post(
-      `${MODEL}/suggestions`,
+      `${MODEL}/suggestions/`,
       claimTemplateSuggestion
     );
     return data;
   },
   getSuggestionByLinearId: async (axios: AxiosInstance, linearId: string) => {
-    const { data } = await axios.get(`/${MODEL}/suggestions/${linearId}`);
+    const { data } = await axios.get(`/${MODEL}/suggestions/${linearId}/`);
     return data;
   },
-  getSuggestionBs: async (axios: AxiosInstance) => {
+  getSuggestions: async (axios: AxiosInstance) => {
     const { data } = await axios.get(`/${MODEL}/suggestions/`);
     return data;
   },
   acceptSuggestion: async (axios: AxiosInstance, linearId: string) => {
     const { data } = await axios.post(
-        `${MODEL}/suggestions/${linearId}`
+        `${MODEL}/suggestions/${linearId}/`
     );
     return data;
   },
   rejectSuggestion: async (axios: AxiosInstance, linearId: string) => {
     const { data } = await axios.delete(
-        `${MODEL}/suggestions/${linearId}`
+        `${MODEL}/suggestions/${linearId}/`
     );
     return data;
   },
