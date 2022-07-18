@@ -6,44 +6,6 @@ import { useData } from "../contexts/DataContext";
 import { Regulation } from "models";
 import { EditOutlined } from "@ant-design/icons";
 
-const columns = [
-  {
-    title: "Linear id",
-    dataIndex: ["linearId", "id"],
-  },
-  {
-    title: "Name",
-    dataIndex: "name",
-  },
-  {
-    title: "Description",
-    dataIndex: "description",
-  },
-  {
-    title: "Release date",
-    dataIndex: "releaseDate",
-  },
-  {
-    title: "Version",
-    dataIndex: "version",
-  },
-  {
-    title: "Deprecate",
-    dataIndex: "isDeprecated",
-    render: ({ isDeprecated, linearId }: Regulation) => {
-      return (
-        <Button
-          type="primary"
-          disabled={isDeprecated}
-          onClick={() => console.log(linearId.id)}
-        >
-          {isDeprecated ? "Deprecate" : "Deprecated"}
-        </Button>
-      );
-    },
-  },
-];
-
 function Regulations() {
   const { regulations } = useData();
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
@@ -93,8 +55,7 @@ function Regulations() {
     },
     {
       title: "Actions",
-      dataIndex: ["linearId", "id"],
-      render: (regulation: Regulation) => {
+      render: (_: string, regulation: Regulation) => {
         return (
           <Button
             type="primary"
