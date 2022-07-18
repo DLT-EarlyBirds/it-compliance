@@ -1,7 +1,7 @@
 import React from "react";
 import { Table, Button } from "antd";
 import { useData } from "../contexts/DataContext";
-import { ClaimTemplate } from "types";
+import { ClaimTemplate } from "models";
 
 const columns = [
   {

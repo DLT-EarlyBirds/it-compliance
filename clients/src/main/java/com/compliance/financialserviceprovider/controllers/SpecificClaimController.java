@@ -86,9 +86,13 @@ public class SpecificClaimController {
             // Call the update flow
             Set<Party> authority = proxy.partiesFromName("Supervisory Authority", true);
             Set<Party> auditor = proxy.partiesFromName("Auditor", true);
+            List<UniqueIdentifier> supportingClaims = new ArrayList<UniqueIdentifier>();
 
+            Arrays.stream(specificClaimDTO.getSupportingClaimIds()).forEach(s -> {
+                supportingClaims.add(UniqueIdentifier.Companion.fromString(s));
+            });
 
-            if (!authority.isEmpty()) {
+            if (!authority.isEmpty() && !auditor.isEmpty()) {
                 SpecificClaim specificClaim = (SpecificClaim) proxy.startTrackedFlowDynamic(
                         UpdateSpecificClaim.UpdateSpecificClaimInitiator.class,
                         id,
@@ -97,7 +101,7 @@ public class SpecificClaimController {
                         new ArrayList<>(authority).get(0),
                         new ArrayList<>(auditor).get(0),
                         UniqueIdentifier.Companion.fromString(specificClaimDTO.getClaimTemplateLinearId()),
-                        new ArrayList<UniqueIdentifier>(),
+                        supportingClaims,
                         null
                 ).getReturnValue().get().getTx().getOutput(0);
                 return ResponseEntity.status(HttpStatus.OK).body(specificClaim);
