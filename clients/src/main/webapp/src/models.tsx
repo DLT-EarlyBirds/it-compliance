@@ -76,7 +76,7 @@ export interface ClaimTemplateSuggestionDTO {
     rule: string; // linear id of the rule
 }
 
-export interface SpecifcClaim {
+export interface SpecificClaim {
     linearId: LinearId;
     name: string;
     attachmentID: string;
@@ -88,7 +88,7 @@ export interface SpecifcClaim {
     supportingClaims: LinearPointer[];
 }
 
-export interface SpecifcClaimDTO {
+export interface SpecificClaimDTO {
     linearId: string;
     name: string;
     claimSpecification: string;
