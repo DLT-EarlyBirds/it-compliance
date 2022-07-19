@@ -1,12 +1,16 @@
 import React, { useState } from "react"
-import { Table, Button } from "antd"
+import { Table, Button, message, Upload } from "antd"
 import { useData } from "../contexts/DataContext"
 import { SpecificClaim } from "models"
 import { EditOutlined } from "@ant-design/icons"
 import UpdateSpecificClaim from "components/UpdateSpecificClaim"
+import { UploadOutlined } from "@ant-design/icons"
+import type { UploadProps } from "antd"
+import { useNode } from "contexts/NodeContext"
 
 function SpecificClaims() {
     const { specificClaims } = useData()
+    const { axiosInstance } = useNode()
 
     const [isDrawerVisible, setIsDrawerVisible] = useState(false)
     const [specificClaim, setCurrentSpecificClaim] = useState<SpecificClaim | undefined>(undefined)
@@ -35,16 +39,40 @@ function SpecificClaims() {
         {
             title: "Actions",
             render: (_: string, specificClaim: SpecificClaim) => {
+                const uploadProps: UploadProps = {
+                    name: "file",
+                    action: `${axiosInstance.defaults.baseURL}/claims/${specificClaim.linearId.id}`,
+                    method: "PUT",
+                    headers: {
+                        authorization: "authorization-text",
+                    },
+                    onChange(info) {
+                        if (info.file.status !== "uploading") {
+                            console.log(info.file, info.fileList)
+                        }
+                        if (info.file.status === "done") {
+                            message.success(`${info.file.name} file uploaded successfully`)
+                        } else if (info.file.status === "error") {
+                            message.error(`${info.file.name} file upload failed.`)
+                        }
+                    },
+                }
+
                 return (
-                    <Button
-                        type="primary"
-                        onClick={() => {
-                            setIsDrawerVisible(true)
-                            setCurrentSpecificClaim(specificClaim)
-                        }}
-                    >
-                        <EditOutlined />
-                    </Button>
+                    <>
+                        <Upload {...uploadProps}>
+                            <Button icon={<UploadOutlined />}>Upload</Button>
+                        </Upload>
+                        <Button
+                            type="primary"
+                            onClick={() => {
+                                setIsDrawerVisible(true)
+                                setCurrentSpecificClaim(specificClaim)
+                            }}
+                        >
+                            <EditOutlined />
+                        </Button>
+                    </>
                 )
             },
         },
