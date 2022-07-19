@@ -1,32 +1,32 @@
 import React from "react"
 import { Button, Form, Input, Drawer, Select } from "antd"
-import { ClaimTemplateDTO, Rule, ClaimTemplate } from "models"
+import { SpecificClaimDTO, ClaimTemplate, SpecificClaim } from "models"
 import { useNode } from "../contexts/NodeContext"
 import { useData } from "contexts/DataContext"
-import ClaimTemplateService from "services/ClaimTemplate.service"
+import SpecificClaimService from "services/SpecificClaim.service"
 
 const { Option } = Select
 
-interface UpdateClaimTemplateProps {
-    claimTemplate: ClaimTemplate
+interface UpdateSpecificClaimProps {
+    specificClaim: SpecificClaim
     isVisible: boolean
     setIsVisible: (isVisible: boolean) => void
 }
 
-const UpdateClaimTemplate = ({ claimTemplate, isVisible, setIsVisible }: UpdateClaimTemplateProps) => {
+const UpdateSpecificClaim = ({ specificClaim, isVisible, setIsVisible }: UpdateSpecificClaimProps) => {
     const { axiosInstance } = useNode()
-    const { claimTemplates, setClaimTemplates, rules } = useData()
+    const { specificClaims, setSpecificClaims, claimTemplates } = useData()
 
-    const onFinish = (values: ClaimTemplateDTO) => {
-        ClaimTemplateService.update(axiosInstance, { ...values, linearId: claimTemplate.linearId.id }).then((response) => {
-            const updatedClaimTemplates = claimTemplates.map((r) => (r.linearId.id === response.linearId.id ? response : r))
-            setClaimTemplates(updatedClaimTemplates)
+    const onFinish = (values: SpecificClaimDTO) => {
+        SpecificClaimService.update(axiosInstance, { ...values, linearId: specificClaim.linearId.id }).then((response) => {
+            const updatedSpecificClaims = specificClaims.map((r) => (r.linearId.id === response.linearId.id ? response : r))
+            setSpecificClaims(updatedSpecificClaims)
             setIsVisible(false)
         })
     }
 
     return (
-        <Drawer title="Update Claim Template" placement="right" closable={false} onClose={() => setIsVisible(false)} visible={isVisible} height="200">
+        <Drawer title="Update Specific Claim" placement="right" closable={false} onClose={() => setIsVisible(false)} visible={isVisible} height="200">
             <Form
                 name="basic"
                 labelCol={{
@@ -37,7 +37,7 @@ const UpdateClaimTemplate = ({ claimTemplate, isVisible, setIsVisible }: UpdateC
                 <Form.Item
                     label="Name"
                     name="name"
-                    initialValue={claimTemplate.name}
+                    initialValue={specificClaim.name}
                     rules={[
                         {
                             required: true,
@@ -47,9 +47,9 @@ const UpdateClaimTemplate = ({ claimTemplate, isVisible, setIsVisible }: UpdateC
                     <Input />
                 </Form.Item>
                 <Form.Item
-                    label="Template Description"
-                    name="templateDescription"
-                    initialValue={claimTemplate.templateDescription}
+                    label="Description"
+                    name="description"
+                    initialValue={specificClaim.description}
                     rules={[
                         {
                             required: true,
@@ -59,9 +59,9 @@ const UpdateClaimTemplate = ({ claimTemplate, isVisible, setIsVisible }: UpdateC
                     <Input />
                 </Form.Item>
                 <Form.Item
-                    label="Rule"
-                    name="rule"
-                    initialValue={claimTemplate.rule}
+                    label="Claim Template"
+                    name="claimTemplate"
+                    initialValue={specificClaim.claimTemplate}
                     rules={[
                         {
                             required: true,
@@ -73,8 +73,8 @@ const UpdateClaimTemplate = ({ claimTemplate, isVisible, setIsVisible }: UpdateC
                             width: 120,
                         }}
                     >
-                        {rules.map((rule: Rule) => (
-                            <Option value={rule.linearId.id}>{rule.name}</Option>
+                        {claimTemplates.map((claimTemplate: ClaimTemplate) => (
+                            <Option value={claimTemplate.linearId.id}>{claimTemplate.name}</Option>
                         ))}
                     </Select>
                 </Form.Item>
@@ -88,4 +88,4 @@ const UpdateClaimTemplate = ({ claimTemplate, isVisible, setIsVisible }: UpdateC
     )
 }
 
-export default UpdateClaimTemplate
+export default UpdateSpecificClaim
