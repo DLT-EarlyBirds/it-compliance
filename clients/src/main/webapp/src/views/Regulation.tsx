@@ -14,6 +14,7 @@ const Regulation = () => {
     }
 
     const relatedRules = rules.filter((rule: Rule) => rule.parentRegulation.pointer.id === regulation.linearId.id)
+    console.log(regulation)
     console.log(relatedRules)
 
     return <h1>Regulation</h1>

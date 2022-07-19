@@ -1,8 +1,8 @@
 import React, { useState } from "react"
-import { Table, Button } from "antd"
+import {Table, Button, TableProps} from "antd"
 import CreateRule from "../components/CreateRule"
 import { useData } from "../contexts/DataContext"
-import { Rule } from "models"
+import {Regulation, Rule} from "models"
 import UpdateRule from "components/UpdateRule"
 import { EditOutlined, EyeOutlined } from "@ant-design/icons"
 import { useNode } from "../contexts/NodeContext"
@@ -17,11 +17,19 @@ function Rules() {
     const [rule, setCurrentRule] = useState<Rule | undefined>(undefined)
     const { currentNode, axiosInstance } = useNode()
     const isSupervisoryAuthority = currentNode === NodeEnum.SUPERVISORY_AUTHORITY
+    const filter = rules.map((rule) => {
+        return {text: rule.name.split(' ')[0], value: rule}
+    })
 
     const columns = [
         {
             title: "Name",
             dataIndex: "name",
+            filters: [...filter],
+            onFilter: (value: string, record: Rule) => record.name.includes(value),
+            filterMultiple: true,
+            sorter: (a: Rule, b: Rule) => a.name.length - b.name.length,
+            sortDirections: ['descend']
         },
         {
             title: "Rule Specification",
@@ -87,10 +95,14 @@ function Rules() {
         },
     ]
 
+    const onChange: TableProps<Rule>['onChange'] = (pagination, filters, sorter, extra) => {
+        console.log('params', pagination, filters, sorter, extra);
+    };
+
     return (
         <div>
             {isSupervisoryAuthority && <CreateRule />}
-            <Table columns={columns} dataSource={rules} />
+            <Table columns={columns} dataSource={rules} onChange={onChange} />
             {isDrawerVisible && <UpdateRule rule={rule as Rule} isVisible={isDrawerVisible} setIsVisible={setIsDrawerVisible} />}
         </div>
     )
