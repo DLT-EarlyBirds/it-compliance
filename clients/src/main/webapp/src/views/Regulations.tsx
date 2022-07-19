@@ -18,11 +18,20 @@ function Regulations() {
     const [isDrawerVisible, setIsDrawerVisible] = useState(false)
     const [regulation, setCurrentRegulation] = useState<Regulation | undefined>(undefined)
     const isSupervisoryAuthority = currentNode === NodeEnum.SUPERVISORY_AUTHORITY
+    const filter = regulations.map((regulation) => {
+        return {text: regulation.name.split(' ')[0], value: regulation}
+    })
+    console.log(filter)
 
     const columns = [
         {
             title: "Name",
             dataIndex: "name",
+            filters: [...filter],
+            onFilter: (value: string, record: Regulation) => record.name.includes(value),
+            filterMultiple: true,
+            sorter: (a: Regulation, b: Regulation) => a.name.length - b.name.length,
+            sortDirections: ['descend']
         },
         {
             title: "Description",
