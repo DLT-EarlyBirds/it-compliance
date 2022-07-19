@@ -5,10 +5,11 @@ import { useNode } from "../contexts/NodeContext"
 import { NodeEnum } from "enums"
 import { ClaimTemplate, Regulation } from "models"
 import CreateClaimTemplate from "../components/CreateClaimTemplate"
-import { EditOutlined } from "@ant-design/icons"
+import { EditOutlined, EyeOutlined } from "@ant-design/icons"
 import UpdateClaimTemplate from "components/UpdateClaimTemplate"
 import { insertIf } from "utils"
 import ClaimTemplateService from "services/ClaimTemplate.service"
+import { Link } from "react-router-dom"
 
 const commonColumns = [
     {
@@ -88,6 +89,16 @@ function ClaimTemplates() {
                 )
             },
         }),
+        {
+            title: "View",
+            render: (_: string, claimTemplate: ClaimTemplate) => {
+                return (
+                    <Link to={`/claim-templates/${claimTemplate.linearId.id}`}>
+                        <EyeOutlined />
+                    </Link>
+                )
+            },
+        },
     ]
 
     return (

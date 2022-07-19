@@ -25,7 +25,7 @@ const CreateSpecificClaim = () => {
     }
 
     const onFinish = (values: any) => {
-        SpecificClaimService.create(axiosInstance, {...values, supportingClaimIds: [], linearId: ''}).then((response) => {
+        SpecificClaimService.create(axiosInstance, { ...values, supportingClaimIds: [], linearId: "" }).then((response) => {
             setSpecificClaims([...specificClaims, response])
             handleCancel()
         })

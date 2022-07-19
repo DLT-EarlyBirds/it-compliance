@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Table, Button, message, Upload } from "antd"
 import { useData } from "../contexts/DataContext"
 import { SpecificClaim } from "models"
-import { EditOutlined, DownloadOutlined } from "@ant-design/icons"
+import { EditOutlined, DownloadOutlined, EyeOutlined } from "@ant-design/icons"
 import UpdateSpecificClaim from "components/UpdateSpecificClaim"
 import { UploadOutlined } from "@ant-design/icons"
 import type { UploadProps } from "antd"
@@ -11,6 +11,7 @@ import { NodeEnum } from "enums"
 import CreateSpecificClaim from "components/CreateSpecificClaim"
 import { insertIf } from "utils"
 import SpecificClaimService from "services/SpecificClaim.service"
+import { Link } from "react-router-dom"
 
 function SpecificClaims() {
     const { specificClaims } = useData()
@@ -87,6 +88,16 @@ function SpecificClaims() {
                 )
             },
         }),
+        {
+            title: "View",
+            render: (_: string, specificClaim: SpecificClaim) => {
+                return (
+                    <Link to={`/specific-claims/${specificClaim.linearId.id}`}>
+                        <EyeOutlined />
+                    </Link>
+                )
+            },
+        },
     ]
 
     return (

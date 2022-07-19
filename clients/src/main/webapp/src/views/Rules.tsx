@@ -4,11 +4,12 @@ import CreateRule from "../components/CreateRule"
 import { useData } from "../contexts/DataContext"
 import { Rule } from "models"
 import UpdateRule from "components/UpdateRule"
-import { EditOutlined } from "@ant-design/icons"
+import { EditOutlined, EyeOutlined } from "@ant-design/icons"
 import { useNode } from "../contexts/NodeContext"
 import { NodeEnum } from "enums"
 import { insertIf } from "utils"
 import RuleService from "../services/Rule.service"
+import { Link } from "react-router-dom"
 
 function Rules() {
     const { rules, setRules } = useData()
@@ -41,7 +42,7 @@ function Rules() {
         ...insertIf(isSupervisoryAuthority, {
             title: "Deprecate",
             dataIndex: "isDeprecated",
-            render: (_ :string, { isDeprecated, linearId }: Rule) => {
+            render: (_: string, { isDeprecated, linearId }: Rule) => {
                 return (
                     <Button
                         type="primary"
@@ -74,6 +75,16 @@ function Rules() {
                 )
             },
         }),
+        {
+            title: "View",
+            render: (_: string, rule: Rule) => {
+                return (
+                    <Link to={`/rules/${rule.linearId.id}`}>
+                        <EyeOutlined />
+                    </Link>
+                )
+            },
+        },
     ]
 
     return (

@@ -6,10 +6,11 @@ import { useData } from "../contexts/DataContext"
 import { useNode } from "../contexts/NodeContext"
 import { Regulation } from "models"
 import { NodeEnum } from "enums"
-import { EditOutlined } from "@ant-design/icons"
+import { EditOutlined, EyeOutlined } from "@ant-design/icons"
 import { insertIf } from "utils"
 import RegulationService from "../services/Regulation.service"
 import RuleService from "../services/Rule.service"
+import { Link } from "react-router-dom"
 
 function Regulations() {
     const { regulations, setRegulations, setRules } = useData()
@@ -42,7 +43,7 @@ function Regulations() {
         ...insertIf(isSupervisoryAuthority, {
             title: "Deprecate",
             dataIndex: "isDeprecated",
-            render: (_:string, { isDeprecated, linearId }: Regulation) => {
+            render: (_: string, { isDeprecated, linearId }: Regulation) => {
                 return (
                     <Button
                         type="primary"
@@ -77,6 +78,16 @@ function Regulations() {
                 )
             },
         }),
+        {
+            title: "View",
+            render: (_: string, regulation: Regulation) => {
+                return (
+                    <Link to={`/regulations/${regulation.linearId.id}`}>
+                        <EyeOutlined />
+                    </Link>
+                )
+            },
+        },
     ]
 
     return (
