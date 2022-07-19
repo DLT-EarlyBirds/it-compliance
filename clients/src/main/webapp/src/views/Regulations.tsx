@@ -54,7 +54,6 @@ function Regulations() {
                     <Button
                         type="primary"
                         onClick={() => {
-                            console.log(regulation, "from button")
                             setIsDrawerVisible(true)
                             setCurrentRegulation(regulation)
                         }}
