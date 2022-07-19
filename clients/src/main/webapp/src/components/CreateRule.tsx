@@ -25,7 +25,10 @@ const CreateRule = () => {
     }
 
     const onFinish = (values: any) => {
-        RuleService.create(axiosInstance, values).then((response) => setRules([...rules, response]))
+        RuleService.create(axiosInstance, values).then((response) => {
+            setRules([...rules, response])
+            handleCancel()
+        })
     }
 
     return (

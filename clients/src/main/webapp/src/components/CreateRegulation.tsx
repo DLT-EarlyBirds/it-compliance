@@ -24,7 +24,10 @@ const CreateRegulation = () => {
     }
 
     const onFinish = (values: any) => {
-        RegulationService.create(axiosInstance, values).then((response) => setRegulations([...regulations, response]))
+        RegulationService.create(axiosInstance, values).then((response) => {
+            setRegulations([...regulations, response])
+            handleCancel()
+        })
     }
 
     const bootstrapGraph = () => {
