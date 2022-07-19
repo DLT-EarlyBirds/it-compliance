@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { Modal, Button, Form, Input, Select } from "antd"
 import { useNode } from "../contexts/NodeContext"
 import { useData } from "../contexts/DataContext"
+import SpecificClaimService from "services/SpecificClaim.service"
 
 const { Option } = Select
 
@@ -9,7 +10,7 @@ const CreateSpecificClaim = () => {
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [specificClaimForm] = Form.useForm()
     const { axiosInstance } = useNode()
-    const { setSpecificClaims } = useData()
+    const { specificClaims, setSpecificClaims, claimTemplates } = useData()
 
     const showModal = () => {
         setIsModalVisible(true)
@@ -23,7 +24,9 @@ const CreateSpecificClaim = () => {
         setIsModalVisible(false)
     }
 
-    const onFinish = (values: any) => {}
+    const onFinish = (values: any) => {
+        SpecificClaimService.create(axiosInstance, values).then((response) => setSpecificClaims([...specificClaims, response]))
+    }
 
     return (
         <>
@@ -88,8 +91,9 @@ const CreateSpecificClaim = () => {
                                 width: 120,
                             }}
                         >
-                            <Option value="m1">M1</Option>
-                            <Option value="m2">M2</Option>
+                            {claimTemplates.map((claimTemplate) => (
+                                <Option value={claimTemplate.linearId.id}>{claimTemplate.name}</Option>
+                            ))}
                         </Select>
                     </Form.Item>
                 </Form>
