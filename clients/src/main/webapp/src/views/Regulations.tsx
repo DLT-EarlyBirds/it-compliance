@@ -8,10 +8,12 @@ import { Regulation } from "models"
 import { NodeEnum } from "enums"
 import { EditOutlined } from "@ant-design/icons"
 import { insertIf } from "utils"
+import RegulationService from "../services/Regulation.service"
+import RuleService from "../services/Rule.service"
 
 function Regulations() {
-    const { regulations } = useData()
-    const { currentNode } = useNode()
+    const { regulations, setRegulations, setRules } = useData()
+    const { currentNode, axiosInstance } = useNode()
     const [isDrawerVisible, setIsDrawerVisible] = useState(false)
     const [regulation, setCurrentRegulation] = useState<Regulation | undefined>(undefined)
     const isSupervisoryAuthority = currentNode === NodeEnum.SUPERVISORY_AUTHORITY
@@ -46,7 +48,18 @@ function Regulations() {
             dataIndex: "isDeprecated",
             render: ({ isDeprecated, linearId }: Regulation) => {
                 return (
-                    <Button type="primary" disabled={isDeprecated} onClick={() => console.log(linearId.id)}>
+                    <Button
+                        type="primary"
+                        disabled={isDeprecated}
+                        onClick={() => {
+                            RegulationService.deprecate(axiosInstance, linearId.id)
+                                .then((response) => {
+                                    const updatedRegulations = regulations.map((r) => (r.linearId.id === response.linearId.id ? response : r))
+                                    setRegulations(updatedRegulations)
+                                })
+                                .then(() => RuleService.getAll(axiosInstance).then((rulesResponse) => setRules(rulesResponse)))
+                        }}
+                    >
                         {isDeprecated ? "Deprecate" : "Deprecated"}
                     </Button>
                 )
