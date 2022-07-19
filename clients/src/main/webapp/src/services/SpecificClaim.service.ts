@@ -33,6 +33,10 @@ const SpecificClaimService = {
         const { data } = await axios.put(`/${MODEL}/${linearId}/`, file)
         return data
     },
+    downloadAttachment: async (axios: AxiosInstance, linearId: string) => {
+        const { data } = await axios.get(`/${MODEL}/attachment/${linearId}`)
+        return data
+    },
 }
 
 export default SpecificClaimService

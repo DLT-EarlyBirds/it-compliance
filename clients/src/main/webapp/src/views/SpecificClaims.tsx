@@ -1,19 +1,20 @@
-import React, {useState} from "react"
-import {Table, Button, message, Upload} from "antd"
-import {useData} from "../contexts/DataContext"
-import {SpecificClaim} from "models"
-import {EditOutlined} from "@ant-design/icons"
+import React, { useState } from "react"
+import { Table, Button, message, Upload } from "antd"
+import { useData } from "../contexts/DataContext"
+import { SpecificClaim } from "models"
+import { EditOutlined, DownloadOutlined } from "@ant-design/icons"
 import UpdateSpecificClaim from "components/UpdateSpecificClaim"
-import {UploadOutlined} from "@ant-design/icons"
-import type {UploadProps} from "antd"
-import {useNode} from "contexts/NodeContext"
-import {NodeEnum} from "enums"
+import { UploadOutlined } from "@ant-design/icons"
+import type { UploadProps } from "antd"
+import { useNode } from "contexts/NodeContext"
+import { NodeEnum } from "enums"
 import CreateSpecificClaim from "components/CreateSpecificClaim"
-import {insertIf} from "utils"
+import { insertIf } from "utils"
+import SpecificClaimService from "services/SpecificClaim.service"
 
 function SpecificClaims() {
-    const {specificClaims} = useData()
-    const {currentNode, axiosInstance} = useNode()
+    const { specificClaims } = useData()
+    const { currentNode, axiosInstance } = useNode()
     const isSupervisoryAuthority = currentNode === NodeEnum.SUPERVISORY_AUTHORITY
 
     const [isDrawerVisible, setIsDrawerVisible] = useState(false)
@@ -35,6 +36,16 @@ function SpecificClaims() {
         {
             title: "Claim Template",
             dataIndex: ["claimTemplate", "pointer", "id"],
+        },
+        {
+            title: "Attachment",
+            render: (_: string, specificClaim: SpecificClaim) => {
+                return specificClaim?.attachmentID ? (
+                    <DownloadOutlined onClick={() => SpecificClaimService.downloadAttachment(axiosInstance, specificClaim.linearId.id)} />
+                ) : (
+                    <span>No attachment</span>
+                )
+            },
         },
         ...insertIf(!isSupervisoryAuthority, {
             title: "Actions",
@@ -61,7 +72,7 @@ function SpecificClaims() {
                 return (
                     <>
                         <Upload {...uploadProps}>
-                            <Button icon={<UploadOutlined/>}>Upload</Button>
+                            <Button icon={<UploadOutlined />}>Upload</Button>
                         </Upload>
                         <Button
                             type="primary"
@@ -70,7 +81,7 @@ function SpecificClaims() {
                                 setCurrentSpecificClaim(specificClaim)
                             }}
                         >
-                            <EditOutlined/>
+                            <EditOutlined />
                         </Button>
                     </>
                 )
@@ -80,11 +91,9 @@ function SpecificClaims() {
 
     return (
         <div>
-            {!isSupervisoryAuthority && <CreateSpecificClaim/>}
-            <Table columns={columns} dataSource={specificClaims}/>
-            {isDrawerVisible &&
-            <UpdateSpecificClaim specificClaim={specificClaim as SpecificClaim} isVisible={isDrawerVisible}
-                                 setIsVisible={setIsDrawerVisible}/>}
+            {!isSupervisoryAuthority && <CreateSpecificClaim />}
+            <Table columns={columns} dataSource={specificClaims} />
+            {isDrawerVisible && <UpdateSpecificClaim specificClaim={specificClaim as SpecificClaim} isVisible={isDrawerVisible} setIsVisible={setIsDrawerVisible} />}
         </div>
     )
 }
