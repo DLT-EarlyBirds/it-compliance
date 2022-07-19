@@ -4,17 +4,19 @@ import RuleService from "../services/Rule.service"
 import ClaimTemplateService from "../services/ClaimTemplate.service"
 import { useNode } from "./NodeContext"
 import { Spin } from "antd"
-import { Regulation, Rule, ClaimTemplate, SpecificClaim } from "../models"
+import { Regulation, Rule, ClaimTemplate, SpecificClaim, ClaimTemplateSuggestion } from "../models"
 
 interface DataContextInteface {
     regulations: Regulation[]
     rules: Rule[]
     claimTemplates: ClaimTemplate[]
     specificClaims: SpecificClaim[]
+    claimTemplatesSuggestions: ClaimTemplateSuggestion[]
     setRegulations: (regulations: Regulation[]) => void
     setRules: (rules: Rule[]) => void
     setClaimTemplates: (claimTemplates: ClaimTemplate[]) => void
     setSpecificClaims: (specificClaims: SpecificClaim[]) => void
+    setClaimTemplatesSuggestions: (claimTemplatesSuggestions: ClaimTemplateSuggestion[]) => void
 }
 
 const DataContext = React.createContext<DataContextInteface>({
@@ -22,10 +24,12 @@ const DataContext = React.createContext<DataContextInteface>({
     rules: [],
     claimTemplates: [],
     specificClaims: [],
+    claimTemplatesSuggestions: [],
     setRegulations: () => {},
     setRules: () => {},
     setClaimTemplates: () => {},
     setSpecificClaims: () => {},
+    setClaimTemplatesSuggestions: () => {},
 })
 
 function DataProvider(props: any) {
@@ -33,9 +37,22 @@ function DataProvider(props: any) {
     const [regulations, setRegulations] = useState<Regulation[]>([])
     const [rules, setRules] = useState<Rule[]>([])
     const [claimTemplates, setClaimTemplates] = useState<ClaimTemplate[]>([])
+    const [specificClaims, setSpecificClaims] = useState<SpecificClaim[]>([])
+    const [claimTemplatesSuggestions, setClaimTemplatesSuggestions] = useState<ClaimTemplateSuggestion[]>([])
     const [isLoading, setIsLoading] = useState(false)
 
-    const data = { regulations, rules, claimTemplates, setRegulations }
+    const data: DataContextInteface = {
+        regulations,
+        rules,
+        claimTemplates,
+        claimTemplatesSuggestions,
+        specificClaims,
+        setRegulations,
+        setRules,
+        setClaimTemplates,
+        setSpecificClaims,
+        setClaimTemplatesSuggestions,
+    }
 
     const fetchData = async () => {
         setIsLoading(true)
@@ -43,6 +60,7 @@ function DataProvider(props: any) {
             RegulationService.getAll(axiosInstance).then((response) => setRegulations(response)),
             RuleService.getAll(axiosInstance).then((response) => setRules(response)),
             ClaimTemplateService.getAll(axiosInstance).then((response) => setClaimTemplates(response)),
+            ClaimTemplateService.getSuggestions(axiosInstance).then((response) => setClaimTemplatesSuggestions(response)),
         ])
 
         setIsLoading(false)
