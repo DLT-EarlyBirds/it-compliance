@@ -42,7 +42,6 @@ function GraphRegulation() {
 
     return (
         <div>
-            <span>Some text</span>
             <ForceGraph2D
                 width={1100}
                 height={1000}

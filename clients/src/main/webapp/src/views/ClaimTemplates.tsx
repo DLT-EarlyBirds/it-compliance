@@ -51,10 +51,6 @@ function ClaimTemplates() {
 
     const claimTemplateColumns = [
         {
-            title: "Linear id",
-            dataIndex: ["linearId", "id"],
-        },
-        {
             title: "Name",
             dataIndex: "name",
         },

@@ -5,7 +5,7 @@ import { Link, useLocation } from "react-router-dom"
 import { useNode } from "../contexts/NodeContext"
 import { NodeEnum } from "enums"
 
-const Header = () => {
+const Sidebar = () => {
     const { pathname } = useLocation()
     const { currentNode, setCurrentNode } = useNode()
 
@@ -25,10 +25,7 @@ const Header = () => {
 
     return (
         <>
-            <Menu mode="horizontal" selectedKeys={[pathname]} defaultSelectedKeys={["home"]}>
-                <Menu.Item key="/" icon={<HomeOutlined />}>
-                    <Link to="/">Home</Link>
-                </Menu.Item>
+            <Menu mode="vertical" selectedKeys={[pathname]} defaultSelectedKeys={["home"]}>
                 <Menu.Item key="/graph-regulation" icon={<RadarChartOutlined />}>
                     <Link to="/graph-regulation">Graph Regulation</Link>
                 </Menu.Item>
@@ -44,14 +41,6 @@ const Header = () => {
                 <Menu.Item key="/specific-claims" icon={<FileTextOutlined />}>
                     <Link to="/specific-claims">Specific Claims</Link>
                 </Menu.Item>
-                <Menu.Item>
-                    <div className="flex">
-                        <h2 className="text-green-600">Node: {currentNode}</h2>
-                        <Button className="ml-2 mt-2" type="primary" onClick={showDrawer}>
-                            Change Node
-                        </Button>
-                    </div>
-                </Menu.Item>
             </Menu>
             <Drawer title="All nodes in the system" placement="bottom" closable={false} onClose={onClose} visible={visible} height="200">
                 <h2>You are currently connected to:</h2>
@@ -66,4 +55,4 @@ const Header = () => {
     )
 }
 
-export default Header
+export default Sidebar

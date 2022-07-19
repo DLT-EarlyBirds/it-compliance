@@ -20,10 +20,6 @@ function Regulations() {
 
     const columns = [
         {
-            title: "Linear id",
-            dataIndex: ["linearId", "id"],
-        },
-        {
             title: "Name",
             dataIndex: "name",
         },

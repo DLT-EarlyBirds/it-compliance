@@ -7,48 +7,63 @@ import { useData } from "../contexts/DataContext"
 
 const CreateRegulation = () => {
     const [isModalVisible, setIsModalVisible] = useState(false)
+    const [isBootstrapVisible, setIsBootstrapVisible] = useState(false)
+
     const [regulationForm] = Form.useForm()
     const { axiosInstance } = useNode()
-    const { regulations, setRegulations } = useData()
+    const { regulations, setRegulations, fetchData } = useData()
 
-    const showModal = () => {
+    const showCreateModal = () => {
         setIsModalVisible(true)
     }
 
-    const handleOk = () => {
+    const handleCreateOk = () => {
         setIsModalVisible(false)
     }
 
-    const handleCancel = () => {
+    const handleCreateCancel = () => {
         setIsModalVisible(false)
+    }
+
+    const showBootstrapModal = () => {
+        setIsBootstrapVisible(true)
+    }
+
+    const handleBootstrapOk = () => {
+        bootstrapGraph()
+        setIsBootstrapVisible(false)
+    }
+
+    const handleBootstrapCancel = () => {
+        setIsBootstrapVisible(false)
     }
 
     const onFinish = (values: any) => {
         RegulationService.create(axiosInstance, values).then((response) => {
             setRegulations([...regulations, response])
-            handleCancel()
+            handleCreateCancel()
         })
     }
 
     const bootstrapGraph = () => {
-        NetworkService.bootstrapGraph(axiosInstance)
+        NetworkService.bootstrapGraph(axiosInstance).then(() => fetchData())
     }
 
     return (
         <>
-            <Button type="primary" className="my-3" onClick={showModal}>
+            <Button type="primary" className="my-3" onClick={showCreateModal}>
                 Create Regulation
             </Button>
-            <Button type="primary" className="my-3" onClick={bootstrapGraph}>
+            <Button type="primary" className="my-3" danger onClick={showBootstrapModal}>
                 Bootstrap Graph
             </Button>
             <Modal
                 title="Create Regulation"
                 visible={isModalVisible}
-                onOk={handleOk}
-                onCancel={handleCancel}
+                onOk={handleCreateOk}
+                onCancel={handleCreateCancel}
                 footer={[
-                    <Button className="btn-default" key="back" onClick={handleCancel}>
+                    <Button className="btn-default" key="back" onClick={handleCreateCancel}>
                         Cancel
                     </Button>,
                     <Button key="submit" type="primary" onClick={() => regulationForm.submit()}>
@@ -109,6 +124,21 @@ const CreateRegulation = () => {
                         <Input />
                     </Form.Item>
                 </Form>
+            </Modal>
+            <Modal
+                title="Bootstrap Regulation Graph"
+                visible={isBootstrapVisible}
+                onOk={handleBootstrapOk}
+                onCancel={handleBootstrapCancel}
+                footer={[
+                    <Button className="btn-default" key="back" onClick={handleBootstrapCancel}>
+                        Cancel
+                    </Button>,
+                    <Button key="submit" type="primary" onClick={handleBootstrapOk}>
+                        Bootstrap Regulation Graph
+                    </Button>,
+                ]}
+            >
             </Modal>
         </>
     )
