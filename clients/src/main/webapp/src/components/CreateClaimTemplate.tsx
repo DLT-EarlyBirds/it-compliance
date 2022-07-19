@@ -14,7 +14,7 @@ const CreateClaimTemplate = ({ isClaimTemplateSuggestion }: CreateClaimTemplateP
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [claimTemplateForm] = Form.useForm()
     const { axiosInstance } = useNode()
-    const { claimTemplates, setClaimTemplates, claimTemplatesSuggestions, setClaimTemplatesSuggestions } = useData()
+    const { rules, claimTemplates, setClaimTemplates, claimTemplatesSuggestions, setClaimTemplatesSuggestions } = useData()
 
     const showModal = () => {
         setIsModalVisible(true)
@@ -99,8 +99,9 @@ const CreateClaimTemplate = ({ isClaimTemplateSuggestion }: CreateClaimTemplateP
                                 width: 120,
                             }}
                         >
-                            <Option value="m1">M1</Option>
-                            <Option value="m2">M2</Option>
+                            {rules.map((rule) => (
+                                <Option value={rule.linearId.id}>{rule.name}</Option>
+                            ))}
                         </Select>
                     </Form.Item>
                 </Form>
