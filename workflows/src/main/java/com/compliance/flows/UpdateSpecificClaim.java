@@ -145,7 +145,9 @@ public class UpdateSpecificClaim {
             }
 
             builder.addOutputState(output);
-            builder.addAttachment(attachmentID);
+            if (attachmentID != null) {
+                builder.addAttachment(attachmentID);
+            }
             builder.addCommand(
                     new SpecificClaimContract.Commands.UpdateSpecificClaim(),
                     Arrays.asList(

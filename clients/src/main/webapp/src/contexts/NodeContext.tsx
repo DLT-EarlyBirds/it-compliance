@@ -1,10 +1,23 @@
+import { NodeEnum } from "enums";
 import React, { useState } from "react";
 import { getAxiosInstance } from "../services/axiosInstance";
 
-const NodeContext = React.createContext();
+interface NodeContextInterface {
+  currentNode: NodeEnum;
+  axiosInstance: any;
+  setCurrentNode: (node: NodeEnum) => void;
+}
 
-function NodeProvider(props) {
-  const [currentNode, setCurrentNode] = useState("Supervisory Authority");
+const NodeContext = React.createContext<NodeContextInterface>({
+  currentNode: NodeEnum.SUPERVISORY_AUTHORITY,
+  axiosInstance: null,
+  setCurrentNode: () => {},
+});
+
+function NodeProvider(props: any) {
+  const [currentNode, setCurrentNode] = useState(
+    NodeEnum.SUPERVISORY_AUTHORITY
+  );
 
   const axiosInstance = getAxiosInstance(currentNode);
 

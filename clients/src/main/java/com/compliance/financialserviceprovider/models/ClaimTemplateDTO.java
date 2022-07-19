@@ -14,7 +14,6 @@ import java.util.Map;
 })
 public class ClaimTemplateDTO implements Serializable
 {
-
     @JsonProperty("linearId")
     private String linearId;
     @JsonProperty("name")

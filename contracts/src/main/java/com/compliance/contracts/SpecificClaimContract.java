@@ -35,7 +35,9 @@ public class SpecificClaimContract implements Contract {
         SpecificClaim output = tx.outputsOfType(SpecificClaim.class).get(0);
 
         StateAndRef<ClaimTemplate> claimTemplate = output.getClaimTemplate().resolve(tx);
-        List<StateAndRef<SpecificClaim>> supportingClaims = output.getSupportingClaims().stream().map(claimTemplateLinearPointer -> claimTemplateLinearPointer.resolve(tx)).collect(Collectors.toList());
+        if (!output.getSupportingClaims().isEmpty()) {
+            List<StateAndRef<SpecificClaim>> supportingClaims = output.getSupportingClaims().stream().map(claimTemplateLinearPointer -> claimTemplateLinearPointer.resolve(tx)).collect(Collectors.toList());
+        }
 
 
         if (commandData instanceof Commands.CreateClaim) {
@@ -49,7 +51,7 @@ public class SpecificClaimContract implements Contract {
 
         } else if (commandData instanceof Commands.UpdateSpecificClaim) {
             //Retrieve the output state of the transaction
-            ClaimTemplate input = tx.inputsOfType(ClaimTemplate.class).get(0);
+            SpecificClaim input = tx.inputsOfType(SpecificClaim.class).get(0);
 
             requireThat(require -> {
                 require.using("The transaction is only allowed to modify the input specific claim", output.getLinearId().equals(input.getLinearId()));

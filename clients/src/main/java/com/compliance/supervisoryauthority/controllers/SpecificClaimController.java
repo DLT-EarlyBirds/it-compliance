@@ -91,7 +91,7 @@ public class SpecificClaimController {
     }
 
     @GetMapping(value = "/{name}/{linearId}", produces = APPLICATION_JSON_VALUE)
-    private ResponseEntity<SpecificClaim> getAllForOrg(@PathVariable String name, @PathVariable String linearId) {
+    private ResponseEntity<SpecificClaim> getAllForOrgByLinearId(@PathVariable String name, @PathVariable String linearId) {
         if (!proxy.partiesFromName(name, true).isEmpty()) {
             List<Party> issuer = new ArrayList<>(proxy.partiesFromName(name, true));
             QueryCriteria criteria = new QueryCriteria.LinearStateQueryCriteria(

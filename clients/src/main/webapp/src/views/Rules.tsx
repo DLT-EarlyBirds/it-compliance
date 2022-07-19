@@ -2,6 +2,7 @@ import React from "react";
 import { Table, Button } from "antd";
 import CreateRule from "../components/CreateRule";
 import { useData } from "../contexts/DataContext";
+import { Rule } from "models";
 
 const columns = [
   {
@@ -23,7 +24,7 @@ const columns = [
   {
     title: "Deprecate",
     dataIndex: "isDeprecated",
-    render: ({ isDeprecated, linearId }) => {
+    render: ({ isDeprecated, linearId }: Rule) => {
       return (
         <Button
           type="primary"
@@ -37,7 +38,7 @@ const columns = [
   },
 ];
 
-function Rule() {
+function Rules() {
   const { rules } = useData();
 
   return (
@@ -48,4 +49,4 @@ function Rule() {
   );
 }
 
-export default Rule;
+export default Rules;
