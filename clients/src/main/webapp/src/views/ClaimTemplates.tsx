@@ -65,7 +65,7 @@ function ClaimTemplates() {
 
     return (
         <div>
-            {currentNode === NodeEnum.SUPERVISORY_AUTHORITY ? <CreateClaimTemplate /> : <h1>Create Claim Template Suggestion</h1>}
+            <CreateClaimTemplate isClaimTemplateSuggestion={currentNode !== NodeEnum.SUPERVISORY_AUTHORITY} />
 
             {currentNode === NodeEnum.SUPERVISORY_AUTHORITY && <Table columns={claimTemplateSuggestions} dataSource={claimTemplates} />}
             <Table columns={claimTemplateColumns} dataSource={claimTemplates} />

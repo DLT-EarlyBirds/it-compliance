@@ -5,7 +5,11 @@ import { useData } from "../contexts/DataContext"
 
 const { Option } = Select
 
-const CreateClaimTemplate = () => {
+interface CreateClaimTemplateProps {
+    isClaimTemplateSuggestion: boolean
+}
+
+const CreateClaimTemplate = ({ isClaimTemplateSuggestion }: CreateClaimTemplateProps) => {
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [claimTemplateForm] = Form.useForm()
     const { axiosInstance } = useNode()
@@ -28,10 +32,10 @@ const CreateClaimTemplate = () => {
     return (
         <>
             <Button type="primary" className="my-3" onClick={showModal}>
-                Create Claim Template
+                {isClaimTemplateSuggestion ? "Create Claim Template" : "Create Claim Template Suggestion"}
             </Button>
             <Modal
-                title="Create Claim Template"
+                title={isClaimTemplateSuggestion ? "Create Claim Template" : "Create Claim Template Suggestion"}
                 visible={isModalVisible}
                 onOk={handleOk}
                 onCancel={handleCancel}
