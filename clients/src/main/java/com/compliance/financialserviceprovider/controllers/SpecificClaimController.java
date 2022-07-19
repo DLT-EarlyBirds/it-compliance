@@ -6,6 +6,7 @@ import com.compliance.states.SpecificClaim;
 import com.compliance.financialserviceprovider.NodeRPCConnection;
 import com.compliance.financialserviceprovider.models.SpecificClaimDTO;
 import liquibase.util.file.FilenameUtils;
+import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.crypto.SecureHash;
 import net.corda.core.identity.Party;
@@ -14,7 +15,10 @@ import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -81,16 +85,20 @@ public class SpecificClaimController {
                 Collections.singletonList(id),
                 Vault.StateStatus.UNCONSUMED,
                 Collections.singleton(SpecificClaim.class));
+
+        List<StateAndRef<SpecificClaim>> linearIdClaims = proxy.vaultQueryByCriteria(queryCriteria, SpecificClaim.class).getStates();
         // Check if state with that linear ID exists
-        if (!proxy.vaultQueryByCriteria(queryCriteria, SpecificClaim.class).getStates().isEmpty()) {
+        if (!linearIdClaims.isEmpty()) {
             // Call the update flow
             Set<Party> authority = proxy.partiesFromName("Supervisory Authority", true);
             Set<Party> auditor = proxy.partiesFromName("Auditor", true);
-            List<UniqueIdentifier> supportingClaims = new ArrayList<UniqueIdentifier>();
+            List<UniqueIdentifier> supportingClaims = new ArrayList<>();
 
-            Arrays.stream(specificClaimDTO.getSupportingClaimIds()).forEach(s -> {
-                supportingClaims.add(UniqueIdentifier.Companion.fromString(s));
-            });
+            if (specificClaimDTO.getSupportingClaimIds() != null) {
+                Arrays.stream(specificClaimDTO.getSupportingClaimIds()).forEach(s -> {
+                    supportingClaims.add(UniqueIdentifier.Companion.fromString(s));
+                });
+            }
 
             if (!authority.isEmpty() && !auditor.isEmpty()) {
                 SpecificClaim specificClaim = (SpecificClaim) proxy.startTrackedFlowDynamic(
@@ -101,12 +109,12 @@ public class SpecificClaimController {
                         new ArrayList<>(authority).get(0),
                         new ArrayList<>(auditor).get(0),
                         UniqueIdentifier.Companion.fromString(specificClaimDTO.getClaimTemplateLinearId()),
-                        supportingClaims,
-                        null
+                        supportingClaims
                 ).getReturnValue().get().getTx().getOutput(0);
                 return ResponseEntity.status(HttpStatus.OK).body(specificClaim);
             } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        } return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
 
@@ -129,10 +137,16 @@ public class SpecificClaimController {
         } else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
-    @PostMapping("/attachment/{linearId}")
+    @PostMapping(value = "/attachment/{linearId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     private ResponseEntity<SpecificClaim> addAttachment(@RequestBody MultipartFile file, @PathVariable String linearId) throws ExecutionException, InterruptedException, IOException {
-        if (FilenameUtils.getExtension(file.getOriginalFilename()).equals("jar")) {
-            SecureHash secureHash = proxy.uploadAttachment(file.getInputStream());
+        if (Objects.equals(FilenameUtils.getExtension(file.getOriginalFilename()), "jar") || file.getOriginalFilename() != null) {
+
+            // upload the file with my common name as uploader and the current date as file name
+            SecureHash secureHash = proxy.uploadAttachmentWithMetadata(
+                    file.getInputStream(),
+                    Objects.requireNonNull(proxy.nodeInfo().getLegalIdentities().get(0).getName().toString()),
+                    new Date().toString() + "." + FilenameUtils.getExtension(file.getOriginalFilename())
+            );
 
             UniqueIdentifier id = UniqueIdentifier.Companion.fromString(linearId);
             QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
@@ -146,10 +160,10 @@ public class SpecificClaimController {
             ).collect(Collectors.toList());
             // Check if state with that linear ID exists
             if (!specificClaims.isEmpty()) {
-                Set<Party> partySet = proxy.partiesFromName("Supervisory Authority", true);
+                Set<Party> authority = proxy.partiesFromName("Supervisory Authority", true);
+                Set<Party> auditor = proxy.partiesFromName("Auditor", true);
 
-                if (!partySet.isEmpty()) {
-                    Party supervisoryAuthority = new ArrayList<>(partySet).get(0);
+                if (!authority.isEmpty() && !auditor.isEmpty()) {
                     SpecificClaim specificClaim = specificClaims.get(0);
                     // Call the update flow
                     SpecificClaim output = (SpecificClaim) proxy.startTrackedFlowDynamic(
@@ -157,14 +171,37 @@ public class SpecificClaimController {
                             specificClaim.getLinearId(),
                             specificClaim.getName(),
                             specificClaim.getDescription(),
-                            supervisoryAuthority,
+                            new ArrayList<>(authority).get(0),
+                            new ArrayList<>(auditor).get(0),
                             specificClaim.getClaimTemplate().getPointer(),
-                            new ArrayList<UniqueIdentifier>(),
+                            specificClaim.getSupportingClaims(),
                             secureHash
                     ).getReturnValue().get().getTx().getOutput(0);
                     return ResponseEntity.status(HttpStatus.OK).body(output);
                 } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } else return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(null);
+    }
+
+    @GetMapping("/attachment/{linearId}")
+    private ResponseEntity<InputStreamResource> openAttachment(@PathVariable String linearId) throws ExecutionException, InterruptedException, IOException {
+        UniqueIdentifier id = UniqueIdentifier.Companion.fromString(linearId);
+        QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
+                null,
+                Collections.singletonList(id),
+                Vault.StateStatus.UNCONSUMED,
+                Collections.singleton(SpecificClaim.class));
+        // Get state with linear id
+        List<SpecificClaim> specificClaims = proxy.vaultQueryByCriteria(queryCriteria, SpecificClaim.class).getStates().stream().map(
+                specificClaimStateAndRef -> specificClaimStateAndRef.getState().getData()
+        ).collect(Collectors.toList());
+        // Check if state with that linear ID exists
+        if (!specificClaims.isEmpty()) {
+            SpecificClaim specificClaim = specificClaims.get(0);
+            if (proxy.attachmentExists(specificClaim.getAttachmentID())) {
+                InputStreamResource file = new InputStreamResource(proxy.openAttachment(specificClaim.getAttachmentID()));
+                return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + specificClaim.getAttachmentID() + ".jar\"").body(file);
+            } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 }
