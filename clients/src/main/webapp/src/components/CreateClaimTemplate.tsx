@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { Modal, Button, Form, Input, Select } from "antd"
 import { useNode } from "../contexts/NodeContext"
 import { useData } from "../contexts/DataContext"
+import ClaimTemplateService from "services/ClaimTemplate.service"
 
 const { Option } = Select
 
@@ -13,7 +14,7 @@ const CreateClaimTemplate = ({ isClaimTemplateSuggestion }: CreateClaimTemplateP
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [claimTemplateForm] = Form.useForm()
     const { axiosInstance } = useNode()
-    const { claimTemplates, setClaimTemplates } = useData()
+    const { claimTemplates, setClaimTemplates, claimTemplatesSuggestions, setClaimTemplatesSuggestions } = useData()
 
     const showModal = () => {
         setIsModalVisible(true)
@@ -27,7 +28,13 @@ const CreateClaimTemplate = ({ isClaimTemplateSuggestion }: CreateClaimTemplateP
         setIsModalVisible(false)
     }
 
-    const onFinish = (values: any) => {}
+    const onFinish = (values: any) => {
+        if (isClaimTemplateSuggestion) {
+            ClaimTemplateService.createSuggestion(axiosInstance, values).then((response) => setClaimTemplatesSuggestions([...claimTemplatesSuggestions, response]))
+        } else {
+            ClaimTemplateService.create(axiosInstance, values).then((response) => setClaimTemplates([...claimTemplates, response]))
+        }
+    }
 
     return (
         <>
