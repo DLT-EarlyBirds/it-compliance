@@ -42,7 +42,7 @@ function Regulations() {
         ...insertIf(isSupervisoryAuthority, {
             title: "Deprecate",
             dataIndex: "isDeprecated",
-            render: ({ isDeprecated, linearId }: Regulation) => {
+            render: (_:string, { isDeprecated, linearId }: Regulation) => {
                 return (
                     <Button
                         type="primary"

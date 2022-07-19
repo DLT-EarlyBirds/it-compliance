@@ -41,7 +41,7 @@ function ClaimTemplates() {
         ...insertIf(isSupervisoryAuthority, {
             title: "Actions",
             dataIndex: ["linearId", "id"],
-            render: ({ linearId }: Regulation) => {
+            render: (_: string, { linearId }: Regulation) => {
                 return (
                     <>
                         <Button

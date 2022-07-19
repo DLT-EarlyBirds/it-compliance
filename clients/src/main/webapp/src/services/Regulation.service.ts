@@ -21,7 +21,7 @@ const RegulationService = {
         return data
     },
     deprecate: async (axios: AxiosInstance, linearId: string) => {
-        const { data } = await axios.put(`/${MODEL}/${linearId}/`)
+        const { data } = await axios.put(`/${MODEL}/deprecate/${linearId}/`)
         return data
     },
 }
