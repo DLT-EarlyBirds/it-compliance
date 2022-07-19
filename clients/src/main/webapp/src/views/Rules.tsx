@@ -5,11 +5,14 @@ import { useData } from "../contexts/DataContext"
 import { Rule } from "models"
 import UpdateRule from "components/UpdateRule"
 import { EditOutlined } from "@ant-design/icons"
+import { useNode } from "../contexts/NodeContext"
+import { NodeEnum } from "enums"
 
 function Rules() {
     const { rules } = useData()
     const [isDrawerVisible, setIsDrawerVisible] = useState(false)
     const [rule, setCurrentRule] = useState<Rule | undefined>(undefined)
+    const { currentNode } = useNode()
 
     const columns = [
         {
@@ -67,7 +70,7 @@ function Rules() {
 
     return (
         <div>
-            <CreateRule />
+            {currentNode === NodeEnum.SUPERVISORY_AUTHORITY && <CreateRule />}
             <Table columns={columns} dataSource={rules} />
             {isDrawerVisible && <UpdateRule rule={rule as Rule} isVisible={isDrawerVisible} setIsVisible={setIsDrawerVisible} />}
         </div>

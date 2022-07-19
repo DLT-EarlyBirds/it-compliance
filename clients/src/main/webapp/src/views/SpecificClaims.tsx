@@ -7,10 +7,12 @@ import UpdateSpecificClaim from "components/UpdateSpecificClaim"
 import { UploadOutlined } from "@ant-design/icons"
 import type { UploadProps } from "antd"
 import { useNode } from "contexts/NodeContext"
+import { NodeEnum } from "enums"
+import CreateSpecificClaim from "components/CreateSpecificClaim"
 
 function SpecificClaims() {
     const { specificClaims } = useData()
-    const { axiosInstance } = useNode()
+    const { currentNode, axiosInstance } = useNode()
 
     const [isDrawerVisible, setIsDrawerVisible] = useState(false)
     const [specificClaim, setCurrentSpecificClaim] = useState<SpecificClaim | undefined>(undefined)
@@ -80,6 +82,7 @@ function SpecificClaims() {
 
     return (
         <div>
+            {currentNode !== NodeEnum.SUPERVISORY_AUTHORITY && <CreateSpecificClaim />}
             <Table columns={columns} dataSource={specificClaims} />
             {isDrawerVisible && <UpdateSpecificClaim specificClaim={specificClaim as SpecificClaim} isVisible={isDrawerVisible} setIsVisible={setIsDrawerVisible} />}
         </div>

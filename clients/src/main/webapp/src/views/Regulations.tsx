@@ -3,11 +3,14 @@ import { Table, Button } from "antd"
 import CreateRegulation from "../components/CreateRegulation"
 import UpdateRegulation from "../components/UpdateRegulation"
 import { useData } from "../contexts/DataContext"
+import { useNode } from "../contexts/NodeContext"
 import { Regulation } from "models"
+import { NodeEnum } from "enums"
 import { EditOutlined } from "@ant-design/icons"
 
 function Regulations() {
     const { regulations } = useData()
+    const { currentNode } = useNode()
     const [isDrawerVisible, setIsDrawerVisible] = useState(false)
     const [regulation, setCurrentRegulation] = useState<Regulation | undefined>(undefined)
 
@@ -67,7 +70,7 @@ function Regulations() {
 
     return (
         <div>
-            <CreateRegulation />
+            {currentNode === NodeEnum.SUPERVISORY_AUTHORITY && <CreateRegulation />}
             <Table columns={columns} dataSource={regulations} />
             {isDrawerVisible && <UpdateRegulation regulation={regulation as Regulation} isVisible={isDrawerVisible} setIsVisible={setIsDrawerVisible} />}
         </div>
