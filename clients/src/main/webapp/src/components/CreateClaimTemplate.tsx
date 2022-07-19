@@ -30,7 +30,7 @@ const CreateClaimTemplate = ({ isClaimTemplateSuggestion }: CreateClaimTemplateP
 
     const onFinish = (values: any) => {
         if (isClaimTemplateSuggestion) {
-            ClaimTemplateService.createSuggestion(axiosInstance, {...values, linearId: ''}).then((response) => {
+            ClaimTemplateService.createSuggestion(axiosInstance, { ...values, linearId: "" }).then((response) => {
                 setClaimTemplatesSuggestions([...claimTemplatesSuggestions, response])
                 handleCancel()
             })
@@ -45,10 +45,10 @@ const CreateClaimTemplate = ({ isClaimTemplateSuggestion }: CreateClaimTemplateP
     return (
         <>
             <Button type="primary" className="my-3" onClick={showModal}>
-                {isClaimTemplateSuggestion ? "Create Claim Template" : "Create Claim Template Suggestion"}
+                {isClaimTemplateSuggestion ? "Create Claim Template Suggestion" : "Create Claim Template"}
             </Button>
             <Modal
-                title={isClaimTemplateSuggestion ? "Create Claim Template" : "Create Claim Template Suggestion"}
+                title={isClaimTemplateSuggestion ? "Create Claim Template Suggestion" : "Create Claim Template"}
                 visible={isModalVisible}
                 onOk={handleOk}
                 onCancel={handleCancel}
