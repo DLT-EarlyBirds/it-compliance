@@ -3,6 +3,7 @@ import { Button, Form, Input, Drawer } from "antd"
 import { Regulation, RegulationDTO } from "models"
 import { useNode } from "../contexts/NodeContext"
 import RegulationService from "../services/Regulation.service"
+import { useData } from "contexts/DataContext"
 
 interface UpdateRegulationProps {
     regulation: Regulation
@@ -12,10 +13,15 @@ interface UpdateRegulationProps {
 
 const UpdateRegulation = ({ regulation, isVisible, setIsVisible }: UpdateRegulationProps) => {
     const { axiosInstance } = useNode()
+    const { regulations, setRegulations } = useData()
+
     const onFinish = (values: RegulationDTO) => {
-        RegulationService.update(axiosInstance, { ...values, linearId: regulation.linearId.id })
+        RegulationService.update(axiosInstance, { ...values, linearId: regulation.linearId.id }).then((response) => {
+            const updatedRegulations = regulations.map((r) => (r.linearId.id === response.linearId.id ? response : r))
+            setRegulations(updatedRegulations)
+            setIsVisible(false)
+        })
     }
-    console.log(regulation, "from update")
 
     return (
         <Drawer title="Update Regulation" placement="right" closable={false} onClose={() => setIsVisible(false)} visible={isVisible} height="200">
