@@ -1,4 +1,5 @@
-import axios from "axios"
+import axios, { AxiosInstance } from "axios"
+
 import { NodeEnum } from "enums"
 
 const axiosFSA = axios.create({
