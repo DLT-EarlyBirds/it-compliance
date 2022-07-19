@@ -1,11 +1,11 @@
 import { useData } from "contexts/DataContext"
 import React from "react"
 import { useParams } from "react-router-dom"
-import { Regulation as RegulationModel } from "models"
+import { Regulation as RegulationModel, Rule } from "models"
 
 const Regulation = () => {
     const { id } = useParams()
-    const { regulations } = useData()
+    const { regulations, rules } = useData()
 
     const regulation = regulations.find((r: RegulationModel) => r.linearId.id === id)
 
@@ -13,7 +13,8 @@ const Regulation = () => {
         return <h1>No Regulation Found</h1>
     }
 
-    console.log(regulation)
+    const relatedRules = rules.filter((rule: Rule) => rule.parentRegulation.pointer.id === regulation.linearId.id)
+    console.log(relatedRules)
 
     return <h1>Regulation</h1>
 }
