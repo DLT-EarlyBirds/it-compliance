@@ -1,36 +1,34 @@
-import React, {useState} from "react";
-import {Modal, Button, Form, Input} from "antd";
-import RegulationService from "../services/Regulation.service";
+import React, { useState } from "react"
+import { Modal, Button, Form, Input } from "antd"
+import RegulationService from "../services/Regulation.service"
 import NetworkService from "../services/Network.service"
-import {useNode} from "../contexts/NodeContext";
-import {useData} from "../contexts/DataContext";
+import { useNode } from "../contexts/NodeContext"
+import { useData } from "../contexts/DataContext"
 
 const CreateRegulation = () => {
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [regulationForm] = Form.useForm();
-    const {axiosInstance} = useNode();
-    const {regulations, setRegulations} = useData();
+    const [isModalVisible, setIsModalVisible] = useState(false)
+    const [regulationForm] = Form.useForm()
+    const { axiosInstance } = useNode()
+    const { regulations, setRegulations } = useData()
 
     const showModal = () => {
-        setIsModalVisible(true);
-    };
+        setIsModalVisible(true)
+    }
 
     const handleOk = () => {
-        setIsModalVisible(false);
-    };
+        setIsModalVisible(false)
+    }
 
     const handleCancel = () => {
-        setIsModalVisible(false);
-    };
+        setIsModalVisible(false)
+    }
 
     const onFinish = (values: any) => {
-        RegulationService.create(axiosInstance, values).then((response) =>
-            setRegulations([...regulations, response])
-        );
-    };
+        RegulationService.create(axiosInstance, values).then((response) => setRegulations([...regulations, response]))
+    }
 
     const bootstrapGraph = () => {
-        NetworkService.bootstrapGraph(axiosInstance);
+        NetworkService.bootstrapGraph(axiosInstance)
     }
 
     return (
@@ -50,11 +48,7 @@ const CreateRegulation = () => {
                     <Button className="btn-default" key="back" onClick={handleCancel}>
                         Cancel
                     </Button>,
-                    <Button
-                        key="submit"
-                        type="primary"
-                        onClick={() => regulationForm.submit()}
-                    >
+                    <Button key="submit" type="primary" onClick={() => regulationForm.submit()}>
                         Create Regulation
                     </Button>,
                 ]}
@@ -76,7 +70,7 @@ const CreateRegulation = () => {
                             },
                         ]}
                     >
-                        <Input/>
+                        <Input />
                     </Form.Item>
                     <Form.Item
                         label="Description"
@@ -87,7 +81,7 @@ const CreateRegulation = () => {
                             },
                         ]}
                     >
-                        <Input/>
+                        <Input />
                     </Form.Item>
                     <Form.Item
                         label="Version"
@@ -98,7 +92,7 @@ const CreateRegulation = () => {
                             },
                         ]}
                     >
-                        <Input/>
+                        <Input />
                     </Form.Item>
                     <Form.Item
                         label="Release Date"
@@ -109,12 +103,12 @@ const CreateRegulation = () => {
                             },
                         ]}
                     >
-                        <Input/>
+                        <Input />
                     </Form.Item>
                 </Form>
             </Modal>
         </>
-    );
-};
+    )
+}
 
-export default CreateRegulation;
+export default CreateRegulation

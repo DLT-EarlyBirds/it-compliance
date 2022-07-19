@@ -1,33 +1,33 @@
-import React from "react";
-import {useData} from "../contexts/DataContext";
-import {ForceGraph2D, ForceGraph3D} from "react-force-graph";
+import React from "react"
+import { useData } from "../contexts/DataContext"
+import { ForceGraph2D, ForceGraph3D } from "react-force-graph"
 
 function GraphRegulation() {
-    const {regulations, rules, claimTemplates} = useData();
+    const { regulations, rules, claimTemplates } = useData()
 
-    console.log(regulations);
-    console.log(rules);
-    console.log(claimTemplates);
+    console.log(regulations)
+    console.log(rules)
+    console.log(claimTemplates)
     const graphNodes = [
         ...regulations.map((regulation) => ({
             id: regulation.linearId.id,
             name: regulation.name,
             object: regulation,
-            type: 'regulation'
+            type: "regulation",
         })),
         ...rules.map((rule) => ({
             id: rule.linearId.id,
             name: rule.name,
             object: rule,
-            type: 'rule'
+            type: "rule",
         })),
         ...claimTemplates.map((claimTemplate) => ({
             id: claimTemplate.linearId.id,
             name: claimTemplate.name,
             object: claimTemplate,
-            type: 'claimTemplate'
+            type: "claimTemplate",
         })),
-    ];
+    ]
 
     const graphEdges = [
         ...rules.map((rule) => ({
@@ -38,7 +38,7 @@ function GraphRegulation() {
             source: claimTemplate.linearId.id,
             target: claimTemplate.rule.pointer.id,
         })),
-    ];
+    ]
 
     return (
         <div>
@@ -49,10 +49,10 @@ function GraphRegulation() {
                 linkDirectionalArrowLength={3.5}
                 linkDirectionalArrowRelPos={1}
                 nodeAutoColorBy="type"
-                graphData={{nodes: graphNodes, links: graphEdges}}
+                graphData={{ nodes: graphNodes, links: graphEdges }}
             />
         </div>
-    );
+    )
 }
 
-export default GraphRegulation;
+export default GraphRegulation
