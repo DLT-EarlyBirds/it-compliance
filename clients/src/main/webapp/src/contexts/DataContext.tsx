@@ -5,7 +5,7 @@ import ClaimTemplateService from "../services/ClaimTemplate.service"
 import { useNode } from "./NodeContext"
 import { Spin } from "antd"
 import { Regulation, Rule, ClaimTemplate, SpecificClaim, ClaimTemplateSuggestion } from "../models"
-import SpecificClaimService from "../services/SpecificClaim.service";
+import SpecificClaimService from "../services/SpecificClaim.service"
 
 interface DataContextInteface {
     regulations: Regulation[]
@@ -18,6 +18,7 @@ interface DataContextInteface {
     setClaimTemplates: (claimTemplates: ClaimTemplate[]) => void
     setSpecificClaims: (specificClaims: SpecificClaim[]) => void
     setClaimTemplatesSuggestions: (claimTemplatesSuggestions: ClaimTemplateSuggestion[]) => void
+    fetchData: () => void
 }
 
 const DataContext = React.createContext<DataContextInteface>({
@@ -31,6 +32,7 @@ const DataContext = React.createContext<DataContextInteface>({
     setClaimTemplates: () => {},
     setSpecificClaims: () => {},
     setClaimTemplatesSuggestions: () => {},
+    fetchData: () => {},
 })
 
 function DataProvider(props: any) {
@@ -41,6 +43,19 @@ function DataProvider(props: any) {
     const [specificClaims, setSpecificClaims] = useState<SpecificClaim[]>([])
     const [claimTemplatesSuggestions, setClaimTemplatesSuggestions] = useState<ClaimTemplateSuggestion[]>([])
     const [isLoading, setIsLoading] = useState(false)
+
+    const fetchData = async () => {
+        setIsLoading(true)
+        await Promise.allSettled([
+            RegulationService.getAll(axiosInstance).then((response) => setRegulations(response)),
+            RuleService.getAll(axiosInstance).then((response) => setRules(response)),
+            ClaimTemplateService.getAll(axiosInstance).then((response) => setClaimTemplates(response)),
+            ClaimTemplateService.getSuggestions(axiosInstance).then((response) => setClaimTemplatesSuggestions(response)),
+            SpecificClaimService.getAll(axiosInstance).then((response) => setSpecificClaims(response)),
+        ])
+
+        setIsLoading(false)
+    }
 
     const data: DataContextInteface = {
         regulations,
@@ -53,19 +68,7 @@ function DataProvider(props: any) {
         setClaimTemplates,
         setSpecificClaims,
         setClaimTemplatesSuggestions,
-    }
-
-    const fetchData = async () => {
-        setIsLoading(true)
-        await Promise.allSettled([
-            RegulationService.getAll(axiosInstance).then((response) => setRegulations(response)),
-            RuleService.getAll(axiosInstance).then((response) => setRules(response)),
-            ClaimTemplateService.getAll(axiosInstance).then((response) => setClaimTemplates(response)),
-            ClaimTemplateService.getSuggestions(axiosInstance).then((response) => setClaimTemplatesSuggestions(response)),
-            SpecificClaimService.getAll(axiosInstance).then((response) => setSpecificClaims(response))
-        ])
-
-        setIsLoading(false)
+        fetchData,
     }
 
     useEffect(() => {
