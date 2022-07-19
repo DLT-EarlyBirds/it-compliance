@@ -34,7 +34,7 @@ const SpecificClaimService = {
         return data
     },
     downloadAttachment: async (axios: AxiosInstance, linearId: string) => {
-        const response = await axios.get(`/${MODEL}/attachment/${linearId}`)
+        const response = await axios.get(`/${MODEL}/attachment/${linearId}`, { responseType: "blob" })
         const url = new Blob([response.data], { type: "application/java-archive" })
         const link = document.createElement("a")
         //@ts-ignore
