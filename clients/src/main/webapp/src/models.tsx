@@ -92,6 +92,6 @@ export interface SpecificClaimDTO {
     linearId?: string;
     name: string;
     claimSpecification: string;
-    claimTemplate: string; // claim template linear id
-    supportingClaims: string[]; // supporting claims linear ids
+    claimTemplateLinearId: string; // claim template linear id
+    supportingClaimIds: string[]; // supporting claims linear ids
 }

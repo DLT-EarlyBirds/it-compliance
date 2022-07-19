@@ -27,7 +27,7 @@ function Rules() {
         },
         {
             title: "Rule Specification",
-            dateIndex: "ruleSpecification",
+            dataIndex: "ruleSpecification",
         },
         {
             title: "Parent regulation",

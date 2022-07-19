@@ -25,7 +25,7 @@ const CreateSpecificClaim = () => {
     }
 
     const onFinish = (values: any) => {
-        SpecificClaimService.create(axiosInstance, values).then((response) => {
+        SpecificClaimService.create(axiosInstance, {...values, supportingClaimIds: [], linearId: ''}).then((response) => {
             setSpecificClaims([...specificClaims, response])
             handleCancel()
         })
@@ -70,8 +70,8 @@ const CreateSpecificClaim = () => {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        label="Description"
-                        name="description"
+                        label="Claim Specification"
+                        name="claimSpecification"
                         rules={[
                             {
                                 required: true,
@@ -82,7 +82,7 @@ const CreateSpecificClaim = () => {
                     </Form.Item>
                     <Form.Item
                         label="Claim Template"
-                        name="claimTemplate"
+                        name="claimTemplateLinearId"
                         rules={[
                             {
                                 required: true,

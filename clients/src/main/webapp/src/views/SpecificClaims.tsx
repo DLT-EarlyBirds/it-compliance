@@ -30,11 +30,11 @@ function SpecificClaims() {
         },
         {
             title: "Description",
-            dataIndex: "claimSpecification",
+            dataIndex: "description",
         },
         {
             title: "Financial Service Provider",
-            dateIndex: "financialServiceProvider",
+            dataIndex: "financialServiceProvider",
         },
         {
             title: "Claim Template",
@@ -45,8 +45,8 @@ function SpecificClaims() {
             render: (_: string, specificClaim: SpecificClaim) => {
                 const uploadProps: UploadProps = {
                     name: "file",
-                    action: `${axiosInstance.defaults.baseURL}/claims/${specificClaim.linearId.id}`,
-                    method: "PUT",
+                    action: `${axiosInstance.defaults.baseURL}/claims/attachment/${specificClaim.linearId.id}`,
+                    method: "POST",
                     headers: {
                         authorization: "authorization-text",
                     },

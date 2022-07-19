@@ -39,7 +39,7 @@ function Regulations() {
         },
         {
             title: "Issuer",
-            dateIndex: "issuer",
+            dataIndex: "issuer",
         },
         ...insertIf(isSupervisoryAuthority, {
             title: "Deprecate",

@@ -64,7 +64,7 @@ function ClaimTemplates() {
         },
         {
             title: "Issuer",
-            dateIndex: "issuer",
+            dataIndex: "issuer",
         },
         ...insertIf(isSupervisoryAuthority, {
             title: "Actions",

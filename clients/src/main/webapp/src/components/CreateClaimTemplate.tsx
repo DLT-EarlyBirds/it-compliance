@@ -30,7 +30,7 @@ const CreateClaimTemplate = ({ isClaimTemplateSuggestion }: CreateClaimTemplateP
 
     const onFinish = (values: any) => {
         if (isClaimTemplateSuggestion) {
-            ClaimTemplateService.createSuggestion(axiosInstance, values).then((response) => {
+            ClaimTemplateService.createSuggestion(axiosInstance, {...values, linearId: ''}).then((response) => {
                 setClaimTemplatesSuggestions([...claimTemplatesSuggestions, response])
                 handleCancel()
             })

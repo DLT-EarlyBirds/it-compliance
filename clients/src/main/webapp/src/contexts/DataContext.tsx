@@ -5,6 +5,7 @@ import ClaimTemplateService from "../services/ClaimTemplate.service"
 import { useNode } from "./NodeContext"
 import { Spin } from "antd"
 import { Regulation, Rule, ClaimTemplate, SpecificClaim, ClaimTemplateSuggestion } from "../models"
+import SpecificClaimService from "../services/SpecificClaim.service";
 
 interface DataContextInteface {
     regulations: Regulation[]
@@ -61,6 +62,7 @@ function DataProvider(props: any) {
             RuleService.getAll(axiosInstance).then((response) => setRules(response)),
             ClaimTemplateService.getAll(axiosInstance).then((response) => setClaimTemplates(response)),
             ClaimTemplateService.getSuggestions(axiosInstance).then((response) => setClaimTemplatesSuggestions(response)),
+            SpecificClaimService.getAll(axiosInstance).then((response) => setSpecificClaims(response))
         ])
 
         setIsLoading(false)
