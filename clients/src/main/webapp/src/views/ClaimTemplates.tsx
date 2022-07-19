@@ -8,7 +8,7 @@ import CreateClaimTemplate from "../components/CreateClaimTemplate"
 import { EditOutlined } from "@ant-design/icons"
 import UpdateClaimTemplate from "components/UpdateClaimTemplate"
 
-const claimTemplateSuggestions = [
+const claimTemplateSuggestionsColumns = [
     {
         title: "Linear id",
         dataIndex: ["linearId", "id"],
@@ -42,8 +42,7 @@ const claimTemplateSuggestions = [
 ]
 
 function ClaimTemplates() {
-    // TODO: Add claim template suggestions
-    const { claimTemplates } = useData()
+    const { claimTemplates, claimTemplatesSuggestions } = useData()
     const { currentNode } = useNode()
     const [isDrawerVisible, setIsDrawerVisible] = useState(false)
     const [claimTemplate, setCurrentClaimTemplate] = useState<ClaimTemplate | undefined>(undefined)
@@ -87,7 +86,7 @@ function ClaimTemplates() {
         <div>
             <CreateClaimTemplate isClaimTemplateSuggestion={currentNode !== NodeEnum.SUPERVISORY_AUTHORITY} />
 
-            {currentNode === NodeEnum.SUPERVISORY_AUTHORITY && <Table columns={claimTemplateSuggestions} dataSource={claimTemplates} />}
+            {currentNode === NodeEnum.SUPERVISORY_AUTHORITY && <Table columns={claimTemplateSuggestionsColumns} dataSource={claimTemplatesSuggestions} />}
             <Table columns={claimTemplateColumns} dataSource={claimTemplates} />
             {isDrawerVisible && <UpdateClaimTemplate claimTemplate={claimTemplate as ClaimTemplate} isVisible={isDrawerVisible} setIsVisible={setIsDrawerVisible} />}
         </div>
