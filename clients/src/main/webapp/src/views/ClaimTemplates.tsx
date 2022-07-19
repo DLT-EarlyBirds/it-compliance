@@ -7,6 +7,7 @@ import { ClaimTemplate, Regulation } from "models"
 import CreateClaimTemplate from "../components/CreateClaimTemplate"
 import { EditOutlined } from "@ant-design/icons"
 import UpdateClaimTemplate from "components/UpdateClaimTemplate"
+import { insertIf } from "utils"
 
 const claimTemplateSuggestionsColumns = [
     {
@@ -46,6 +47,7 @@ function ClaimTemplates() {
     const { currentNode } = useNode()
     const [isDrawerVisible, setIsDrawerVisible] = useState(false)
     const [claimTemplate, setCurrentClaimTemplate] = useState<ClaimTemplate | undefined>(undefined)
+    const isSupervisoryAuthority = currentNode === NodeEnum.SUPERVISORY_AUTHORITY
 
     const claimTemplateColumns = [
         {
@@ -64,7 +66,7 @@ function ClaimTemplates() {
             title: "Issuer",
             dateIndex: "issuer",
         },
-        {
+        ...insertIf(isSupervisoryAuthority, {
             title: "Actions",
             render: (_: string, claimTemplate: ClaimTemplate) => {
                 return (
@@ -79,14 +81,13 @@ function ClaimTemplates() {
                     </Button>
                 )
             },
-        },
+        }),
     ]
 
     return (
         <div>
-            <CreateClaimTemplate isClaimTemplateSuggestion={currentNode !== NodeEnum.SUPERVISORY_AUTHORITY} />
-
-            {currentNode === NodeEnum.SUPERVISORY_AUTHORITY && <Table columns={claimTemplateSuggestionsColumns} dataSource={claimTemplatesSuggestions} />}
+            <CreateClaimTemplate isClaimTemplateSuggestion={!isSupervisoryAuthority} />
+            {isSupervisoryAuthority && <Table columns={claimTemplateSuggestionsColumns} dataSource={claimTemplatesSuggestions} />}
             <Table columns={claimTemplateColumns} dataSource={claimTemplates} />
             {isDrawerVisible && <UpdateClaimTemplate claimTemplate={claimTemplate as ClaimTemplate} isVisible={isDrawerVisible} setIsVisible={setIsDrawerVisible} />}
         </div>

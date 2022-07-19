@@ -9,10 +9,12 @@ import type { UploadProps } from "antd"
 import { useNode } from "contexts/NodeContext"
 import { NodeEnum } from "enums"
 import CreateSpecificClaim from "components/CreateSpecificClaim"
+import { insertIf } from "utils"
 
 function SpecificClaims() {
     const { specificClaims } = useData()
     const { currentNode, axiosInstance } = useNode()
+    const isSupervisoryAuthority = currentNode === NodeEnum.SUPERVISORY_AUTHORITY
 
     const [isDrawerVisible, setIsDrawerVisible] = useState(false)
     const [specificClaim, setCurrentSpecificClaim] = useState<SpecificClaim | undefined>(undefined)
@@ -38,7 +40,7 @@ function SpecificClaims() {
             title: "Claim Template",
             dataIndex: ["claimTemplate", "pointer", "id"],
         },
-        {
+        ...insertIf(!isSupervisoryAuthority, {
             title: "Actions",
             render: (_: string, specificClaim: SpecificClaim) => {
                 const uploadProps: UploadProps = {
@@ -77,12 +79,12 @@ function SpecificClaims() {
                     </>
                 )
             },
-        },
+        }),
     ]
 
     return (
         <div>
-            {currentNode !== NodeEnum.SUPERVISORY_AUTHORITY && <CreateSpecificClaim />}
+            {!isSupervisoryAuthority && <CreateSpecificClaim />}
             <Table columns={columns} dataSource={specificClaims} />
             {isDrawerVisible && <UpdateSpecificClaim specificClaim={specificClaim as SpecificClaim} isVisible={isDrawerVisible} setIsVisible={setIsDrawerVisible} />}
         </div>

@@ -7,12 +7,14 @@ import { useNode } from "../contexts/NodeContext"
 import { Regulation } from "models"
 import { NodeEnum } from "enums"
 import { EditOutlined } from "@ant-design/icons"
+import { insertIf } from "utils"
 
 function Regulations() {
     const { regulations } = useData()
     const { currentNode } = useNode()
     const [isDrawerVisible, setIsDrawerVisible] = useState(false)
     const [regulation, setCurrentRegulation] = useState<Regulation | undefined>(undefined)
+    const isSupervisoryAuthority = currentNode === NodeEnum.SUPERVISORY_AUTHORITY
 
     const columns = [
         {
@@ -39,7 +41,7 @@ function Regulations() {
             title: "Issuer",
             dateIndex: "issuer",
         },
-        {
+        ...insertIf(isSupervisoryAuthority, {
             title: "Deprecate",
             dataIndex: "isDeprecated",
             render: ({ isDeprecated, linearId }: Regulation) => {
@@ -49,8 +51,8 @@ function Regulations() {
                     </Button>
                 )
             },
-        },
-        {
+        }),
+        ...insertIf(isSupervisoryAuthority, {
             title: "Actions",
             render: (_: string, regulation: Regulation) => {
                 return (
@@ -65,12 +67,12 @@ function Regulations() {
                     </Button>
                 )
             },
-        },
+        }),
     ]
 
     return (
         <div>
-            {currentNode === NodeEnum.SUPERVISORY_AUTHORITY && <CreateRegulation />}
+            {isSupervisoryAuthority && <CreateRegulation />}
             <Table columns={columns} dataSource={regulations} />
             {isDrawerVisible && <UpdateRegulation regulation={regulation as Regulation} isVisible={isDrawerVisible} setIsVisible={setIsDrawerVisible} />}
         </div>
