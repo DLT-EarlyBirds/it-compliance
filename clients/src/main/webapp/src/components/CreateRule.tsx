@@ -1,10 +1,16 @@
 import React, { useState } from "react"
 import { Modal, Button, Form, Input, Select } from "antd"
+import { useData } from "contexts/DataContext"
+import { Regulation } from "models"
+import RuleService from "services/Rule.service"
+import { useNode } from "contexts/NodeContext"
 const { Option } = Select
 
 const CreateRule = () => {
     const [isModalVisible, setIsModalVisible] = useState(false)
+    const { regulations, rules, setRules } = useData()
     const [ruleForm] = Form.useForm()
+    const { axiosInstance } = useNode()
 
     const showModal = () => {
         setIsModalVisible(true)
@@ -19,7 +25,7 @@ const CreateRule = () => {
     }
 
     const onFinish = (values: any) => {
-        console.log("Success:", values)
+        RuleService.create(axiosInstance, values).then((response) => setRules([...rules, response]))
     }
 
     return (
@@ -85,8 +91,9 @@ const CreateRule = () => {
                                 width: 120,
                             }}
                         >
-                            <Option value="m1">M1</Option>
-                            <Option value="m2">M2</Option>
+                            {regulations.map((regulation: Regulation) => (
+                                <Option value={regulation.linearId.id}>{regulation.name}</Option>
+                            ))}
                         </Select>
                     </Form.Item>
                 </Form>
