@@ -8,8 +8,9 @@ import CreateClaimTemplate from "../components/CreateClaimTemplate"
 import { EditOutlined } from "@ant-design/icons"
 import UpdateClaimTemplate from "components/UpdateClaimTemplate"
 import { insertIf } from "utils"
+import ClaimTemplateService from "services/ClaimTemplate.service"
 
-const claimTemplateSuggestionsColumns = [
+const commonColumns = [
     {
         title: "Linear id",
         dataIndex: ["linearId", "id"],
@@ -26,46 +27,51 @@ const claimTemplateSuggestionsColumns = [
         title: "Issuer",
         dataIndex: "issuer",
     },
-    {
-        title: "Actions",
-        dataIndex: ["linearId", "id"],
-        render: ({ linearId }: Regulation) => {
-            return (
-                <>
-                    <Button onClick={() => console.log(linearId.id)}>Reject</Button>
-                    <Button type="primary" onClick={() => console.log(linearId.id)}>
-                        Accept
-                    </Button>
-                </>
-            )
-        },
-    },
 ]
 
 function ClaimTemplates() {
-    const { claimTemplates, claimTemplatesSuggestions } = useData()
-    const { currentNode } = useNode()
+    const { claimTemplates, claimTemplatesSuggestions, setClaimTemplatesSuggestions, setClaimTemplates } = useData()
+    const { currentNode, axiosInstance } = useNode()
     const [isDrawerVisible, setIsDrawerVisible] = useState(false)
     const [claimTemplate, setCurrentClaimTemplate] = useState<ClaimTemplate | undefined>(undefined)
     const isSupervisoryAuthority = currentNode === NodeEnum.SUPERVISORY_AUTHORITY
 
-    const claimTemplateColumns = [
-        {
-            title: "Linear id",
+    const claimTemplateSuggestionsColumns = [
+        ...commonColumns,
+        ...insertIf(isSupervisoryAuthority, {
+            title: "Actions",
             dataIndex: ["linearId", "id"],
-        },
-        {
-            title: "Name",
-            dataIndex: "name",
-        },
-        {
-            title: "Template Description",
-            dataIndex: "templateDescription",
-        },
-        {
-            title: "Issuer",
-            dataIndex: "issuer",
-        },
+            render: ({ linearId }: Regulation) => {
+                return (
+                    <>
+                        <Button
+                            onClick={() => {
+                                ClaimTemplateService.rejectSuggestion(axiosInstance, linearId.id).then(() =>
+                                    ClaimTemplateService.getSuggestions(axiosInstance).then(setClaimTemplatesSuggestions)
+                                )
+                            }}
+                        >
+                            Reject
+                        </Button>
+                        <Button
+                            type="primary"
+                            onClick={() => {
+                                ClaimTemplateService.acceptSuggestion(axiosInstance, linearId.id).then(() => {
+                                    ClaimTemplateService.getSuggestions(axiosInstance).then(setClaimTemplatesSuggestions)
+                                    ClaimTemplateService.getAll(axiosInstance).then(setClaimTemplates)
+                                })
+                            }}
+                        >
+                            Accept
+                        </Button>
+                    </>
+                )
+            },
+        }),
+    ]
+
+    const claimTemplateColumns = [
+        ...commonColumns,
         ...insertIf(isSupervisoryAuthority, {
             title: "Actions",
             render: (_: string, claimTemplate: ClaimTemplate) => {
@@ -87,7 +93,9 @@ function ClaimTemplates() {
     return (
         <div>
             <CreateClaimTemplate isClaimTemplateSuggestion={!isSupervisoryAuthority} />
-            {isSupervisoryAuthority && <Table columns={claimTemplateSuggestionsColumns} dataSource={claimTemplatesSuggestions} />}
+            <h2>Claim Template Suggestions</h2>
+            <Table columns={claimTemplateSuggestionsColumns} dataSource={claimTemplatesSuggestions} />
+            <h2>Claim Templates </h2>
             <Table columns={claimTemplateColumns} dataSource={claimTemplates} />
             {isDrawerVisible && <UpdateClaimTemplate claimTemplate={claimTemplate as ClaimTemplate} isVisible={isDrawerVisible} setIsVisible={setIsDrawerVisible} />}
         </div>
