@@ -44,17 +44,24 @@ task runTestClient(type: JavaExec, dependsOn: assemble) {
 task runSupervisoryAuthorityServer(type: JavaExec, dependsOn: assemble) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.compliance.supervisoryauthority.Starter'
-    args '--server.port=10050', '--config.rpc.host=localhost', '--config.rpc.port=54884', '--config.rpc.username=user1', '--config.rpc.password=test'
+    args '--server.port=10050', '--config.rpc.host=localhost', '--config.rpc.port=49758', '--config.rpc.username=user1', '--config.rpc.password=test'
 }
 
 
 /* This task will start the springboot server that connects to your node (via RPC connection). All of the http requests
  * are in the Controller file. You can leave the Server.kt and NodeRPCConnection.kt file untouched for your use.
  */
-task runFinancialServiceProviderServer(type: JavaExec, dependsOn: assemble) {
+task runBrainFinanceServer(type: JavaExec, dependsOn: assemble) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.compliance.financialserviceprovider.Starter'
-    args '--server.port=10051', '--config.rpc.host=localhost', '--config.rpc.port=54883', '--config.rpc.username=user1', '--config.rpc.password=test'
+    args '--server.port=10051', '--config.rpc.host=localhost', '--config.rpc.port=49757', '--config.rpc.username=user1', '--config.rpc.password=test'
+}
+
+
+task runCapitalsHoldingServer(type: JavaExec, dependsOn: assemble) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.compliance.financialserviceprovider.Starter'
+    args '--server.port=10053', '--config.rpc.host=localhost', '--config.rpc.port=49756', '--config.rpc.username=user1', '--config.rpc.password=test'
 }
 
 
@@ -64,5 +71,5 @@ task runFinancialServiceProviderServer(type: JavaExec, dependsOn: assemble) {
 task runAuditorServer(type: JavaExec, dependsOn: assemble) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.compliance.auditor.Starter'
-    args '--server.port=10052', '--config.rpc.host=localhost', '--config.rpc.port=49962', '--config.rpc.username=user1', '--config.rpc.password=test'
+    args '--server.port=10052', '--config.rpc.host=localhost', '--config.rpc.port=49759', '--config.rpc.username=user1', '--config.rpc.password=test'
 }
