@@ -62,7 +62,7 @@ function Regulations() {
     return (
         <div>
             {isSupervisoryAuthority && <CreateRegulation />}
-            <Table columns={columns} dataSource={regulations} />
+            <Table columns={columns} dataSource={regulations} pagination={{ pageSize: 5 }} />
             {isDrawerVisible && <UpdateRegulation regulation={regulation as Regulation} isVisible={isDrawerVisible} setIsVisible={setIsDrawerVisible} />}
         </div>
     )

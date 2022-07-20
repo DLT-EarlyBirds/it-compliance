@@ -126,7 +126,7 @@ function SpecificClaims() {
     return (
         <div>
             {!isSupervisoryAuthority && <CreateSpecificClaim />}
-            <Table columns={columns} dataSource={specificClaims} />
+            <Table columns={columns} dataSource={specificClaims} pagination={{ pageSize: 5 }} />
             {isDrawerVisible && <UpdateSpecificClaim specificClaim={specificClaim as SpecificClaim} isVisible={isDrawerVisible} setIsVisible={setIsDrawerVisible} />}
         </div>
     )
