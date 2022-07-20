@@ -25,7 +25,7 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
 
 /**
- * It provides a REST API for the network map cache
+ * This controller provides a REST API for the network map cache
  */
 @RestController
 @CrossOrigin(origins = "*")
@@ -89,7 +89,7 @@ public class NetworkController {
     }
 
     /**
-     * It returns a string representation of the list of addresses of the node
+     * Endpoint that returns a string representation of the list of addresses of the node
      *
      * @return The addresses of the node.
      */
@@ -159,11 +159,7 @@ public class NetworkController {
         return proxy.registeredFlows().toString();
     }
 
-    /**
-     * Endpoint that returns information about this node.
-     *
-     * @return A HashMap with a single key-value pair.
-     */
+
     @GetMapping(value = "/me", produces = APPLICATION_JSON_VALUE)
     private HashMap<String, String> whoami() {
         HashMap<String, String> myMap = new HashMap<>();
