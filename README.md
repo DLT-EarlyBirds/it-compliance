@@ -4,6 +4,9 @@ A repository containing the code implementation for DLT4PI practical course for 
 
 The goal of _Aud-IT_ is to make IT compliance easier for financial service providers. It optimizes the auditing processes for auditors and supervisory authorities.
 
+![logo](docs/media/logo.png "Logo")
+
+
 #### Current auditing process:
 
 - A supervisory authority issues a regulation and publishes it in text form on its website
