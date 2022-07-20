@@ -42,23 +42,23 @@ springBoot {
 task runSupervisoryAuthorityServer(type: JavaExec, dependsOn: assemble) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.compliance.supervisoryauthority.Starter'
-    args '--server.port=10050', '--config.rpc.host=localhost', '--config.rpc.port=59280', '--config.rpc.username=user1', '--config.rpc.password=test'
+    args '--server.port=10050', '--config.rpc.host=localhost', '--config.rpc.port=65472', '--config.rpc.username=user1', '--config.rpc.password=test'
 }
 
 task runBrainFinanceServer(type: JavaExec, dependsOn: assemble) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.compliance.financialserviceprovider.Starter'
-    args '--server.port=10051', '--config.rpc.host=localhost', '--config.rpc.port=59281', '--config.rpc.username=user1', '--config.rpc.password=test'
+    args '--server.port=10051', '--config.rpc.host=localhost', '--config.rpc.port=65474', '--config.rpc.username=user1', '--config.rpc.password=test'
 }
 
 task runCapitalsHoldingServer(type: JavaExec, dependsOn: assemble) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.compliance.financialserviceprovider.Starter'
-    args '--server.port=10053', '--config.rpc.host=localhost', '--config.rpc.port=59282', '--config.rpc.username=user1', '--config.rpc.password=test'
+    args '--server.port=10053', '--config.rpc.host=localhost', '--config.rpc.port=65473', '--config.rpc.username=user1', '--config.rpc.password=test'
 }
 
 task runAuditorServer(type: JavaExec, dependsOn: assemble) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.compliance.auditor.Starter'
-    args '--server.port=10052', '--config.rpc.host=localhost', '--config.rpc.port=59284', '--config.rpc.username=user1', '--config.rpc.password=test'
+    args '--server.port=10052', '--config.rpc.host=localhost', '--config.rpc.port=65475', '--config.rpc.username=user1', '--config.rpc.password=test'
 }
