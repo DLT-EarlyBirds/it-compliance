@@ -17,6 +17,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * This flow is used to reject a claim template suggestion
+ */
 public class RejectClaimTemplateSuggestion {
 
     @InitiatingFlow
@@ -110,6 +113,4 @@ public class RejectClaimTemplateSuggestion {
             return null;
         }
     }
-
-
 }

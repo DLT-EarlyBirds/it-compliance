@@ -14,12 +14,11 @@ import net.corda.core.transactions.TransactionBuilder;
 import java.util.Arrays;
 import java.util.Collections;
 
-//Initiate this flow:
-//flow start CreateRegulation description: "test_description", supervisoryAuthority: Supervisory Authority
 
-//Check if added to ledger:
-//run vaultQuery contractStateType: com.template.states.Regulation
 
+/**
+ * This flow is used to create a claim template suggestion
+ */
 public class CreateClaimTemplateSuggestion {
 
     @InitiatingFlow
@@ -115,5 +114,4 @@ public class CreateClaimTemplateSuggestion {
             return null;
         }
     }
-
 }

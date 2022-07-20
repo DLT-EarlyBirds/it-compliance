@@ -15,12 +15,11 @@ import net.corda.core.transactions.TransactionBuilder;
 
 import java.util.*;
 
-//Initiate this flow:
-//flow start CreateRegulation description: "test_description", supervisoryAuthority: Supervisory Authority
 
-//Check if added to ledger:
-//run vaultQuery contractStateType: com.template.states.Regulation
 
+/**
+ * This flow is used to update a Regulation
+ */
 public class UpdateRegulation {
 
     @InitiatingFlow
@@ -79,5 +78,4 @@ public class UpdateRegulation {
             return subFlow(new FinalityFlow(signedTransaction, Collections.emptyList()));
         }
     }
-
 }

@@ -19,6 +19,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * This flow is used to update the ClaimTemplate.
+ */
 public class UpdateClaimTemplate {
 
     @InitiatingFlow
@@ -127,6 +130,4 @@ public class UpdateClaimTemplate {
             return null;
         }
     }
-
-    
 }

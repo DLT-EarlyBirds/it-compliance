@@ -19,17 +19,21 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * This flow is used to update a specific claim
+ */
 public class UpdateSpecificClaim {
 
     @InitiatingFlow
     @StartableByRPC
     public static class UpdateSpecificClaimInitiator extends FlowLogic<SignedTransaction> {
 
-        // Name of the SpecificClaim
         private final String name;
 
         private final Party auditor;
+
         private SecureHash attachmentID;
+
         @NotNull
         private final UniqueIdentifier specificClaimLinearId;
 
@@ -59,6 +63,7 @@ public class UpdateSpecificClaim {
             this.claimTemplateLinearId = claimTemplateLinearId;
             this.supportingClaimsLinearIds = supportingClaimsLinearIds;
         }
+
         public UpdateSpecificClaimInitiator(
                 @NotNull UniqueIdentifier specificClaimLinearId,
                 String name,
@@ -95,8 +100,7 @@ public class UpdateSpecificClaim {
 
                 final StateAndRef<SpecificClaim> input = getServiceHub().getVaultService().queryBy(SpecificClaim.class, inputCriteria).getStates().get(0);
                 builder.addInputState(input);
-            }
-            catch (IndexOutOfBoundsException e) {
+            } catch (IndexOutOfBoundsException e) {
                 throw new FlowException("ERROR: No SpecificClaim with provided ID found!");
             }
 
@@ -179,10 +183,8 @@ public class UpdateSpecificClaim {
 
     @InitiatedBy(UpdateSpecificClaim.UpdateSpecificClaimInitiator.class)
     public static class UpdateSpecificClaimResponder extends FlowLogic<Void> {
-        //private variable
         private final FlowSession counterpartySession;
 
-        //Constructor
         public UpdateSpecificClaimResponder(FlowSession counterpartySession) {
             this.counterpartySession = counterpartySession;
         }
@@ -209,6 +211,4 @@ public class UpdateSpecificClaim {
             return null;
         }
     }
-
-
 }

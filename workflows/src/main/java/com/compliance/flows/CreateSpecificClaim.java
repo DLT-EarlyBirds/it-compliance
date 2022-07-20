@@ -19,6 +19,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This flow creates a new specific claim, and sends it to the other parties involved in the claim
+ */
 public class CreateSpecificClaim {
 
     @InitiatingFlow
@@ -158,5 +161,4 @@ public class CreateSpecificClaim {
             return null;
         }
     }
-
 }
