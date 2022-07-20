@@ -138,8 +138,7 @@ const CreateRegulation = () => {
                         Bootstrap Regulation Graph
                     </Button>,
                 ]}
-            >
-            </Modal>
+            ></Modal>
         </>
     )
 }

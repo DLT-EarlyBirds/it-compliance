@@ -37,7 +37,7 @@ const SpecificClaimService = {
     downloadAttachment: async (axios: AxiosInstance, linearId: string) => {
         const response = await axios.get(`/${MODEL}/attachment/${linearId}`, { responseType: "blob" })
 
-        fileDownload(response.data, linearId + '.jar');
+        fileDownload(response.data, linearId + ".jar")
     },
 }
 

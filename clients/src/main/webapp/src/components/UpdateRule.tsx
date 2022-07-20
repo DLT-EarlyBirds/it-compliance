@@ -1,12 +1,12 @@
 import React from "react"
-import {Button, Form, Input, Drawer, Select} from "antd"
-import {Regulation, Rule, RuleDTO} from "models"
-import {useNode} from "../contexts/NodeContext"
-import {useData} from "contexts/DataContext"
+import { Button, Form, Input, Drawer, Select } from "antd"
+import { Regulation, Rule, RuleDTO } from "models"
+import { useNode } from "../contexts/NodeContext"
+import { useData } from "contexts/DataContext"
 import RuleService from "services/Rule.service"
-import TextArea from "antd/es/input/TextArea";
+import TextArea from "antd/es/input/TextArea"
 
-const {Option} = Select
+const { Option } = Select
 
 interface UpdateRuleProps {
     rule: Rule
@@ -14,12 +14,12 @@ interface UpdateRuleProps {
     setIsVisible: (isVisible: boolean) => void
 }
 
-const UpdateRule = ({rule, isVisible, setIsVisible}: UpdateRuleProps) => {
-    const {axiosInstance} = useNode()
-    const {rules, regulations, setRules} = useData()
+const UpdateRule = ({ rule, isVisible, setIsVisible }: UpdateRuleProps) => {
+    const { axiosInstance } = useNode()
+    const { rules, regulations, setRules } = useData()
 
     const onFinish = (values: RuleDTO) => {
-        RuleService.update(axiosInstance, {...values, linearId: rule.linearId.id}).then((response) => {
+        RuleService.update(axiosInstance, { ...values, linearId: rule.linearId.id }).then((response) => {
             const updatedRules = rules.map((r) => (r.linearId.id === response.linearId.id ? response : r))
             setRules(updatedRules)
             setIsVisible(false)
@@ -27,8 +27,7 @@ const UpdateRule = ({rule, isVisible, setIsVisible}: UpdateRuleProps) => {
     }
 
     return (
-        <Drawer size={'large'} title="Update Rule" placement="right" closable={false}
-                onClose={() => setIsVisible(false)} visible={isVisible} height="200">
+        <Drawer size={"large"} title="Update Rule" placement="right" closable={false} onClose={() => setIsVisible(false)} visible={isVisible} height="200">
             <Form
                 name="basic"
                 labelCol={{
@@ -46,28 +45,28 @@ const UpdateRule = ({rule, isVisible, setIsVisible}: UpdateRuleProps) => {
                         },
                     ]}
                 >
-                    <Input/>
+                    <Input />
                 </Form.Item>
                 <Form.Item
-                label="Parent Regulation"
-                name="parentRegulation"
-                initialValue={rule.parentRegulation}
-                rules={[
-                    {
-                        required: true,
-                    },
-                ]}
-            >
-                <Select
-                    style={{
-                        width: 120,
-                    }}
+                    label="Parent Regulation"
+                    name="parentRegulation"
+                    initialValue={rule.parentRegulation}
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
                 >
-                    {regulations.map((regulation: Regulation) => (
-                        <Option value={regulation.linearId.id}>{regulation.name}</Option>
-                    ))}
-                </Select>
-            </Form.Item>
+                    <Select
+                        style={{
+                            width: 120,
+                        }}
+                    >
+                        {regulations.map((regulation: Regulation) => (
+                            <Option value={regulation.linearId.id}>{regulation.name}</Option>
+                        ))}
+                    </Select>
+                </Form.Item>
 
                 <Form.Item
                     label="Rule Specification"
@@ -79,7 +78,7 @@ const UpdateRule = ({rule, isVisible, setIsVisible}: UpdateRuleProps) => {
                         },
                     ]}
                 >
-                    <TextArea rows={10}/>
+                    <TextArea rows={10} />
                 </Form.Item>
                 <Form.Item>
                     <Button type="primary" htmlType="submit">

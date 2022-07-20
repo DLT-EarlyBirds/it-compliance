@@ -10,7 +10,7 @@ import UpdateClaimTemplate from "components/UpdateClaimTemplate"
 import { insertIf } from "utils"
 import ClaimTemplateService from "services/ClaimTemplate.service"
 import { Link } from "react-router-dom"
-import {resolveX500Name} from "../services/resolveX500Name";
+import { resolveX500Name } from "../services/resolveX500Name"
 
 const commonColumns = [
     {
@@ -24,9 +24,9 @@ const commonColumns = [
     {
         title: "Issuer",
         dataIndex: "issuer",
-        render: (_:string, claimTemplate: ClaimTemplate) => {
-            return resolveX500Name(claimTemplate.issuer);
-        }
+        render: (_: string, claimTemplate: ClaimTemplate) => {
+            return resolveX500Name(claimTemplate.issuer)
+        },
     },
 ]
 

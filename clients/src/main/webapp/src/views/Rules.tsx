@@ -1,8 +1,8 @@
 import React, { useState } from "react"
-import {Table, Button, TableProps} from "antd"
+import { Table, Button, TableProps } from "antd"
 import CreateRule from "../components/CreateRule"
 import { useData } from "../contexts/DataContext"
-import {Regulation, Rule} from "models"
+import { Regulation, Rule } from "models"
 import UpdateRule from "components/UpdateRule"
 import { EditOutlined, EyeOutlined } from "@ant-design/icons"
 import { useNode } from "../contexts/NodeContext"
@@ -10,7 +10,7 @@ import { NodeEnum } from "enums"
 import { insertIf } from "utils"
 import RuleService from "../services/Rule.service"
 import { Link } from "react-router-dom"
-import {resolveX500Name} from "../services/resolveX500Name";
+import { resolveX500Name } from "../services/resolveX500Name"
 
 function Rules() {
     const { rules, setRules } = useData()
@@ -19,7 +19,7 @@ function Rules() {
     const { currentNode, axiosInstance } = useNode()
     const isSupervisoryAuthority = currentNode === NodeEnum.SUPERVISORY_AUTHORITY
     const filter = rules.map((rule) => {
-        return {text: rule.name.split(' ')[0], value: rule}
+        return { text: rule.name.split(" ")[0], value: rule }
     })
 
     const columns = [
@@ -30,26 +30,26 @@ function Rules() {
         {
             title: "Issuer",
             dataIndex: "issuer",
-            render: (_:string, rule: Rule) => {
-                return resolveX500Name(rule.issuer);
-            }
+            render: (_: string, rule: Rule) => {
+                return resolveX500Name(rule.issuer)
+            },
         },
         {
             title: "Involved parties",
             dataIndex: "involvedParties",
-            render: (_:string, rule: Rule) => {
-                let output = ''
-                rule.involvedParties.forEach(party => {
-                    output += resolveX500Name(party) + ', '
+            render: (_: string, rule: Rule) => {
+                let output = ""
+                rule.involvedParties.forEach((party) => {
+                    output += resolveX500Name(party) + ", "
                 })
                 return output.substring(0, output.length - 2)
-            }
+            },
         },
         {
             title: "View",
             render: (_: string, rule: Rule) => {
                 return (
-                    <Link className={'flex items-center justify-evenly'} to={`/rules/${rule.linearId.id}`}>
+                    <Link className={"flex items-center justify-evenly"} to={`/rules/${rule.linearId.id}`}>
                         <EyeOutlined /> Open Rule
                     </Link>
                 )
@@ -57,9 +57,9 @@ function Rules() {
         },
     ]
 
-    const onChange: TableProps<Rule>['onChange'] = (pagination, filters, sorter, extra) => {
-        console.log('params', pagination, filters, sorter, extra);
-    };
+    const onChange: TableProps<Rule>["onChange"] = (pagination, filters, sorter, extra) => {
+        console.log("params", pagination, filters, sorter, extra)
+    }
 
     return (
         <div>
