@@ -15,7 +15,7 @@ import { Link } from "react-router-dom"
 import { resolveX500Name } from "../services/resolveX500Name"
 
 function SpecificClaims() {
-    const { specificClaims } = useData()
+    const { specificClaims, setSpecificClaims } = useData()
     const { currentNode, axiosInstance } = useNode()
     const isSupervisoryAuthority = currentNode === NodeEnum.SUPERVISORY_AUTHORITY
     const isAuditor = currentNode === NodeEnum.AUDITOR
@@ -76,6 +76,7 @@ function SpecificClaims() {
                         }
                         if (info.file.status === "done") {
                             message.success(`${info.file.name} file uploaded successfully`)
+                            SpecificClaimService.getAll(axiosInstance).then((response) => setSpecificClaims(response))
                         } else if (info.file.status === "error") {
                             message.error(`${info.file.name} file upload failed.`)
                         }
