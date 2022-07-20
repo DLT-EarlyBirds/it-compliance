@@ -63,7 +63,7 @@ For each of the above-mentioned states we define a smart contract that checks fo
 
 ### Update Rule Flow
 
-`flow start UpdateRule name: NewRule2, ruleSpecification: new Description, parentRegulationLinearId: <RegulationLinearId>, linearId: <RuleLinearId>`
+`flow start UpdateRule linearId: <RuleLinearId>, name: NewRule2, ruleSpecification: new Description, parentRegulationLinearId: <RegulationLinearId>`
 
 ### Deprecate Rule Flow
 `flow start DeprecateRule linearId: <RuleLinearId>`
@@ -71,14 +71,14 @@ For each of the above-mentioned states we define a smart contract that checks fo
 ## Claim Templates
 
 ### ClaimTemplate Flow
-`flow start CreateClaimTemplate name: NewClameTemplate, description: new Description, ruleLinearId: <RuleLinearId>`
+`flow start CreateClaimTemplate$CreateClaimTemplateInitiator name: NewClameTemplate, description: new Description, ruleLinearId: <RuleLinearId>`
 
 `run vaultQuery contractStateType: com.compliance.states.ClaimTemplate`
 
 ## Claim Template Suggestions
 
 ### Claim Template Suggestion Flow
-`flow start CreateClaimTemplateSuggestion name: TemplateSuggestion, description: This is template suggestion, supervisoryAuthority: SupervisoryAuthority, ruleLinearId: <ruleId>`
+`flow start CreateClaimTemplateSuggestion$CreateClaimTemplateSuggestionInitiator name: TemplateSuggestion, description: This is template suggestion, supervisoryAuthority: SupervisoryAuthority, ruleLinearId: <ruleId>`
 
 `run vaultQuery contractStateType: com.compliance.states.ClaimTemplateSuggestion`
 
@@ -90,19 +90,19 @@ For each of the above-mentioned states we define a smart contract that checks fo
 ### CreateSpecificClaim Flow
 
 #### Without referencing an attachment
-`flow start CreateSpecificClaim name: SpecificClaim, supervisoryAuthority: Supervisory Authority, auditor: Auditor, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: []`
+`flow start CreateSpecificClaim name: SpecificClaim, description: This is a specific claim, supervisoryAuthority: Supervisory Authority, auditor: Auditor, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: []`
 
 `run vaultQuery contractStateType: com.compliance.states.SpecificClaim`
 
 #### With referencing an attachment
-`flow start CreateSpecificClaim name: SpecificClaim, supervisoryAuthority: Supervisory Authority, auditor: Auditor, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: [], attachmentID: <attachmentID>`
+`flow start CreateSpecificClaim name: SpecificClaim, description: This is a specific claim, supervisoryAuthority: Supervisory Authority, auditor: Auditor, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: [], attachmentID: <attachmentID>`
 
 `run vaultQuery contractStateType: com.compliance.states.SpecificClaim`
 
 ### UpdateSpecificClaim Flow
 
 #### Without referencing an attachment
-`flow start UpdateSpecificClaim specificClaimLinearId: <linearID>, name: SpecificClaim, supervisoryAuthority: Supervisory Authority, auditor: Auditor, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: []`
+`flow start UpdateSpecificClaim specificClaimLinearId: <linearID>, name: SpecificClaim, description: This is a specific claim, supervisoryAuthority: Supervisory Authority, auditor: Auditor, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: []`
 
 #### With referencing an attachment
 `flow start UpdateSpecificClaim specificClaimLinearId: <linearID>, name: SpecificClaim, supervisoryAuthority: Supervisory Authority, auditor: Auditor, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: [], attachmentID: <attachmentID>`
