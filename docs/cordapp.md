@@ -30,13 +30,13 @@ Together they build what we call a regulation graph. It is a DAG(Directed Acycli
 
 The code that defines the states can be found here:
 
-`java/com/compliance/states`
+`contracts/src/main/java/com/compliance/states`
 
 # Contracts:
 
 For each of the above-mentioned states we define a smart contract that checks for the validity of its allowed transactions. The contracts can be found here:
 
-`java/com/compliance/contracts`
+`contracts/src/main/java/com/compliance/contracts`
 
 
 # Issuing flows:
