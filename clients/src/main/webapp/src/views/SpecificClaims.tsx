@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Table, Button, message, Upload } from "antd"
 import { useData } from "../contexts/DataContext"
-import { Regulation, SpecificClaim } from "models"
+import { SpecificClaim } from "models"
 import { EditOutlined, DownloadOutlined, EyeOutlined } from "@ant-design/icons"
 import UpdateSpecificClaim from "components/UpdateSpecificClaim"
 import { UploadOutlined } from "@ant-design/icons"
@@ -44,7 +44,7 @@ function SpecificClaims() {
                     value: NodeEnum.CAPITALS_HOLDING,
                 },
             ],
-            onFilter: (value: string, specificClaim: SpecificClaim) => resolveX500Name(specificClaim.financialServiceProvider) == value,
+            onFilter: (value: string, specificClaim: SpecificClaim) => resolveX500Name(specificClaim.financialServiceProvider) === value,
             render: (_: string, specificClaim1: SpecificClaim) => {
                 return resolveX500Name(specificClaim1.financialServiceProvider)
             },
