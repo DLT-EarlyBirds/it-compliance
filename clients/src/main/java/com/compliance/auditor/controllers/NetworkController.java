@@ -23,8 +23,9 @@ import java.util.stream.Stream;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
+
 /**
- * Define your API endpoints here.
+ * It provides a REST API for the network map cache
  */
 @RestController
 @CrossOrigin(origins = "*")
@@ -32,7 +33,6 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 public class NetworkController {
     private final CordaRPCOps proxy;
     private final CordaX500Name me;
-    private final static Logger logger = LoggerFactory.getLogger(RuleController.class);
 
     public NetworkController(NodeRPCConnection rpc) {
         this.proxy = rpc.proxy;
@@ -46,40 +46,84 @@ public class NetworkController {
         return BCStyle.INSTANCE.toString(name);
     }
 
+    /**
+     * If the node is not a notary, return true, otherwise return false.
+     *
+     * @param nodeInfo The node that we are checking to see if it is a notary.
+     * @return A boolean value.
+     */
     private boolean isNotary(NodeInfo nodeInfo) {
         return !(proxy.notaryIdentities()
                 .stream().noneMatch(nodeInfo::isLegalIdentity));
     }
 
+    /**
+     *  This function returns true if the node is the node that we are currently running on
+     *
+     * @param nodeInfo The node that we are checking to see if it is the node we're connected to.
+     * @return The name of the node.
+     */
     private boolean isMe(NodeInfo nodeInfo) {
         return nodeInfo.getLegalIdentities().get(0).getName().equals(me);
     }
 
+    /**
+     * Check if the node is a network map, return true, otherwise return false.
+     *
+     * @param nodeInfo The node info of the node that we are trying to connect to.
+     * @return The nodeInfo object contains the identity of the node.
+     */
     private boolean isNetworkMap(NodeInfo nodeInfo) {
         return nodeInfo.getLegalIdentities().get(0).getName().getOrganisation().equals("Network Map Service");
     }
 
 
+    /**
+     * Endpoint that returns the current time of the node that the proxy is connected to
+     *
+     * @return The current time on the server.
+     */
     @GetMapping(value = "/servertime", produces = TEXT_PLAIN_VALUE)
     private String serverTime() {
         return (LocalDateTime.ofInstant(proxy.currentNodeTime(), ZoneId.of("UTC"))).toString();
     }
 
+    /**
+     * It returns a string representation of the list of addresses of the node
+     *
+     * @return The addresses of the node.
+     */
     @GetMapping(value = "/addresses", produces = TEXT_PLAIN_VALUE)
     private String addresses() {
         return proxy.nodeInfo().getAddresses().toString();
     }
 
+
+    /**
+     * Endpoint to get all legal identities in the network
+     *
+     * @return The identities of the nodes in the network.
+     */
     @GetMapping(value = "/identities", produces = TEXT_PLAIN_VALUE)
     private String identities() {
         return proxy.nodeInfo().getLegalIdentities().toString();
     }
 
+    /**
+     * Endpoint that returns the platform version of the node
+     *
+     * @return The platform version of the node.
+     */
     @GetMapping(value = "/platformversion", produces = TEXT_PLAIN_VALUE)
     private String platformVersion() {
         return Integer.toString(proxy.nodeInfo().getPlatformVersion());
     }
 
+    /**
+     * Get all nodes that are not notaries, ourself, or the network map, and return their names as a list
+     *
+     * @return A list of peers.
+     */
     @GetMapping(value = "/peers", produces = APPLICATION_JSON_VALUE)
     public HashMap<String, List<String>> getPeers() {
         HashMap<String, List<String>> myMap = new HashMap<>();
@@ -95,16 +139,31 @@ public class NetworkController {
         return myMap;
     }
 
+    /**
+     * Endpoint that returns a list of all the notaries on the network
+     *
+     * @return A list of notaries.
+     */
     @GetMapping(value = "/notaries", produces = TEXT_PLAIN_VALUE)
     private String notaries() {
         return proxy.notaryIdentities().toString();
     }
 
+    /**
+     * Endpoint that returns a string representation of the registered flows
+     *
+     * @return A list of all the flows that have been registered with the proxy.
+     */
     @GetMapping(value = "/flows", produces = TEXT_PLAIN_VALUE)
     private String flows() {
         return proxy.registeredFlows().toString();
     }
 
+    /**
+     * Endpoint that returns information about this node.
+     *
+     * @return A HashMap with a single key-value pair.
+     */
     @GetMapping(value = "/me", produces = APPLICATION_JSON_VALUE)
     private HashMap<String, String> whoami() {
         HashMap<String, String> myMap = new HashMap<>();

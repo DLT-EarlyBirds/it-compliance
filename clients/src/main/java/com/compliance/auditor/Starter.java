@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import static org.springframework.boot.WebApplicationType.SERVLET;
 
 /**
- * Our Spring Boot application.
+ * Spring Boot entry point of the auditor client application.
  */
 @SpringBootApplication
 public class Starter {

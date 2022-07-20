@@ -18,8 +18,9 @@ import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+
 /**
- * Define your API endpoints here.
+ * Spring Boot controller that exposes a REST API for querying the vault for rules
  */
 @RestController
 @CrossOrigin(origins = "*")
@@ -33,6 +34,11 @@ public class RuleController {
     }
 
 
+    /**
+     * Endpoint that returns a list of all the rules in the vault
+     *
+     * @return A list of all the rules in the vault.
+     */
     @GetMapping(value = "/", produces = APPLICATION_JSON_VALUE)
     private List<Rule> getAll() {
         return proxy
@@ -45,6 +51,12 @@ public class RuleController {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Endpoint that queries the vault for a rule with the given linearId and returns it as a JSON object
+     *
+     * @param linearId The unique identifier of the rule.
+     * @return A Rule object
+     */
     @GetMapping(value = "/{linearId}", produces = APPLICATION_JSON_VALUE)
     private ResponseEntity<Rule> getByLinearId(@PathVariable String linearId) {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
