@@ -25,7 +25,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 
 /**
- * It's a Spring Boot controller that exposes endpoints for the creation of claim template suggestions and the retrieval
+ * This Spring Boot controller exposes endpoints for the creation of claim template suggestions and the retrieval
  * of claim templates and claim template suggestions
  */
 @RestController
