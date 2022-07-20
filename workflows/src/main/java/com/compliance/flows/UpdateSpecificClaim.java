@@ -152,7 +152,8 @@ public class UpdateSpecificClaim {
                     new SpecificClaimContract.Commands.UpdateSpecificClaim(),
                     Arrays.asList(
                             getOurIdentity().getOwningKey(),
-                            supervisoryAuthority.getOwningKey()
+                            supervisoryAuthority.getOwningKey(),
+                            auditor.getOwningKey()
                     )
             );
 

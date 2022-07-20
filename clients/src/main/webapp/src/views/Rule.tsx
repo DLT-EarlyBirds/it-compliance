@@ -1,24 +1,24 @@
-import { useData } from "contexts/DataContext"
-import React, { useState } from "react"
-import { NavigateFunction, useNavigate, useParams } from "react-router-dom"
-import { Rule as RuleModel, ClaimTemplate } from "models"
-import createEngine, { DefaultLinkModel, DefaultNodeModel, DiagramModel } from "@projectstorm/react-diagrams"
-import { resolveX500Name } from "../services/resolveX500Name"
-import { Button, Card } from "antd"
+import {useData} from "contexts/DataContext"
+import React, {useState} from "react"
+import {NavigateFunction, useNavigate, useParams} from "react-router-dom"
+import {Rule as RuleModel, ClaimTemplate, Regulation} from "models"
+import createEngine, {DefaultLinkModel, DefaultNodeModel, DiagramModel} from "@projectstorm/react-diagrams"
+import {resolveX500Name} from "../services/resolveX500Name"
+import {Button, Card} from "antd"
 import RegulationService from "../services/Regulation.service"
 import RuleService from "../services/Rule.service"
-import { EditOutlined } from "@ant-design/icons"
+import {EditOutlined} from "@ant-design/icons"
 import Meta from "antd/es/card/Meta"
 import UpdateRegulation from "../components/UpdateRegulation"
-import { CanvasWidget, Action, InputType } from "@projectstorm/react-canvas-core"
-import { useNode } from "../contexts/NodeContext"
+import {CanvasWidget, Action, InputType} from "@projectstorm/react-canvas-core"
+import {useNode} from "../contexts/NodeContext"
 import UpdateRule from "../components/UpdateRule"
-import { NodeEnum } from "../enums"
+import {NodeEnum} from "../enums"
 
 /**
  * Navigates to a selected node
  */
-class CustomDeleteItemsAction extends Action {
+class CustomNavigateAction extends Action {
     constructor(navigate: NavigateFunction) {
         super({
             type: InputType.MOUSE_UP,
@@ -40,9 +40,9 @@ class CustomDeleteItemsAction extends Action {
 }
 
 const Rule = () => {
-    const { id } = useParams()
-    const { rules, claimTemplates, setClaimTemplates, setRules } = useData()
-    const { currentNode, axiosInstance } = useNode()
+    const {id} = useParams()
+    const {rules, claimTemplates, setClaimTemplates, setRules, regulations} = useData()
+    const {currentNode, axiosInstance} = useNode()
     const [isDrawerVisible, setIsDrawerVisible] = useState(false)
     const navigate = useNavigate()
     const isSupervisoryAuthority = currentNode === NodeEnum.SUPERVISORY_AUTHORITY
@@ -54,45 +54,59 @@ const Rule = () => {
     }
 
     const relatedClaimTemplates = claimTemplates.filter((claimTemplate: ClaimTemplate) => claimTemplate.rule.pointer.id === rule.linearId.id)
-    console.log(relatedClaimTemplates)
+    const parentRegulation = regulations.find((regulation: Regulation) => regulation.linearId.id === rule.parentRegulation.pointer.id)
 
-    console.log(rule)
-
+    console.log(parentRegulation)
     // create an instance of the engine with all the defaults
     const engine = createEngine()
+    const model = new DiagramModel()
 
-    const regulationNode = new DefaultNodeModel({
+    const ruleNode = new DefaultNodeModel({
         name: rule.name,
-        color: "rgb(0,192,255)",
+        color: "rgb(255,165,0)",
         id: "/rules/" + rule.linearId.id,
     })
-    regulationNode.setPosition(250, 150)
-    let regulationPort = regulationNode.addOutPort("Released by: " + resolveX500Name(rule.issuer))
 
-    const offset = 50 * (1 + rules.length / 100)
+    let baseOffset = 50 * (relatedClaimTemplates.length/2)
+    if (baseOffset === 0 || relatedClaimTemplates.length === 1) baseOffset = 50
+    ruleNode.setPosition(400, baseOffset)
+    let rulePort = ruleNode.addOutPort("Released by: " + resolveX500Name(rule.issuer))
+
+    if (parentRegulation) {
+        let inPort = ruleNode.addInPort('');
+        const regulationNode = new DefaultNodeModel({
+            name: parentRegulation.name,
+            color: "rgb(0,192,255)",
+            id: "/regulations/" + parentRegulation.linearId.id
+        })
+        regulationNode.setPosition(100, baseOffset)
+        const regulationPort = regulationNode.addOutPort(resolveX500Name(parentRegulation.issuer))
+        const link = regulationPort.link(inPort);
+        model.addAll(regulationNode, link)
+    }
+
+    const offset = 50 * (1 + relatedClaimTemplates.length / 100)
     let offsetAcc = 50
 
-    const ruleNodes = relatedClaimTemplates.map((claimTemplate: ClaimTemplate) => {
+    const claimTemplateNodes = relatedClaimTemplates.map((claimTemplate: ClaimTemplate) => {
         const node = new DefaultNodeModel({
             name: claimTemplate.name,
             color: "rgb(0,192,255)",
             id: "/claim-templates/" + claimTemplate.linearId.id,
         })
-        node.setPosition(500, offsetAcc)
+        node.setPosition(800, offsetAcc)
         offsetAcc += offset
         node.addInPort(resolveX500Name(claimTemplate.issuer))
         return node
     })
 
-    const links = ruleNodes.map((node: DefaultNodeModel) => {
-        return regulationPort.link<DefaultLinkModel>(node.getInPorts()[0])
+    const links = claimTemplateNodes.map((node: DefaultNodeModel) => {
+        return rulePort.link<DefaultLinkModel>(node.getInPorts()[0])
     })
 
-    const model = new DiagramModel()
-    model.addAll(regulationNode, ...ruleNodes, ...links)
+    model.addAll(ruleNode, ...claimTemplateNodes, ...links)
     engine.setModel(model)
-
-    engine.getActionEventBus().registerAction(new CustomDeleteItemsAction(navigate))
+    engine.getActionEventBus().registerAction(new CustomNavigateAction(navigate))
 
     return (
         <>
@@ -121,18 +135,18 @@ const Rule = () => {
                         }}
                         block
                     >
-                        <EditOutlined /> Edit
+                        <EditOutlined/> Edit
                     </Button>
                 </div>
             )}
-            <Card cover={<CanvasWidget className={"h-[50vh]"} engine={engine} />} bordered={true}>
-                <Meta title={rule.name} description={"Released by: " + resolveX500Name(rule.issuer)} />
+            <Card cover={<CanvasWidget className={"h-[50vh]"} engine={engine}/>} bordered={true}>
+                <Meta title={rule.name} description={"Released by: " + resolveX500Name(rule.issuer)}/>
                 <p className="mt-5">{rule.ruleSpecification}</p>
 
                 <p className="mt-5">{rule.involvedParties.map((party) => resolveX500Name(party) + ", ")}</p>
             </Card>
 
-            {isDrawerVisible && <UpdateRule rule={rule} isVisible={isDrawerVisible} setIsVisible={setIsDrawerVisible} />}
+            {isDrawerVisible && <UpdateRule rule={rule} isVisible={isDrawerVisible} setIsVisible={setIsDrawerVisible}/>}
         </>
     )
 }

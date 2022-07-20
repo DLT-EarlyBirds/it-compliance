@@ -4,9 +4,10 @@ import { ForceGraph2D, ForceGraph3D } from "react-force-graph"
 import { useNavigate } from "react-router-dom"
 import THREE from "three"
 import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer"
+import {SpecificClaim} from "../models";
 
 function GraphRegulation() {
-    const { regulations, rules, claimTemplates } = useData()
+    const { regulations, rules, claimTemplates, specificClaims } = useData()
 
     const graphNodes = [
         ...regulations.map((regulation) => ({
@@ -30,6 +31,13 @@ function GraphRegulation() {
             link: "claim-templates",
             neighbors: [],
         })),
+        ...specificClaims.map((specifcClaim: SpecificClaim) => ({
+            id: specifcClaim.linearId.id,
+            name: specifcClaim.name,
+            object: specifcClaim,
+            link: "claims",
+            neighbors: [],
+        }))
     ]
 
     const graphEdges = [
@@ -41,6 +49,10 @@ function GraphRegulation() {
             source: claimTemplate.linearId.id,
             target: claimTemplate.rule.pointer.id,
         })),
+        ...specificClaims.map((specificClaim: SpecificClaim) => ({
+            source: specificClaim.linearId.id,
+            target: specificClaim.claimTemplate.pointer.id
+        }))
     ]
     let navigate = useNavigate()
 
@@ -127,7 +139,7 @@ function GraphRegulation() {
 
     useEffect(() => {
         //@ts-ignore
-        fgRef.current.d3Force("link").distance(100).iterations(20)
+        fgRef.current.d3Force("link").distance(150).iterations(20)
     }, [])
     // @ts-ignore
     // @ts-ignore
