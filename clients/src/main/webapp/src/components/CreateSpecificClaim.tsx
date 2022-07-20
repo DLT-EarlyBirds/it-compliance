@@ -1,16 +1,16 @@
 import React, { useState } from "react"
 import { Modal, Button, Form, Input, Select } from "antd"
-import { useData } from "contexts/DataContext"
-import { Regulation } from "models"
-import RuleService from "services/Rule.service"
-import { useNode } from "contexts/NodeContext"
+import { useNode } from "../contexts/NodeContext"
+import { useData } from "../contexts/DataContext"
+import SpecificClaimService from "services/SpecificClaim.service"
+
 const { Option } = Select
 
-const CreateRule = () => {
+const CreateSpecificClaim = () => {
     const [isModalVisible, setIsModalVisible] = useState(false)
-    const { regulations, rules, setRules } = useData()
-    const [ruleForm] = Form.useForm()
+    const [specificClaimForm] = Form.useForm()
     const { axiosInstance } = useNode()
+    const { specificClaims, setSpecificClaims, claimTemplates } = useData()
 
     const showModal = () => {
         setIsModalVisible(true)
@@ -25,8 +25,8 @@ const CreateRule = () => {
     }
 
     const onFinish = (values: any) => {
-        RuleService.create(axiosInstance, values).then((response) => {
-            setRules([...rules, response])
+        SpecificClaimService.create(axiosInstance, { ...values, supportingClaimIds: [], linearId: "" }).then((response) => {
+            setSpecificClaims([...specificClaims, response])
             handleCancel()
         })
     }
@@ -34,10 +34,10 @@ const CreateRule = () => {
     return (
         <>
             <Button type="primary" className="my-3" onClick={showModal}>
-                Create Rule
+                Create Specific Claim
             </Button>
             <Modal
-                title="Create Regulation"
+                title="Create Specific Claim"
                 visible={isModalVisible}
                 onOk={handleOk}
                 onCancel={handleCancel}
@@ -45,13 +45,13 @@ const CreateRule = () => {
                     <Button className="btn-default" key="back" onClick={handleCancel}>
                         Cancel
                     </Button>,
-                    <Button key="submit" type="primary" onClick={() => ruleForm.submit()}>
-                        Create Rule
+                    <Button key="submit" type="primary" onClick={() => specificClaimForm.submit()}>
+                        Create Specific Claim
                     </Button>,
                 ]}
             >
                 <Form
-                    form={ruleForm}
+                    form={specificClaimForm}
                     name="basic"
                     labelCol={{
                         span: 8,
@@ -70,8 +70,8 @@ const CreateRule = () => {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        label="Rule Specification"
-                        name="ruleSpecification"
+                        label="Claim Specification"
+                        name="claimSpecification"
                         rules={[
                             {
                                 required: true,
@@ -81,8 +81,8 @@ const CreateRule = () => {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        label="Parent Regulation"
-                        name="parentRegulation"
+                        label="Claim Template"
+                        name="claimTemplateLinearId"
                         rules={[
                             {
                                 required: true,
@@ -94,8 +94,8 @@ const CreateRule = () => {
                                 width: 120,
                             }}
                         >
-                            {regulations.map((regulation: Regulation) => (
-                                <Option value={regulation.linearId.id}>{regulation.name}</Option>
+                            {claimTemplates.map((claimTemplate) => (
+                                <Option value={claimTemplate.linearId.id}>{claimTemplate.name}</Option>
                             ))}
                         </Select>
                     </Form.Item>
@@ -105,4 +105,4 @@ const CreateRule = () => {
     )
 }
 
-export default CreateRule
+export default CreateSpecificClaim

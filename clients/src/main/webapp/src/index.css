@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+.ant-layout-header {
+  padding: 0 !important;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

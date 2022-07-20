@@ -64,6 +64,7 @@ public class SpecificClaim implements LinearState {
         this.financialServiceProvider = financialServiceProvider;
 
         this.participants = new ArrayList<>();
+        this.participants.add(auditor);
         this.participants.add(supervisoryAuthority);
         this.participants.add(financialServiceProvider);
     }
@@ -89,6 +90,7 @@ public class SpecificClaim implements LinearState {
         this.financialServiceProvider = financialServiceProvider;
 
         this.participants = new ArrayList<>();
+        this.participants.add(auditor);
         this.participants.add(supervisoryAuthority);
         this.participants.add(financialServiceProvider);
     }

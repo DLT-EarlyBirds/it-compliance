@@ -152,10 +152,10 @@ public class UpdateSpecificClaim {
                     new SpecificClaimContract.Commands.UpdateSpecificClaim(),
                     Arrays.asList(
                             getOurIdentity().getOwningKey(),
-                            supervisoryAuthority.getOwningKey()
+                            supervisoryAuthority.getOwningKey(),
+                            auditor.getOwningKey()
                     )
             );
-
 
             // Verify that the transaction is valid.
             builder.verify(getServiceHub());
@@ -163,14 +163,17 @@ public class UpdateSpecificClaim {
             // Sign the transaction.
             final SignedTransaction partSignedTx = getServiceHub().signInitialTransaction(builder);
 
+            List<Party> otherParties = output.getParticipants().stream().map(el -> (Party) el).collect(Collectors.toList());
+            otherParties.remove(getOurIdentity());
+
             // Send the state to the counterparty, and receive it back with their signature.
-            FlowSession otherPartySession = initiateFlow(supervisoryAuthority);
+            List<FlowSession> otherPartySessions = otherParties.stream().map(this::initiateFlow).collect(Collectors.toList());
             final SignedTransaction fullySignedTx = subFlow(
-                    new CollectSignaturesFlow(partSignedTx, Collections.singletonList(otherPartySession))
-            );
+                    new CollectSignaturesFlow(partSignedTx, otherPartySessions));
 
             // Notarise and record the transaction in both parties' vaults.
-            return subFlow(new FinalityFlow(fullySignedTx, Collections.singletonList(otherPartySession)));
+            return subFlow(new FinalityFlow(fullySignedTx, otherPartySessions));
+
         }
     }
 

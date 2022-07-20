@@ -13,6 +13,7 @@ import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -74,9 +75,9 @@ public class CreateSpecificClaim {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
             TransactionBuilder txBuilder = new TransactionBuilder(notary);
-
+            SpecificClaim output;
             if (this.attachmentID != null) {
-                SpecificClaim newClaim = new SpecificClaim(
+                 output = new SpecificClaim(
                         new UniqueIdentifier(),
                         this.name,
                         this.description,
@@ -87,13 +88,11 @@ public class CreateSpecificClaim {
                         this.supportingClaimsLinearIds.stream().map(claimLinearId -> new LinearPointer<>(claimLinearId, SpecificClaim.class)).collect(Collectors.toList()),
                         this.attachmentID
                 );
-
-                        txBuilder.addOutputState(newClaim);
                         txBuilder.addAttachment(this.attachmentID);
             }
 
             else{
-                SpecificClaim newClaim = new SpecificClaim(
+                output = new SpecificClaim(
                         new UniqueIdentifier(),
                         this.name,
                         this.description,
@@ -103,13 +102,15 @@ public class CreateSpecificClaim {
                         new LinearPointer<>(claimTemplateLinearId, ClaimTemplate.class),
                         this.supportingClaimsLinearIds.stream().map(claimLinearId -> new LinearPointer<>(claimLinearId, SpecificClaim.class)).collect(Collectors.toList())
                 );
-                        txBuilder.addOutputState(newClaim);
             }
+            txBuilder.addOutputState(output);
+
             txBuilder.addCommand(
                     new SpecificClaimContract.Commands.CreateClaim(),
                     Arrays.asList(
                             getOurIdentity().getOwningKey(),
-                            supervisoryAuthority.getOwningKey()
+                            supervisoryAuthority.getOwningKey(),
+                            auditor.getOwningKey()
                     )
             );
 
@@ -119,13 +120,16 @@ public class CreateSpecificClaim {
             // Sign the transaction.
             final SignedTransaction partSignedTx = getServiceHub().signInitialTransaction(txBuilder);
 
+            List<Party> otherParties = output.getParticipants().stream().map(el -> (Party) el).collect(Collectors.toList());
+            otherParties.remove(getOurIdentity());
+
             // Send the state to the counterparty, and receive it back with their signature.
-            FlowSession otherPartySession = initiateFlow(supervisoryAuthority);
+            List<FlowSession> otherPartySessions = otherParties.stream().map(this::initiateFlow).collect(Collectors.toList());
             final SignedTransaction fullySignedTx = subFlow(
-                    new CollectSignaturesFlow(partSignedTx, Collections.singletonList(otherPartySession)));
+                    new CollectSignaturesFlow(partSignedTx, otherPartySessions));
 
             // Notarise and record the transaction in both parties' vaults.
-            return subFlow(new FinalityFlow(fullySignedTx, Collections.singletonList(otherPartySession)));
+            return subFlow(new FinalityFlow(fullySignedTx, otherPartySessions));
         }
     }
 

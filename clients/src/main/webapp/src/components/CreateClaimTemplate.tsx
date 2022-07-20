@@ -1,16 +1,20 @@
 import React, { useState } from "react"
 import { Modal, Button, Form, Input, Select } from "antd"
-import { useData } from "contexts/DataContext"
-import { Regulation } from "models"
-import RuleService from "services/Rule.service"
-import { useNode } from "contexts/NodeContext"
+import { useNode } from "../contexts/NodeContext"
+import { useData } from "../contexts/DataContext"
+import ClaimTemplateService from "services/ClaimTemplate.service"
+
 const { Option } = Select
 
-const CreateRule = () => {
+interface CreateClaimTemplateProps {
+    isClaimTemplateSuggestion: boolean
+}
+
+const CreateClaimTemplate = ({ isClaimTemplateSuggestion }: CreateClaimTemplateProps) => {
     const [isModalVisible, setIsModalVisible] = useState(false)
-    const { regulations, rules, setRules } = useData()
-    const [ruleForm] = Form.useForm()
+    const [claimTemplateForm] = Form.useForm()
     const { axiosInstance } = useNode()
+    const { rules, claimTemplates, setClaimTemplates, claimTemplatesSuggestions, setClaimTemplatesSuggestions } = useData()
 
     const showModal = () => {
         setIsModalVisible(true)
@@ -25,19 +29,26 @@ const CreateRule = () => {
     }
 
     const onFinish = (values: any) => {
-        RuleService.create(axiosInstance, values).then((response) => {
-            setRules([...rules, response])
-            handleCancel()
-        })
+        if (isClaimTemplateSuggestion) {
+            ClaimTemplateService.createSuggestion(axiosInstance, { ...values, linearId: "" }).then((response) => {
+                setClaimTemplatesSuggestions([...claimTemplatesSuggestions, response])
+                handleCancel()
+            })
+        } else {
+            ClaimTemplateService.create(axiosInstance, values).then((response) => {
+                setClaimTemplates([...claimTemplates, response])
+                handleCancel()
+            })
+        }
     }
 
     return (
         <>
-            <Button type="primary" className="my-3" onClick={showModal}>
-                Create Rule
+            <Button block type="primary" className="my-3" onClick={showModal}>
+                {isClaimTemplateSuggestion ? "Create Claim Template Suggestion" : "Create Claim Template"}
             </Button>
             <Modal
-                title="Create Regulation"
+                title={isClaimTemplateSuggestion ? "Create Claim Template Suggestion" : "Create Claim Template"}
                 visible={isModalVisible}
                 onOk={handleOk}
                 onCancel={handleCancel}
@@ -45,13 +56,13 @@ const CreateRule = () => {
                     <Button className="btn-default" key="back" onClick={handleCancel}>
                         Cancel
                     </Button>,
-                    <Button key="submit" type="primary" onClick={() => ruleForm.submit()}>
-                        Create Rule
+                    <Button key="submit" type="primary" onClick={() => claimTemplateForm.submit()}>
+                        Create Claim Template
                     </Button>,
                 ]}
             >
                 <Form
-                    form={ruleForm}
+                    form={claimTemplateForm}
                     name="basic"
                     labelCol={{
                         span: 8,
@@ -70,8 +81,8 @@ const CreateRule = () => {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        label="Rule Specification"
-                        name="ruleSpecification"
+                        label="Template Description"
+                        name="templateDescription"
                         rules={[
                             {
                                 required: true,
@@ -81,8 +92,8 @@ const CreateRule = () => {
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        label="Parent Regulation"
-                        name="parentRegulation"
+                        label="Rule"
+                        name="rule"
                         rules={[
                             {
                                 required: true,
@@ -94,8 +105,8 @@ const CreateRule = () => {
                                 width: 120,
                             }}
                         >
-                            {regulations.map((regulation: Regulation) => (
-                                <Option value={regulation.linearId.id}>{regulation.name}</Option>
+                            {rules.map((rule) => (
+                                <Option value={rule.linearId.id}>{rule.name}</Option>
                             ))}
                         </Select>
                     </Form.Item>
@@ -105,4 +116,4 @@ const CreateRule = () => {
     )
 }
 
-export default CreateRule
+export default CreateClaimTemplate
