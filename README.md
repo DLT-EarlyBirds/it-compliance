@@ -1,7 +1,7 @@
-# Aud IT
+# Aud-IT
 A repository containing the code implementation for DLT4PI practical course for IT Compliance
 
-The goal of _Aud IT_ is to make IT compliance easier for financial service providers. It optimizes the auditing processes for auditors and supervisory authorities.
+The goal of _Aud-IT_ is to make IT compliance easier for financial service providers. It optimizes the auditing processes for auditors and supervisory authorities.
 
 The project consists of three main modules:
 
@@ -9,7 +9,7 @@ The project consists of three main modules:
 
 ## Requirements
 
-_Aud IT_ was tested on Windows 10 and Mac OS with 64-Bit CPU. To be able to run it your system needs to have these requirements installed:
+_Aud-IT_ was tested on Windows 10 and Mac OS with 64-Bit CPU. To be able to run it your system needs to have these requirements installed:
 
 - Java 8
 - Docker Desktop >= 4.8.1
