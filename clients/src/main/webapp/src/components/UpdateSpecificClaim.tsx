@@ -16,9 +16,10 @@ interface UpdateSpecificClaimProps {
 const UpdateSpecificClaim = ({ specificClaim, isVisible, setIsVisible }: UpdateSpecificClaimProps) => {
     const { axiosInstance } = useNode()
     const { specificClaims, setSpecificClaims, claimTemplates } = useData()
+    console.log(specificClaim)
 
     const onFinish = (values: SpecificClaimDTO) => {
-        SpecificClaimService.update(axiosInstance, { ...values, linearId: specificClaim.linearId.id }).then((response) => {
+        SpecificClaimService.update(axiosInstance, { ...values, supportingClaimIds: [], linearId: specificClaim.linearId.id }).then((response) => {
             const updatedSpecificClaims = specificClaims.map((r) => (r.linearId.id === response.linearId.id ? response : r))
             setSpecificClaims(updatedSpecificClaims)
             setIsVisible(false)
@@ -47,8 +48,8 @@ const UpdateSpecificClaim = ({ specificClaim, isVisible, setIsVisible }: UpdateS
                     <Input />
                 </Form.Item>
                 <Form.Item
-                    label="Description"
-                    name="description"
+                    label="Claim Specification"
+                    name="claimSpecification"
                     initialValue={specificClaim.description}
                     rules={[
                         {
@@ -60,7 +61,7 @@ const UpdateSpecificClaim = ({ specificClaim, isVisible, setIsVisible }: UpdateS
                 </Form.Item>
                 <Form.Item
                     label="Claim Template"
-                    name="claimTemplate"
+                    name="claimTemplateLinearId"
                     initialValue={specificClaim.claimTemplate}
                     rules={[
                         {
