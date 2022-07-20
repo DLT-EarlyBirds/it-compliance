@@ -11,15 +11,12 @@ const axiosBrainFinance = axios.create({
 })
 
 const axiosCapitalHolding = axios.create({
-    baseURL: "",
+    baseURL: "http://localhost:10053",
 })
 
-const axiosNotary = axios.create({
-    baseURL: "",
-})
 
 const axiosAuditor = axios.create({
-    baseURL: "",
+    baseURL: "http://localhost:10052",
 })
 
 const getAxiosInstance = (node: NodeEnum) => {
