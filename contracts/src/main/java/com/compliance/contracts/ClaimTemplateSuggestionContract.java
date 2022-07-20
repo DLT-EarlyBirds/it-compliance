@@ -1,5 +1,6 @@
 package com.compliance.contracts;
 
+import com.compliance.states.ClaimTemplate;
 import com.compliance.states.ClaimTemplateSuggestion;
 import com.compliance.states.Rule;
 import com.compliance.states.SpecificClaim;
@@ -39,7 +40,7 @@ public class ClaimTemplateSuggestionContract implements Contract {
             });
         }
         else if (commandData instanceof ClaimTemplateSuggestionContract.Commands.AcceptClaimTemplateSuggestion) {
-            SpecificClaim output = tx.outputsOfType(SpecificClaim.class).get(0);
+            ClaimTemplate output = tx.outputsOfType(ClaimTemplate.class).get(0);
 
             requireThat(require -> {
                 require.using("The transaction should have exactly one Claim as output", tx.getOutputs().size() == 1);
