@@ -26,7 +26,6 @@ class CustomNavigateAction extends Action {
                     selectedEntities.forEach((model) => {
                         // only delete items which are not locked
                         if (!model.isLocked()) {
-                            console.log(model.getID())
                             navigate(model.getID())
                         }
                     })

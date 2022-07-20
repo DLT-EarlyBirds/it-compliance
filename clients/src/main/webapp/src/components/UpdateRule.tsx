@@ -81,7 +81,7 @@ const UpdateRule = ({ rule, isVisible, setIsVisible }: UpdateRuleProps) => {
                     <TextArea rows={10} />
                 </Form.Item>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit">
+                    <Button block type="primary" htmlType="submit">
                         Submit
                     </Button>
                 </Form.Item>

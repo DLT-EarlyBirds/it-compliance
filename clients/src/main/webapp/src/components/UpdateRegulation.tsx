@@ -4,6 +4,7 @@ import { Regulation, RegulationDTO } from "models"
 import { useNode } from "../contexts/NodeContext"
 import RegulationService from "../services/Regulation.service"
 import { useData } from "contexts/DataContext"
+import TextArea from "antd/es/input/TextArea";
 
 interface UpdateRegulationProps {
     regulation: Regulation
@@ -24,7 +25,7 @@ const UpdateRegulation = ({ regulation, isVisible, setIsVisible }: UpdateRegulat
     }
 
     return (
-        <Drawer title="Update Regulation" placement="right" closable={false} onClose={() => setIsVisible(false)} visible={isVisible} height="200">
+        <Drawer size={"large"} title="Update Regulation" placement="right" closable={false} onClose={() => setIsVisible(false)} visible={isVisible} height="200">
             <Form
                 name="basic"
                 labelCol={{
@@ -54,7 +55,7 @@ const UpdateRegulation = ({ regulation, isVisible, setIsVisible }: UpdateRegulat
                         },
                     ]}
                 >
-                    <Input />
+                    <TextArea rows={10} />
                 </Form.Item>
                 <Form.Item
                     label="Version"
@@ -81,7 +82,7 @@ const UpdateRegulation = ({ regulation, isVisible, setIsVisible }: UpdateRegulat
                     <Input />
                 </Form.Item>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit">
+                    <Button block type="primary" htmlType="submit">
                         Submit
                     </Button>
                 </Form.Item>

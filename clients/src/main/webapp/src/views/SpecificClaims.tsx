@@ -1,22 +1,22 @@
-import React, { useState } from "react"
-import { Table, Button, message, Upload } from "antd"
-import { useData } from "../contexts/DataContext"
-import { ClaimTemplate, SpecificClaim } from "models"
-import { EditOutlined, DownloadOutlined, EyeOutlined } from "@ant-design/icons"
+import React, {useState} from "react"
+import {Table, Button, message, Upload} from "antd"
+import {useData} from "../contexts/DataContext"
+import {ClaimTemplate, SpecificClaim} from "models"
+import {EditOutlined, DownloadOutlined, EyeOutlined} from "@ant-design/icons"
 import UpdateSpecificClaim from "components/UpdateSpecificClaim"
-import { UploadOutlined } from "@ant-design/icons"
-import type { UploadProps } from "antd"
-import { useNode } from "contexts/NodeContext"
-import { NodeEnum } from "enums"
+import {UploadOutlined} from "@ant-design/icons"
+import type {UploadProps} from "antd"
+import {useNode} from "contexts/NodeContext"
+import {NodeEnum} from "enums"
 import CreateSpecificClaim from "components/CreateSpecificClaim"
-import { insertIf } from "utils"
+import {insertIf} from "utils"
 import SpecificClaimService from "services/SpecificClaim.service"
-import { Link } from "react-router-dom"
-import { resolveX500Name } from "../services/resolveX500Name"
+import {Link} from "react-router-dom"
+import {resolveX500Name} from "../services/resolveX500Name"
 
 function SpecificClaims() {
-    const { specificClaims, setSpecificClaims, claimTemplates } = useData()
-    const { currentNode, axiosInstance } = useNode()
+    const {specificClaims, setSpecificClaims, claimTemplates} = useData()
+    const {currentNode, axiosInstance} = useNode()
     const isSupervisoryAuthority = currentNode === NodeEnum.SUPERVISORY_AUTHORITY
     const isAuditor = currentNode === NodeEnum.AUDITOR
 
@@ -27,10 +27,6 @@ function SpecificClaims() {
         {
             title: "Name",
             dataIndex: "name",
-        },
-        {
-            title: "Description",
-            dataIndex: "description",
         },
         {
             title: "Claim Template",
@@ -62,8 +58,11 @@ function SpecificClaims() {
             render: (_: string, specificClaim: SpecificClaim) => {
                 return specificClaim?.attachmentID ? (
                     <>
-                        <span>Download attachment</span>
-                        <DownloadOutlined onClick={() => SpecificClaimService.downloadAttachment(axiosInstance, specificClaim.linearId.id)} />
+                        <Button
+                            onClick={() => SpecificClaimService.downloadAttachment(axiosInstance, specificClaim.linearId.id)}>
+                            <DownloadOutlined/>
+                            <span className={'ml-2'}>Download attachment</span>
+                        </Button>
                     </>
                 ) : (
                     <span>No attachment</span>
@@ -82,7 +81,6 @@ function SpecificClaims() {
                     },
                     onChange(info) {
                         if (info.file.status !== "uploading") {
-                            console.log(info.file, info.fileList)
                         }
                         if (info.file.status === "done") {
                             message.success(`${info.file.name} file uploaded successfully`)
@@ -94,20 +92,21 @@ function SpecificClaims() {
                 }
 
                 return (
-                    <>
-                        <Upload {...uploadProps}>
-                            <Button icon={<UploadOutlined />}>Upload</Button>
+                    <div className={'flex items-center'}>
+                        <Upload {...uploadProps} className={'m-2'}>
+                            <Button className={'m-2'} icon={<UploadOutlined/>}>Upload</Button>
                         </Upload>
                         <Button
                             type="primary"
+                            className={'m-2'}
                             onClick={() => {
                                 setIsDrawerVisible(true)
                                 setCurrentSpecificClaim(specificClaim)
                             }}
                         >
-                            <EditOutlined />
+                            <EditOutlined/> Edit
                         </Button>
-                    </>
+                    </div>
                 )
             },
         }),
@@ -115,8 +114,8 @@ function SpecificClaims() {
             title: "View",
             render: (_: string, specificClaim: SpecificClaim) => {
                 return (
-                    <Link to={`/specific-claims/${specificClaim.linearId.id}`}>
-                        <EyeOutlined />
+                    <Link className={'flex items-center justify-evenly'} to={`/specific-claims/${specificClaim.linearId.id}`}>
+                        <EyeOutlined/> Open
                     </Link>
                 )
             },
@@ -125,9 +124,11 @@ function SpecificClaims() {
 
     return (
         <div>
-            {!isSupervisoryAuthority && <CreateSpecificClaim />}
-            <Table columns={columns} dataSource={specificClaims} pagination={{ pageSize: 5 }} />
-            {isDrawerVisible && <UpdateSpecificClaim specificClaim={specificClaim as SpecificClaim} isVisible={isDrawerVisible} setIsVisible={setIsDrawerVisible} />}
+            {!isSupervisoryAuthority && !isAuditor && <CreateSpecificClaim/>}
+            <Table columns={columns} dataSource={specificClaims} pagination={{pageSize: 5}}/>
+            {isDrawerVisible &&
+            <UpdateSpecificClaim specificClaim={specificClaim as SpecificClaim} isVisible={isDrawerVisible}
+                                 setIsVisible={setIsDrawerVisible}/>}
         </div>
     )
 }

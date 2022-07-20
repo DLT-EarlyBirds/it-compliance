@@ -44,7 +44,7 @@ const CreateClaimTemplate = ({ isClaimTemplateSuggestion }: CreateClaimTemplateP
 
     return (
         <>
-            <Button type="primary" className="my-3" onClick={showModal}>
+            <Button block type="primary" className="my-3" onClick={showModal}>
                 {isClaimTemplateSuggestion ? "Create Claim Template Suggestion" : "Create Claim Template"}
             </Button>
             <Modal

@@ -4,6 +4,7 @@ import { SpecificClaimDTO, ClaimTemplate, SpecificClaim } from "models"
 import { useNode } from "../contexts/NodeContext"
 import { useData } from "contexts/DataContext"
 import SpecificClaimService from "services/SpecificClaim.service"
+import TextArea from "antd/es/input/TextArea";
 
 const { Option } = Select
 
@@ -16,7 +17,6 @@ interface UpdateSpecificClaimProps {
 const UpdateSpecificClaim = ({ specificClaim, isVisible, setIsVisible }: UpdateSpecificClaimProps) => {
     const { axiosInstance } = useNode()
     const { specificClaims, setSpecificClaims, claimTemplates } = useData()
-    console.log(specificClaim)
 
     const onFinish = (values: SpecificClaimDTO) => {
         SpecificClaimService.update(axiosInstance, { ...values, supportingClaimIds: [], linearId: specificClaim.linearId.id }).then((response) => {
@@ -27,7 +27,7 @@ const UpdateSpecificClaim = ({ specificClaim, isVisible, setIsVisible }: UpdateS
     }
 
     return (
-        <Drawer title="Update Specific Claim" placement="right" closable={false} onClose={() => setIsVisible(false)} visible={isVisible} height="200">
+        <Drawer size={"large"} title="Update Specific Claim" placement="right" closable={false} onClose={() => setIsVisible(false)} visible={isVisible} height="200">
             <Form
                 name="basic"
                 labelCol={{
@@ -57,7 +57,7 @@ const UpdateSpecificClaim = ({ specificClaim, isVisible, setIsVisible }: UpdateS
                         },
                     ]}
                 >
-                    <Input />
+                    <TextArea rows={10} />
                 </Form.Item>
                 <Form.Item
                     label="Claim Template"
@@ -80,7 +80,7 @@ const UpdateSpecificClaim = ({ specificClaim, isVisible, setIsVisible }: UpdateS
                     </Select>
                 </Form.Item>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit">
+                    <Button block type="primary" htmlType="submit">
                         Submit
                     </Button>
                 </Form.Item>
