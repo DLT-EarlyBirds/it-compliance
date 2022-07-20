@@ -26,7 +26,7 @@ In the CorDapp there are five possible states with the following referencing hie
 
 ![modules](media/states.png "Title")
 
-Together they build what we call a regulation graph. It is a DAG(Directed Acyclic Graph) that specifies the law regulations, their rules (sub-regulations) and the claims that need to be proven by a financial service provider to be compliant to the laws.
+Together they build what we call a regulation graph. It is a DAG (**D**irected **A**cyclic **G**raph) that specifies the law regulations, their rules (sub-regulations) and the claims that need to be proven by a financial service provider to be compliant to the laws.
 
 The code that defines the states can be found here:
 
