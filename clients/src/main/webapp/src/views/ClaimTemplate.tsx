@@ -6,13 +6,12 @@ import {useNode} from "../contexts/NodeContext";
 import {NodeEnum} from "../enums";
 import createEngine, {DefaultLinkModel, DefaultNodeModel, DiagramModel} from "@projectstorm/react-diagrams";
 import {resolveX500Name} from "../services/resolveX500Name";
-import {CanvasWidget, Action, InputType} from "@projectstorm/react-canvas-core"
+import {Action, CanvasWidget, InputType} from "@projectstorm/react-canvas-core"
 import {Button, Card} from "antd";
-import RuleService from "../services/Rule.service";
 import {EditOutlined} from "@ant-design/icons";
 import Meta from "antd/es/card/Meta";
-import UpdateRule from "../components/UpdateRule";
 import UpdateClaimTemplate from "../components/UpdateClaimTemplate";
+import CreateSpecificClaim from "../components/CreateSpecificClaim";
 
 /**
  * Navigates to a selected node
@@ -27,7 +26,6 @@ class CustomNavigateAction extends Action {
                     selectedEntities.forEach((model) => {
                         // only delete items which are not locked
                         if (!model.isLocked()) {
-                            console.log(model.getID())
                             navigate(model.getID())
                         }
                     })
@@ -110,9 +108,8 @@ const ClaimTemplate = () => {
     return (
         <>
             {isSupervisoryAuthority && (
-                <div className={"flex justify-between py-3"}>
+                <div className={"flex justify-between py-3 mr-[50%]"}>
                     <Button
-                        className={"ml-2"}
                         type="primary"
                         onClick={() => {
                             setIsDrawerVisible(true)
@@ -121,6 +118,12 @@ const ClaimTemplate = () => {
                     >
                         <EditOutlined/> Edit
                     </Button>
+                    <div></div>
+                </div>
+            )}
+            {(currentNode === NodeEnum.CAPITALS_HOLDING || currentNode === NodeEnum.BRAIN_FINANCE) && (
+                <div className={"flex justify-between py-3"}>
+                    <CreateSpecificClaim />
                 </div>
             )}
             <Card cover={<CanvasWidget className={"h-[50vh]"} engine={engine}/>} bordered={true}>

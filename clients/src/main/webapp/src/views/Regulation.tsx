@@ -28,7 +28,6 @@ class CustomDeleteItemsAction extends Action {
                     selectedEntities.forEach((model) => {
                         // only delete items which are not locked
                         if (!model.isLocked()) {
-                            console.log(model.getID())
                             navigate(model.getID())
                         }
                     })
@@ -54,8 +53,6 @@ const Regulation: FC = () => {
     }
 
     const relatedRules = rules.filter((rule: Rule) => rule.parentRegulation.pointer.id === regulation.linearId.id)
-    console.log(regulation)
-    console.log(relatedRules)
 
     // create an instance of the engine with all the defaults
     const engine = createEngine()

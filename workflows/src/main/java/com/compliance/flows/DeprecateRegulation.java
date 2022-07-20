@@ -68,7 +68,7 @@ public class DeprecateRegulation {
                 Regulation parentRegulation = originalRule.getParentRegulation().resolve(getServiceHub()).getState().getData();
 
                 // Deprecate rules related to the given regulation
-                if (parentRegulation.getLinearId().equals(linearId))
+                if (parentRegulation.getLinearId().equals(linearId) && !originalRule.getIsDeprecated())
                 {
                     subFlow(new DeprecateRule.DeprecateRuleInitiator(originalRule.getLinearId()));
                 }

@@ -3,19 +3,19 @@ import axios, { AxiosInstance } from "axios"
 import { NodeEnum } from "enums"
 
 const axiosFSA = axios.create({
-    baseURL: process.env.SUPERVISORY_AUTHORITY_NODE,
+    baseURL: 'http://localhost:10050/',
 })
 
 const axiosBrainFinance = axios.create({
-    baseURL: process.env.BRAIN_FINANCE_NODE,
+    baseURL: 'http://localhost:10051/',
 })
 
 const axiosCapitalHolding = axios.create({
-    baseURL: process.env.CAPITALS_HOLDING_NODE,
+    baseURL: 'http://localhost:10053/',
 })
 
 const axiosAuditor = axios.create({
-    baseURL: process.env.AUDITOR_NODE,
+    baseURL: 'http://localhost:10052/',
 })
 
 const getAxiosInstance = (node: NodeEnum) => {

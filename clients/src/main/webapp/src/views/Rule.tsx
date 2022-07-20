@@ -14,6 +14,7 @@ import {CanvasWidget, Action, InputType} from "@projectstorm/react-canvas-core"
 import {useNode} from "../contexts/NodeContext"
 import UpdateRule from "../components/UpdateRule"
 import {NodeEnum} from "../enums"
+import CreateClaimTemplate from "../components/CreateClaimTemplate";
 
 /**
  * Navigates to a selected node
@@ -28,7 +29,6 @@ class CustomNavigateAction extends Action {
                     selectedEntities.forEach((model) => {
                         // only delete items which are not locked
                         if (!model.isLocked()) {
-                            console.log(model.getID())
                             navigate(model.getID())
                         }
                     })
@@ -56,7 +56,6 @@ const Rule = () => {
     const relatedClaimTemplates = claimTemplates.filter((claimTemplate: ClaimTemplate) => claimTemplate.rule.pointer.id === rule.linearId.id)
     const parentRegulation = regulations.find((regulation: Regulation) => regulation.linearId.id === rule.parentRegulation.pointer.id)
 
-    console.log(parentRegulation)
     // create an instance of the engine with all the defaults
     const engine = createEngine()
     const model = new DiagramModel()
@@ -111,6 +110,7 @@ const Rule = () => {
     return (
         <>
             {isSupervisoryAuthority && (
+                <>
                 <div className={"flex justify-between py-3"}>
                     <Button
                         type="primary"
@@ -138,7 +138,9 @@ const Rule = () => {
                         <EditOutlined/> Edit
                     </Button>
                 </div>
-            )}
+                <CreateClaimTemplate isClaimTemplateSuggestion={!isSupervisoryAuthority} />
+                </>
+                )}
             <Card cover={<CanvasWidget className={"h-[50vh]"} engine={engine}/>} bordered={true}>
                 <Meta title={rule.name} description={"Released by: " + resolveX500Name(rule.issuer)}/>
                 <p className="mt-5">{rule.ruleSpecification}</p>

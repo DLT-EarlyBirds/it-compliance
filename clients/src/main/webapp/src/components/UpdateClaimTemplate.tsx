@@ -4,6 +4,7 @@ import { ClaimTemplateDTO, Rule, ClaimTemplate } from "models"
 import { useNode } from "../contexts/NodeContext"
 import { useData } from "contexts/DataContext"
 import ClaimTemplateService from "services/ClaimTemplate.service"
+import TextArea from "antd/es/input/TextArea";
 
 const { Option } = Select
 
@@ -26,7 +27,7 @@ const UpdateClaimTemplate = ({ claimTemplate, isVisible, setIsVisible }: UpdateC
     }
 
     return (
-        <Drawer title="Update Claim Template" placement="right" closable={false} onClose={() => setIsVisible(false)} visible={isVisible} height="200">
+        <Drawer size={"large"} title="Update Claim Template" placement="right" closable={false} onClose={() => setIsVisible(false)} visible={isVisible} height="200">
             <Form
                 name="basic"
                 labelCol={{
@@ -56,7 +57,7 @@ const UpdateClaimTemplate = ({ claimTemplate, isVisible, setIsVisible }: UpdateC
                         },
                     ]}
                 >
-                    <Input />
+                    <TextArea rows={10} />
                 </Form.Item>
                 <Form.Item
                     label="Rule"
@@ -79,7 +80,7 @@ const UpdateClaimTemplate = ({ claimTemplate, isVisible, setIsVisible }: UpdateC
                     </Select>
                 </Form.Item>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit">
+                    <Button block type="primary" htmlType="submit">
                         Submit
                     </Button>
                 </Form.Item>
