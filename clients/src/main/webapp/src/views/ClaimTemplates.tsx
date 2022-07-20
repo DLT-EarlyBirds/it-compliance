@@ -3,7 +3,7 @@ import { Table, Button } from "antd"
 import { useData } from "../contexts/DataContext"
 import { useNode } from "../contexts/NodeContext"
 import { NodeEnum } from "enums"
-import { ClaimTemplate, Regulation } from "models"
+import { ClaimTemplate, Regulation, Rule } from "models"
 import CreateClaimTemplate from "../components/CreateClaimTemplate"
 import { EditOutlined, EyeOutlined } from "@ant-design/icons"
 import UpdateClaimTemplate from "components/UpdateClaimTemplate"
@@ -31,7 +31,7 @@ const commonColumns = [
 ]
 
 function ClaimTemplates() {
-    const { claimTemplates, claimTemplatesSuggestions, setClaimTemplatesSuggestions, setClaimTemplates } = useData()
+    const { claimTemplates, rules, claimTemplatesSuggestions, setClaimTemplatesSuggestions, setClaimTemplates } = useData()
     const { currentNode, axiosInstance } = useNode()
     const [isDrawerVisible, setIsDrawerVisible] = useState(false)
     const [claimTemplate, setCurrentClaimTemplate] = useState<ClaimTemplate | undefined>(undefined)
@@ -73,6 +73,13 @@ function ClaimTemplates() {
 
     const claimTemplateColumns = [
         ...commonColumns,
+        {
+            title: "Rule",
+            render: (_: string, claimTemplate: ClaimTemplate) => {
+                const rule = rules.find((rule: Rule) => claimTemplate.rule.pointer.id === rule.linearId.id)
+                return rule ? rule.name : ""
+            },
+        },
         ...insertIf(isSupervisoryAuthority, {
             title: "Actions",
             render: (_: string, claimTemplate: ClaimTemplate) => {

@@ -13,14 +13,11 @@ import { Link } from "react-router-dom"
 import { resolveX500Name } from "../services/resolveX500Name"
 
 function Rules() {
-    const { rules, setRules } = useData()
+    const { rules, regulations, setRules } = useData()
     const [isDrawerVisible, setIsDrawerVisible] = useState(false)
     const [rule, setCurrentRule] = useState<Rule | undefined>(undefined)
     const { currentNode, axiosInstance } = useNode()
     const isSupervisoryAuthority = currentNode === NodeEnum.SUPERVISORY_AUTHORITY
-    const filter = rules.map((rule) => {
-        return { text: rule.name.split(" ")[0], value: rule }
-    })
 
     const columns = [
         {
@@ -46,6 +43,13 @@ function Rules() {
             },
         },
         {
+            title: "Regulation",
+            render: (_: string, rule: Rule) => {
+                const regulation = regulations.find((regulation: Regulation) => rule.parentRegulation.pointer.id === regulation.linearId.id)
+                return regulation ? regulation.name : ""
+            },
+        },
+        {
             title: "View",
             render: (_: string, rule: Rule) => {
                 return (
@@ -57,14 +61,10 @@ function Rules() {
         },
     ]
 
-    const onChange: TableProps<Rule>["onChange"] = (pagination, filters, sorter, extra) => {
-        console.log("params", pagination, filters, sorter, extra)
-    }
-
     return (
         <div>
             {isSupervisoryAuthority && <CreateRule />}
-            <Table columns={columns} dataSource={rules} onChange={onChange} />
+            <Table columns={columns} dataSource={rules} />
             {isDrawerVisible && <UpdateRule rule={rule as Rule} isVisible={isDrawerVisible} setIsVisible={setIsDrawerVisible} />}
         </div>
     )

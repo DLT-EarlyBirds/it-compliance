@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Table, Button, message, Upload } from "antd"
 import { useData } from "../contexts/DataContext"
-import { SpecificClaim } from "models"
+import { ClaimTemplate, SpecificClaim } from "models"
 import { EditOutlined, DownloadOutlined, EyeOutlined } from "@ant-design/icons"
 import UpdateSpecificClaim from "components/UpdateSpecificClaim"
 import { UploadOutlined } from "@ant-design/icons"
@@ -15,7 +15,7 @@ import { Link } from "react-router-dom"
 import { resolveX500Name } from "../services/resolveX500Name"
 
 function SpecificClaims() {
-    const { specificClaims, setSpecificClaims } = useData()
+    const { specificClaims, setSpecificClaims, claimTemplates } = useData()
     const { currentNode, axiosInstance } = useNode()
     const isSupervisoryAuthority = currentNode === NodeEnum.SUPERVISORY_AUTHORITY
     const isAuditor = currentNode === NodeEnum.AUDITOR
@@ -31,6 +31,13 @@ function SpecificClaims() {
         {
             title: "Description",
             dataIndex: "description",
+        },
+        {
+            title: "Claim Template",
+            render: (_: string, specificClaim: SpecificClaim) => {
+                const claimTemplate = claimTemplates.find((claimTemplate: ClaimTemplate) => specificClaim.claimTemplate.pointer.id === claimTemplate.linearId.id)
+                return claimTemplate ? claimTemplate.name : ""
+            },
         },
         {
             title: "Financial Service Provider",
