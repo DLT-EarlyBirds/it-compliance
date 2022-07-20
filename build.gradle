@@ -86,10 +86,21 @@ dependencies {
 }
 
 
-//Task to deploy the nodes in order to bootstrap a network
+
+/*
+ * Task to deploy the nodes in order to bootstrap the test network
+ *
+ * Creates four nodes for the showcase of the business network and on notary.
+ * Builds the Cordapp and loads it into every node.
+ * Mocks a network cache by providing information about the other nodes directly in the nodes
+ *
+ * You can find the generated docker-compose file as well as the individual nodes and their configs in the it-compliance/build/nodes
+ * directory. To start the network simply run this task and then run the docker compose file.
+ */
 task deployNodes(type: net.corda.plugins.Dockerform, dependsOn: ['jar']) {
 
-    /* This property will load the CorDapps to each of the node by default, including the Notary. You can find them
+    /*
+     * This property will load the CorDapps to each of the node by default, including the Notary. You can find them
      * in the cordapps folder of the node at build/nodes/Notary/cordapps. However, the notary doesn't really understand
      * the notion of cordapps. In production, Notary does not need cordapps as well. This is just a short cut to load
      * the Corda network bootstrapper.
