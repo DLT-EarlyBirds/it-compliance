@@ -13,21 +13,21 @@ function GraphRegulation() {
             id: regulation.linearId.id,
             name: regulation.name,
             object: regulation,
-            type: "regulation",
+            link: "regulations",
             neighbors: []
         })),
         ...rules.map((rule) => ({
             id: rule.linearId.id,
             name: rule.name,
             object: rule,
-            type: "rule",
+            link: "rules",
             neighbors: []
         })),
         ...claimTemplates.map((claimTemplate) => ({
             id: claimTemplate.linearId.id,
             name: claimTemplate.name,
             object: claimTemplate,
-            type: "claimTemplate",
+            link: "claim-templates",
             neighbors: []
         })),
     ]
@@ -144,11 +144,12 @@ function GraphRegulation() {
                 linkWidth={link => highlightLinks.has(link) ? 5 : 1}
                 linkDirectionalParticles={4}
                 linkDirectionalParticleWidth={link => highlightLinks.has(link) ? 4 : 0}
-                nodeAutoColorBy="type"
+                nodeAutoColorBy="link"
 
                 //@ts-ignore
                 onNodeClick={(node, event) => {
-                    console.log(node.id)
+                    //@ts-ignore
+                    navigate('/'+ node.link +'/' + node.id)
                 }}
                 //@ts-ignore
                 nodeCanvasObjectMode={node => highlightNodes.has(node) ? 'before' : 'before'}

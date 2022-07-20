@@ -1,4 +1,5 @@
 import { AxiosInstance } from "axios"
+import fileDownload from "js-file-download"
 import { RegulationDTO, SpecificClaimDTO } from "../models"
 
 const MODEL = "claims"
@@ -35,13 +36,8 @@ const SpecificClaimService = {
     },
     downloadAttachment: async (axios: AxiosInstance, linearId: string) => {
         const response = await axios.get(`/${MODEL}/attachment/${linearId}`, { responseType: "blob" })
-        const url = new Blob([response.data], { type: "application/java-archive" })
-        const link = document.createElement("a")
-        //@ts-ignore
-        link.href = url
-        link.setAttribute("download", "claim.jar")
-        document.body.appendChild(link)
-        link.click()
+
+        fileDownload(response.data, linearId + '.jar');
     },
 }
 

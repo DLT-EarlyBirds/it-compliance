@@ -10,6 +10,7 @@ import { NodeEnum } from "enums"
 import { insertIf } from "utils"
 import RuleService from "../services/Rule.service"
 import { Link } from "react-router-dom"
+import {resolveX500Name} from "../services/resolveX500Name";
 
 function Rules() {
     const { rules, setRules } = useData()
@@ -25,70 +26,31 @@ function Rules() {
         {
             title: "Name",
             dataIndex: "name",
-            filters: [...filter],
-            onFilter: (value: string, record: Rule) => record.name.includes(value),
-            filterMultiple: true,
-            sorter: (a: Rule, b: Rule) => a.name.length - b.name.length,
-            sortDirections: ['descend']
         },
         {
-            title: "Rule Specification",
-            dataIndex: "ruleSpecification",
-        },
-        {
-            title: "Parent regulation",
-            dataIndex: ["parentRegulation", "pointer", "id"],
-        },
-        {
-            issuer: "Issuer",
+            title: "Issuer",
             dataIndex: "issuer",
+            render: (_:string, rule: Rule) => {
+                return resolveX500Name(rule.issuer);
+            }
         },
         {
             title: "Involved parties",
             dataIndex: "involvedParties",
+            render: (_:string, rule: Rule) => {
+                let output = ''
+                rule.involvedParties.forEach(party => {
+                    output += resolveX500Name(party) + ', '
+                })
+                return output.substring(0, output.length - 2)
+            }
         },
-        ...insertIf(isSupervisoryAuthority, {
-            title: "Deprecate",
-            dataIndex: "isDeprecated",
-            render: (_: string, { isDeprecated, linearId }: Rule) => {
-                return (
-                    <Button
-                        type="primary"
-                        disabled={isDeprecated}
-                        onClick={() => {
-                            RuleService.deprecate(axiosInstance, linearId.id).then((response) => {
-                                const updatedRules = rules.map((r) => (r.linearId.id === response.linearId.id ? response : r))
-                                setRules(updatedRules)
-                            })
-                        }}
-                    >
-                        {isDeprecated ? "Deprecate" : "Deprecated"}
-                    </Button>
-                )
-            },
-        }),
-        ...insertIf(isSupervisoryAuthority, {
-            title: "Actions",
-            render: (_: string, rule: Rule) => {
-                return (
-                    <Button
-                        type="primary"
-                        onClick={() => {
-                            setIsDrawerVisible(true)
-                            setCurrentRule(rule)
-                        }}
-                    >
-                        <EditOutlined />
-                    </Button>
-                )
-            },
-        }),
         {
             title: "View",
             render: (_: string, rule: Rule) => {
                 return (
-                    <Link to={`/rules/${rule.linearId.id}`}>
-                        <EyeOutlined />
+                    <Link className={'flex items-center justify-evenly'} to={`/rules/${rule.linearId.id}`}>
+                        <EyeOutlined /> Open Rule
                     </Link>
                 )
             },
