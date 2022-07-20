@@ -18,6 +18,7 @@ function SpecificClaims() {
     const { specificClaims } = useData()
     const { currentNode, axiosInstance } = useNode()
     const isSupervisoryAuthority = currentNode === NodeEnum.SUPERVISORY_AUTHORITY
+    const isAuditor = currentNode === NodeEnum.AUDITOR
 
     const [isDrawerVisible, setIsDrawerVisible] = useState(false)
     const [specificClaim, setCurrentSpecificClaim] = useState<SpecificClaim | undefined>(undefined)
@@ -59,7 +60,7 @@ function SpecificClaims() {
                 )
             },
         },
-        ...insertIf(!isSupervisoryAuthority, {
+        ...insertIf(!(isSupervisoryAuthority || isAuditor), {
             title: "Actions",
             render: (_: string, specificClaim: SpecificClaim) => {
                 const uploadProps: UploadProps = {
