@@ -62,13 +62,15 @@ const Regulation: FC = () => {
 
     const regulationNode = new DefaultNodeModel({
         name: regulation.name,
-        color: "rgb(0,192,255)",
+        color: "rgb(255,165,0)",
         id: "/regulations/" + regulation.linearId.id,
     })
-    regulationNode.setPosition(250, 150)
+    let baseOffset = 50 * (relatedRules.length/2)
+    if (baseOffset === 0 || relatedRules.length === 1) baseOffset = 50
+    regulationNode.setPosition(250, baseOffset)
     let regulationPort = regulationNode.addOutPort("Released: " + new Date(Date.parse(regulation.releaseDate)).toDateString())
 
-    const offset = 50 * (1 + rules.length / 100)
+    const offset = 50 * (1 + relatedRules.length / 100)
     let offsetAcc = 50
 
     const ruleNodes = relatedRules.map((rule: Rule) => {
