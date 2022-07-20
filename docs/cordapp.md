@@ -70,19 +70,22 @@ For each of the above-mentioned states we define a smart contract that checks fo
 
 ## Claim Templates
 
-### ClaimTemplate Flow
+### CreateClaimTemplate Flow
 `flow start CreateClaimTemplate$CreateClaimTemplateInitiator name: NewClameTemplate, description: new Description, ruleLinearId: <RuleLinearId>`
 
 `run vaultQuery contractStateType: com.compliance.states.ClaimTemplate`
 
+### UpdateClaimTemplate Flow
+`flow start UpdateClaimTemplate name: NewClameTemplate, templateDescription: new Description, rule: <RuleLinearId>`
+
 ## Claim Template Suggestions
 
-### Claim Template Suggestion Flow
+### CreateClaimTemplateSuggestion Flow
 `flow start CreateClaimTemplateSuggestion$CreateClaimTemplateSuggestionInitiator name: TemplateSuggestion, description: This is template suggestion, supervisoryAuthority: SupervisoryAuthority, ruleLinearId: <ruleId>`
 
 `run vaultQuery contractStateType: com.compliance.states.ClaimTemplateSuggestion`
 
-### Accept Claim Template Suggestion Flow
+### AcceptClaimTemplateSuggestion Flow
 `flow start AcceptClaimTemplateSuggestion linearId: <claimTemplateSuggestionId>`
 
 ## Specific Claims
