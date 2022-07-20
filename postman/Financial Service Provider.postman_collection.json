@@ -1,0 +1,339 @@
+{
+	"info": {
+		"_postman_id": "301b88c8-9a71-45f2-9842-c03512df165f",
+		"name": "Financial Service Provider",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Regulation API",
+			"item": [
+				{
+					"name": "Query Regulations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10051/regulations/",
+							"host": [
+								"localhost"
+							],
+							"port": "10051",
+							"path": [
+								"regulations",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Regulation by Linear ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10051/regulations/82135e7c-f21a-4c79-8146-58abd8d77eb9",
+							"host": [
+								"localhost"
+							],
+							"port": "10051",
+							"path": [
+								"regulations",
+								"82135e7c-f21a-4c79-8146-58abd8d77eb9"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rule API",
+			"item": [
+				{
+					"name": "Query Rules",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10051/rules/",
+							"host": [
+								"localhost"
+							],
+							"port": "10051",
+							"path": [
+								"rules",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Rule by Linear ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10051/rules/82135e7c-f21a-4c79-8146-58abd8d77eb9",
+							"host": [
+								"localhost"
+							],
+							"port": "10051",
+							"path": [
+								"rules",
+								"82135e7c-f21a-4c79-8146-58abd8d77eb9"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Claim Template API",
+			"item": [
+				{
+					"name": "Query Claim Templates",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10051/claimtemplates/",
+							"host": [
+								"localhost"
+							],
+							"port": "10051",
+							"path": [
+								"claimtemplates",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Claim Template by Linear ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10051/claimtemplates/<linearID>",
+							"host": [
+								"localhost"
+							],
+							"port": "10051",
+							"path": [
+								"claimtemplates",
+								"<linearID>"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Claim Template Suggestions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10051/claimtemplates/suggestions/",
+							"host": [
+								"localhost"
+							],
+							"port": "10051",
+							"path": [
+								"claimtemplates",
+								"suggestions",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Claim Template Suggestion by Linear ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10051/claimtemplates/suggestions/<linearID>",
+							"host": [
+								"localhost"
+							],
+							"port": "10051",
+							"path": [
+								"claimtemplates",
+								"suggestions",
+								"<linearID>"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Claim Template Suggestion",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"linearId\": \"\",\n    \"name\": \"Claim Template X\",\n    \"templateDescription\": \"templateDescription\",\n    \"rule\": \"cbea1025-a5da-47dc-b826-6c14a0330f56\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10051/claimtemplates/suggestions/",
+							"host": [
+								"localhost"
+							],
+							"port": "10051",
+							"path": [
+								"claimtemplates",
+								"suggestions",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Specific Claim API",
+			"item": [
+				{
+					"name": "Query Specific Claims",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:100501claims/",
+							"host": [
+								"localhost"
+							],
+							"port": "100501claims",
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Specific Claim by Linear ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10051/claims/<linearID>",
+							"host": [
+								"localhost"
+							],
+							"port": "10051",
+							"path": [
+								"claims",
+								"<linearID>"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Specific Claims",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"linearId\": \"6c1504b8-2beb-47fe-b9e4-a08285456439\",\n    \"name\": \"My Admin Access\",\n    \"claimSpecification\": \"claimSpecification\",\n    \"claimTemplateLinearId\": \"a5db3bc1-d862-4008-bce8-f4f393bb9a9b\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10051/claims/",
+							"host": [
+								"localhost"
+							],
+							"port": "10051",
+							"path": [
+								"claims",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Specific Claim",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"linearId\": \"\",\n    \"name\": \"Claim name\",\n    \"claimSpecification\": \"claimSpecification\",\n    \"claimTemplateLinearId\": \"6b383dfa-a620-413e-a705-65c288fa09fd\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10051/claims/",
+							"host": [
+								"localhost"
+							],
+							"port": "10051",
+							"path": [
+								"claims",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Attachment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "/Users/valentinhartig/Projects/DLT4PI/evidence.jar"
+							}
+						},
+						"url": {
+							"raw": "localhost:10051/claims/attachment/d697cb86-e0cb-4e30-be3d-a30ead77937e",
+							"host": [
+								"localhost"
+							],
+							"port": "10051",
+							"path": [
+								"claims",
+								"attachment",
+								"d697cb86-e0cb-4e30-be3d-a30ead77937e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Download attachment",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -71,17 +71,17 @@ Then you can simply run the command `docker compose up` in the directory `it-com
 
 ### Start the middleware application:
 
-To start the middleware spring boot applications you have to get the RPC ports for each node's docker container and assign it to the variable `--config.rpc.port` in `clients/build.gradle`.
+To start the middleware spring boot applications you have to get the RPC ports for each node's docker container and assign it to the variable `--config.rpc.port` in [clients/build.gradle](/clients/build.gradle).
 
 An explanation why you need to do this can be found in the mentioned `build.gradle` file.
 
-Start the individual gradle tasks in `clients/build.gradle` for the servers you want to run. If you want to run multiple servers, please execute the task one after another, as the clients can crash if all build simultaneously. 
+Start the individual gradle tasks in [clients/build.gradle](/clients/build.gradle) for the servers you want to run. If you want to run multiple servers, please execute the task one after another, as the clients can crash if all build simultaneously. 
 
 ### Start the web application:
 The web application is a showcase on how to use the client APIs: 
 #### Change the directory:
 
-The webapp resides in the: `it-compliance/clients/src/main/webapp` directory.
+The webapp resides in the: [t-compliance/clients/src/main/webapp](/clients/src/main/webapp/) directory.
 You must change the directory to the webapp directory to run the application.
 
 #### Install dependencies
@@ -96,7 +96,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 #### Connecting to different nodes
 
-Inside the `services/axiosInstance.js` all the clients that need to be connected are defined. These addresses are set in the clients `build.gradle`.
+Inside the [services/axiosInstance.js](/clients/src/main/webapp/src/services/axiosInstance.tsx) all the clients that need to be connected are defined. These addresses are set in the clients `build.gradle`.
 
 Overall, there are four nodes: Financial Supervisory Authority, Brain Finance (Financial Service Provider), Capital Holding (Financial Service Provider) and the Auditor.
 

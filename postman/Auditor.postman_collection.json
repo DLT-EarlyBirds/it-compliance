@@ -1,0 +1,290 @@
+{
+	"info": {
+		"_postman_id": "34740df2-f084-4fec-a121-3500fafc7781",
+		"name": "Auditor",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Regulation API",
+			"item": [
+				{
+					"name": "Query Regulations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10052/regulations/",
+							"host": [
+								"localhost"
+							],
+							"port": "10052",
+							"path": [
+								"regulations",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Regulation by Linear ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10052/regulations/82135e7c-f21a-4c79-8146-58abd8d77eb9",
+							"host": [
+								"localhost"
+							],
+							"port": "10052",
+							"path": [
+								"regulations",
+								"82135e7c-f21a-4c79-8146-58abd8d77eb9"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rule API",
+			"item": [
+				{
+					"name": "Query Rules",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10052/rules/",
+							"host": [
+								"localhost"
+							],
+							"port": "10052",
+							"path": [
+								"rules",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Rule by Linear ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10052/rules/82135e7c-f21a-4c79-8146-58abd8d77eb9",
+							"host": [
+								"localhost"
+							],
+							"port": "10052",
+							"path": [
+								"rules",
+								"82135e7c-f21a-4c79-8146-58abd8d77eb9"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Claim Template API",
+			"item": [
+				{
+					"name": "Query Claim Templates",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10052/claimtemplates/",
+							"host": [
+								"localhost"
+							],
+							"port": "10052",
+							"path": [
+								"claimtemplates",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Claim Template by Linear ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10052/claimtemplates/<linearID>",
+							"host": [
+								"localhost"
+							],
+							"port": "10052",
+							"path": [
+								"claimtemplates",
+								"<linearID>"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Claim Template Suggestions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10052/claimtemplates/suggestions/",
+							"host": [
+								"localhost"
+							],
+							"port": "10052",
+							"path": [
+								"claimtemplates",
+								"suggestions",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Claim Template Suggestion by Linear ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10052/claimtemplates/suggestions/<linearID>",
+							"host": [
+								"localhost"
+							],
+							"port": "10052",
+							"path": [
+								"claimtemplates",
+								"suggestions",
+								"<linearID>"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Claim Template Suggestion",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"linearId\": \"\",\n    \"name\": \"Claim Template X\",\n    \"templateDescription\": \"templateDescription\",\n    \"rule\": \"linearId\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10052/claimtemplates/suggestions/",
+							"host": [
+								"localhost"
+							],
+							"port": "10052",
+							"path": [
+								"claimtemplates",
+								"suggestions",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Specific Claim API",
+			"item": [
+				{
+					"name": "Query Specific Claims",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10052/claims/",
+							"host": [
+								"localhost"
+							],
+							"port": "10052",
+							"path": [
+								"claims",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Specific Claim by Linear ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10052/claims/<linearID>",
+							"host": [
+								"localhost"
+							],
+							"port": "10052",
+							"path": [
+								"claims",
+								"<linearID>"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Specific Claims for Organization Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10052/claims/<orgName>/",
+							"host": [
+								"localhost"
+							],
+							"port": "10052",
+							"path": [
+								"claims",
+								"<orgName>",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Specific Claim for Organization by Linear ID Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10052/claims/<orgName>/<linearId>",
+							"host": [
+								"localhost"
+							],
+							"port": "10052",
+							"path": [
+								"claims",
+								"<orgName>",
+								"<linearId>"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
