@@ -54,7 +54,10 @@ function SpecificClaims() {
             title: "Attachment",
             render: (_: string, specificClaim: SpecificClaim) => {
                 return specificClaim?.attachmentID ? (
-                    <DownloadOutlined onClick={() => SpecificClaimService.downloadAttachment(axiosInstance, specificClaim.linearId.id)} />
+                    <>
+                        <span>Download attachment</span>
+                        <DownloadOutlined onClick={() => SpecificClaimService.downloadAttachment(axiosInstance, specificClaim.linearId.id)} />
+                    </>
                 ) : (
                     <span>No attachment</span>
                 )
