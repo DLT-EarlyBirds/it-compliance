@@ -72,7 +72,7 @@ To start the middleware spring boot application you have to find out the RPC por
 
 After that start the gradle tasks in `clients/build.gradle` for the servers you want to run.
 
-#### Start the web application:
+## Start the web application:
 
 #### Prerequisite:
 
