@@ -7,7 +7,7 @@ The goal of _Aud-IT_ is to make IT compliance easier for financial service provi
 
 - A supervisory authority issues a regulation and publishes it in text form on its website
 
-- The supervisory authority appoints an auditor to audit some financial service provider (FSP) regarding its compliance to the issued regulation
+ - Most financial service providers (FSPs) are required by law to be audited at least once a year. They then mandate an auditor to verify their compliance with all relevant regulations. 
 
 - The FSP claims its compliance to the regulations and has to prove his claims to the auditor
 
@@ -22,11 +22,11 @@ With _Aud-IT_ we attempt to solve the problem of standardized claims on which ag
 
 Our proposed auditing process:
 
-- A supervisory authority issues a regulation and submits it with its sub-regulations (We call them rules) to a DLT-Network in which participate auditors and all FSPs.
+- A supervisory authority issues references to regulations (including their content) to a DLT network in which auditors and FSPs particpate as well
 
-- FSPs and auditors suggest claims (we call them claim templates) for each rule of the newly issued regulation. These claims are examined by the supervisory authority and only claims, which would prove compliance when verified, are accepted and broadcasted to all parties.
+- FSPs and auditors suggest claim templates for each rule of the newly issued regulation. These templates are examined by the supervisory authority and only claim templates, which would prove compliance when verified, are accepted and broadcasted to all parties.
 
-- Each FSP instantiates the regulation graph consisting of regulations, rules and claim templates. Then extends this graph with claims specific to their IT systems and logs (we call them specific claims) and submit these with attachments containing the evidence to the network and share it only with the respective supervisory authority and auditor.
+- Each FSP instantiates the regulation graph consisting of regulations, rules and claim templates. They then extend this graph with claims specific to their IT systems and logs (we call them specific claims) and submit these with attachments containing the evidence to the network and share it only with the respective supervisory authority and auditor.
 
 - When auditing the auditor doesn't need to check the FSP claims, since he and the supervisory authority already agreed on. He only needs to check the evidence representation attached to the specific claim. 
 
