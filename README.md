@@ -61,7 +61,7 @@ $ git clone https://github.com/DLT-EarlyBirds/it-compliance.git
 Run this command in the repository root:
 
 ```console
-.\gradlew.bat clean deployNodes
+$ .\gradlew.bat clean deployNodes
 ```
 
 #### Run the CorDapp on Docker Compose
