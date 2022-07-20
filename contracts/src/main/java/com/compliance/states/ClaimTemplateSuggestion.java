@@ -1,5 +1,6 @@
 package com.compliance.states;
 
+import com.compliance.contracts.ClaimTemplateSuggestionContract;
 import com.compliance.contracts.RegulationContract;
 import net.corda.core.contracts.BelongsToContract;
 import net.corda.core.contracts.LinearPointer;
@@ -13,13 +14,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-// *********
-// * State *
-// *********
-@BelongsToContract(RegulationContract.class)
+
+/**
+ * A ClaimTemplateSuggestion is a suggestion for a claim template that is submitted by an issuer and approved by a
+ * supervisory authority
+ */
+@BelongsToContract(ClaimTemplateSuggestionContract.class)
 public class ClaimTemplateSuggestion implements LinearState {
 
-    // Private variables
 
     // Linear ID is used to track the evolution of the state over multiple transactions
     @NotNull
@@ -32,6 +34,8 @@ public class ClaimTemplateSuggestion implements LinearState {
 
     // The issuer who submits the claim template
     private final Party issuer;
+
+    // The supervisory authority that is responsible for the regulation.
     private final Party supervisoryAuthority;
 
 
@@ -39,7 +43,6 @@ public class ClaimTemplateSuggestion implements LinearState {
 
     // A reference to the rule that is fulfilled by a claim implementing this template.
     private final LinearPointer<Rule> rule;
-
 
     /* Constructor of RegulationDescription */
     @ConstructorForDeserialization

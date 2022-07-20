@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
- * Define your API endpoints here.
+ * A REST controller that exposes the Corda node's vault as a REST API to query information about regulations
  */
 @RestController
 @CrossOrigin(origins = "*")
@@ -32,6 +32,11 @@ public class RegulationController {
         this.proxy = rpc.proxy;
     }
 
+    /**
+     * REST endpoint that returns a list of all the regulations in the ledger
+     *
+     * @return A list of all the regulations in the vault.
+     */
     @GetMapping(value = "/", produces = APPLICATION_JSON_VALUE)
     private List<Regulation> getAll() {
         return proxy
@@ -44,6 +49,12 @@ public class RegulationController {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Endpoint to get a regulations by its linear ID (with status UNCONSUMED = the newest)
+     *
+     * @param linearId The linear ID of the regulation you want to retrieve.
+     * @return The regulation with the given linear ID and status UNCONSUMED.
+     */
     @GetMapping(value = "/{linearId}", produces = APPLICATION_JSON_VALUE)
     private ResponseEntity<Regulation> getByLinearId(@PathVariable String linearId) {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(

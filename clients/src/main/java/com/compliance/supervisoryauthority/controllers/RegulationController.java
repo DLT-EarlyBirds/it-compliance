@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
- * Define your API endpoints here.
+ * A REST controller that exposes the Corda node's vault as a REST API to query information about regulations
  */
 @RestController
 @CrossOrigin(origins = "*")
@@ -38,6 +38,11 @@ public class RegulationController {
         this.proxy = rpc.proxy;
     }
 
+    /**
+     * REST endpoint that returns a list of all the regulations in the ledger
+     *
+     * @return A list of all the regulations in the vault.
+     */
     @GetMapping(value = "/", produces = APPLICATION_JSON_VALUE)
     private List<Regulation> getAll() {
         return proxy
@@ -50,6 +55,12 @@ public class RegulationController {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Endpoint to get a regulations by its linear ID (with status UNCONSUMED = the newest)
+     *
+     * @param linearId The linear ID of the regulation you want to retrieve.
+     * @return The regulation with the given linear ID and status UNCONSUMED.
+     */
     @GetMapping(value = "/{linearId}", produces = APPLICATION_JSON_VALUE)
     private ResponseEntity<Regulation> getByLinearId(@PathVariable String linearId) {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
@@ -71,6 +82,13 @@ public class RegulationController {
         else return ResponseEntity.status(HttpStatus.OK).body(regulations.get(0));
     }
 
+    /**
+     * Endpoint to update a regulation:
+     * We check if the state with the given linear ID exists, and if it does, we call the update flow
+     *
+     * @param regulationDTO The DTO object that contains the data to be updated.
+     * @return The updated regulation state.
+     */
     @PutMapping(value = "/")
     private ResponseEntity<Regulation> updateRegulation(@RequestBody RegulationDTO regulationDTO) throws ExecutionException, InterruptedException {
         UniqueIdentifier id = UniqueIdentifier.Companion.fromString(regulationDTO.getLinearId());
@@ -95,6 +113,12 @@ public class RegulationController {
         } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
+    /**
+     * Endpoint that creates a new regulation and returns the newly created regulation
+     *
+     * @param regulationDTO The object that contains the data that will be used to create the regulation.
+     * @return The regulation that was created.
+     */
     @PostMapping("/")
     private ResponseEntity<Regulation> createRegulation(@RequestBody RegulationDTO regulationDTO) throws ExecutionException, InterruptedException {
         SignedTransaction tx = proxy.startTrackedFlowDynamic(
@@ -107,6 +131,14 @@ public class RegulationController {
         return ResponseEntity.status(HttpStatus.CREATED).body((Regulation) tx.getTx().getOutput(0));
     }
 
+    /**
+     *
+     * Endpoint to deprecate a regulation:
+     * The function takes a linearId as a parameter and returns a ResponseEntity with the updated Regulation
+     *
+     * @param linearId The linearId of the regulation to be deprecated.
+     * @return The Regulation object that was depreciated.
+     */
     @PutMapping("/deprecate/{linearId}")
     private ResponseEntity<Regulation> deprecatedRegulation(@PathVariable String linearId) throws ExecutionException, InterruptedException {
         SignedTransaction tx = proxy.startTrackedFlowDynamic(

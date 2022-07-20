@@ -30,8 +30,9 @@ import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+
 /**
- * Define your API endpoints here.
+ * A REST controller that handles HTTP requests for the `SpecificClaim` state
  */
 @RestController
 @CrossOrigin(origins = "*")
@@ -44,6 +45,11 @@ public class SpecificClaimController {
         this.proxy = rpc.proxy;
     }
 
+    /**
+     * REST endpoint that returns a list of all the SpecificClaims that are stored on the ledger of the fsp
+     *
+     * @return A list of SpecificClaim objects
+     */
     @GetMapping(value = "/", produces = APPLICATION_JSON_VALUE)
     private List<SpecificClaim> getAll() {
         return proxy
@@ -56,6 +62,12 @@ public class SpecificClaimController {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * REST endpoint finds a specific claim by its linearId
+     *
+     * @param linearId The linearId of the claim you want to retrieve as a path variable.
+     * @return A list of SpecificClaims
+     */
     @GetMapping(value = "/{linearId}", produces = APPLICATION_JSON_VALUE)
     private ResponseEntity<SpecificClaim> getByLinearId(@PathVariable String linearId) {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
@@ -77,6 +89,13 @@ public class SpecificClaimController {
         else return ResponseEntity.status(HttpStatus.OK).body(specificClaims.get(0));
     }
 
+    /**
+     * Updates a specific claim with the values passed in the DTO.
+     * Attachments can not be changed via this endpoint. The linearId must be passed to find the object
+     *
+     * @param specificClaimDTO The DTO object that contains the updated information for the specific claim.
+     * @return The updated SpecificClaim state.
+     */
     @PutMapping(value = "/")
     private ResponseEntity<SpecificClaim> update(@RequestBody SpecificClaimDTO specificClaimDTO) throws ExecutionException, InterruptedException {
         UniqueIdentifier id = UniqueIdentifier.Companion.fromString(specificClaimDTO.getLinearId());
@@ -118,6 +137,12 @@ public class SpecificClaimController {
     }
 
 
+    /**
+     * It creates a new specific claim, and returns it.
+     *
+     * @param specificClaimDTO The DTO object that contains the parameters for the creation flow. Has an empty string as linearId
+     * @return A ResponseEntity object is being returned.
+     */
     @PostMapping("/")
     private ResponseEntity<SpecificClaim> create(@RequestBody SpecificClaimDTO specificClaimDTO) throws ExecutionException, InterruptedException {
         Set<Party> authority = proxy.partiesFromName("Supervisory Authority", true);
@@ -137,6 +162,13 @@ public class SpecificClaimController {
         } else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
+    /**
+     * Endpoint to upload a file to the node and adds the attachment to the passed specific claim via its linearId
+     *
+     * @param file The file to be uploaded
+     * @param linearId The linear ID of the claim you want to add an attachment to.
+     * @return The updated state
+     */
     @PostMapping(value = "/attachment/{linearId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     private ResponseEntity<SpecificClaim> addAttachment(@RequestBody MultipartFile file, @PathVariable String linearId) throws ExecutionException, InterruptedException, IOException {
         if (Objects.equals(FilenameUtils.getExtension(file.getOriginalFilename()), "jar") || file.getOriginalFilename() != null) {
@@ -183,6 +215,13 @@ public class SpecificClaimController {
         } else return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(null);
     }
 
+    /**
+     * Endpoint that takes a linear ID to download the attachment of a specific claim. For this it finds the state with
+     * that linear ID, checks if the attachment exists, and if it does, returns the attachment
+     *
+     * @param linearId The linear ID of the state that contains the attachment ID.
+     * @return The file is being returned.
+     */
     @GetMapping("/attachment/{linearId}")
     private ResponseEntity<InputStreamResource> openAttachment(@PathVariable String linearId) throws ExecutionException, InterruptedException, IOException {
         UniqueIdentifier id = UniqueIdentifier.Companion.fromString(linearId);

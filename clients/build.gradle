@@ -28,48 +28,37 @@ springBoot {
     mainClassName = "com.compliance.supervisoryauthority.Server"
 }
 
-/* The Client is the communication channel between the external and the node. This task will help you immediately
- * execute your rpc methods in the main method of the client.kt. You can somewhat see this as a quick test of making
- * RPC calls to your nodes.
- */
-task runTestClient(type: JavaExec, dependsOn: assemble) {
-    classpath = sourceSets.main.runtimeClasspath
-    main = 'com.compliance.Client'
-    args 'localhost:10006', 'user1', 'test'
-}
 
-/* This task will start the springboot server that connects to your node (via RPC connection). All of the http requests
- * are in the Controller file. You can leave the Server.kt and NodeRPCConnection.kt file untouched for your use.
+/*
+ * These tasks will start a springboot server for a client that connects to a node (via RPC connection). All of the http requests
+ * are in the Controller file.
+ *
+ * The --config.rpc.port needs to be set manually to the ports exposed by docker. As the Dockerform plugin (by corda to run a dev network)
+ * is not mapping the rpc ports to fixed ports, the ports change after every rerun of the deploy nodes task and the corresponding
+ * running of the docker-compose file.
+ *
+ * Short: Please set the RPC port to connect!
  */
 task runSupervisoryAuthorityServer(type: JavaExec, dependsOn: assemble) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.compliance.supervisoryauthority.Starter'
-    args '--server.port=10050', '--config.rpc.host=localhost', '--config.rpc.port=59280', '--config.rpc.username=user1', '--config.rpc.password=test'
+    args '--server.port=10050', '--config.rpc.host=localhost', '--config.rpc.port=65472', '--config.rpc.username=user1', '--config.rpc.password=test'
 }
 
-
-/* This task will start the springboot server that connects to your node (via RPC connection). All of the http requests
- * are in the Controller file. You can leave the Server.kt and NodeRPCConnection.kt file untouched for your use.
- */
 task runBrainFinanceServer(type: JavaExec, dependsOn: assemble) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.compliance.financialserviceprovider.Starter'
-    args '--server.port=10051', '--config.rpc.host=localhost', '--config.rpc.port=59281', '--config.rpc.username=user1', '--config.rpc.password=test'
+    args '--server.port=10051', '--config.rpc.host=localhost', '--config.rpc.port=65474', '--config.rpc.username=user1', '--config.rpc.password=test'
 }
-
 
 task runCapitalsHoldingServer(type: JavaExec, dependsOn: assemble) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.compliance.financialserviceprovider.Starter'
-    args '--server.port=10053', '--config.rpc.host=localhost', '--config.rpc.port=59282', '--config.rpc.username=user1', '--config.rpc.password=test'
+    args '--server.port=10053', '--config.rpc.host=localhost', '--config.rpc.port=65473', '--config.rpc.username=user1', '--config.rpc.password=test'
 }
 
-
-/* This task will start the springboot server that connects to your node (via RPC connection). All of the http requests
- * are in the Controller file. You can leave the Server.kt and NodeRPCConnection.kt file untouched for your use.
- */
 task runAuditorServer(type: JavaExec, dependsOn: assemble) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'com.compliance.auditor.Starter'
-    args '--server.port=10052', '--config.rpc.host=localhost', '--config.rpc.port=59284', '--config.rpc.username=user1', '--config.rpc.password=test'
+    args '--server.port=10052', '--config.rpc.host=localhost', '--config.rpc.port=65475', '--config.rpc.username=user1', '--config.rpc.password=test'
 }

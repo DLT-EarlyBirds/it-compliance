@@ -13,26 +13,36 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-// *********
-// * State *
-// *********
+
+/**
+ * A rule is part of a regulation and specifies a terms that need to be complied to
+ */
 @BelongsToContract(RuleContract.class)
 public class Rule implements LinearState {
 
-    // Private variables
     // Linear ID is used to track the evolution of the state over multiple transactions
     @NotNull
     private final UniqueIdentifier linearId;
+
     // Name of the rule
     private final String name;
+
     // The specification that details what need to be fulfilled
     private final String ruleSpecification;
+
     // The issuer who submits the rule, usually the supervisory authority or part of the regulatory body
     @NotNull
     private final Party issuer;
+
+    // A list of parties that are involved in the rule.
     private final List<Party> involvedParties;
+
     private final List<AbstractParty> participants;
+
+    // This is a boolean value that is used to check if the rule is deprecated or not.
     private final boolean isDeprecated;
+
+    // A pointer to the parent regulation that is used to create a reference state in the transaction.
     private final LinearPointer<Regulation> parentRegulation;
 
 
@@ -98,11 +108,12 @@ public class Rule implements LinearState {
     public LinearPointer<Regulation> getParentRegulation() {
         return parentRegulation;
     }
+
     public List<Party> getInvolvedParties() {
         return involvedParties;
     }
 
-    public boolean getIsDeprecated(){
+    public boolean getIsDeprecated() {
         return isDeprecated;
     }
 

@@ -17,6 +17,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * This class is used to deprecate a rule
+ */
 public class DeprecateRule {
 
     @InitiatingFlow
@@ -109,5 +112,4 @@ public class DeprecateRule {
             return null;
         }
     }
-
 }

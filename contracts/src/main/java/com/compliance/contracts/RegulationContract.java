@@ -16,18 +16,21 @@ public class RegulationContract implements Contract {
     // This is used to identify our contract when building a transaction.
     public static final String ID = "com.template.contracts.RegulationContract";
 
-    // A transaction is valid if the verify() function of the contract of all the transaction's input and output states
-    // does not throw an exception.
+    /**
+     * The verify function is called by the Corda node to check that the transaction is valid
+     * <p>
+     * A transaction is valid if the verify() function of the contract of all the transaction's input and output states
+     * does not throw an exception.
+     *
+     * @param tx The transaction that is being verified.
+     */
     @Override
     public void verify(LedgerTransaction tx) {
 
-        /* We can use the requireSingleCommand function to extract command data from transaction.
-         * However, it is possible to have multiple commands in a signle transaction.*/
-        //final CommandWithParties<Commands> command = requireSingleCommand(tx.getCommands(), Commands.class);
+
         final CommandData commandData = tx.getCommands().get(0).getValue();
 
         if (commandData instanceof Commands.CreateRegulation) {
-            //Retrieve the output state of the transaction
             Regulation output = tx.outputsOfType(Regulation.class).get(0);
 
             requireThat(require -> {
@@ -57,7 +60,7 @@ public class RegulationContract implements Contract {
                 require.using(
                         "The releaseDate for updated regulation must be after the releaseDate for old regulation",
                         output.getReleaseDate().after(input.getReleaseDate())
-                        );
+                );
 
                 return null;
             });
@@ -66,8 +69,8 @@ public class RegulationContract implements Contract {
             Regulation output = tx.outputsOfType(Regulation.class).get(0);
 
             requireThat(require -> {
-              require.using("The regulation input is not deprecated", !input.getIsDeprecated());
-              require.using("The regulation output is deprecated", output.getIsDeprecated());
+                require.using("The regulation input is not deprecated", !input.getIsDeprecated());
+                require.using("The regulation output is deprecated", output.getIsDeprecated());
                 require.using(
                         "The transaction is only allowed to modify the input regulation",
                         output.getLinearId().equals(input.getLinearId())

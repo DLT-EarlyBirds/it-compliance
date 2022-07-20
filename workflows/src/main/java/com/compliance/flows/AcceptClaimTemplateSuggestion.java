@@ -18,6 +18,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * This flow is used to accept a claim template suggestion
+ */
 public class AcceptClaimTemplateSuggestion {
 
     @InitiatingFlow
@@ -37,6 +40,8 @@ public class AcceptClaimTemplateSuggestion {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
             final TransactionBuilder builder = new TransactionBuilder(notary);
+
+            // Get the suggestion
             try {
                 QueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria()
                         .withUuid(Collections.singletonList(UUID.fromString(linearId.toString())))
@@ -44,47 +49,49 @@ public class AcceptClaimTemplateSuggestion {
                         .withRelevancyStatus(Vault.RelevancyStatus.RELEVANT);
 
                 final StateAndRef<ClaimTemplateSuggestion> input = getServiceHub().getVaultService().queryBy(ClaimTemplateSuggestion.class, inputCriteria).getStates().get(0);
+
+                // Consume the suggestion
                 builder.addInputState(input);
 
-            // Add all parties in the network
-            final List<Party> involvedParties = getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList());
+                // Add all parties in the network
+                final List<Party> involvedParties = getServiceHub().getNetworkMapCache().getAllNodes().stream().map(NodeInfo::getLegalIdentities).collect(Collectors.toList()).stream().flatMap(List::stream).collect(Collectors.toList());
 
-            // Remove yourself
-            involvedParties.remove(getOurIdentity());
+                // Remove yourself
+                involvedParties.remove(getOurIdentity());
 
-            // Remove notaries
-            involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
+                // Remove notaries
+                involvedParties.removeAll(getServiceHub().getNetworkMapCache().getNotaryIdentities());
 
-            ClaimTemplateSuggestion originalClaimTemplateSuggestion = input.getState().getData();
+                ClaimTemplateSuggestion originalClaimTemplateSuggestion = input.getState().getData();
 
-            final ClaimTemplate output = new ClaimTemplate(originalClaimTemplateSuggestion.getName(), originalClaimTemplateSuggestion.getTemplateDescription(), this.getOurIdentity(), involvedParties, originalClaimTemplateSuggestion.getRule());
+                // Create a claim template as output
+                final ClaimTemplate output = new ClaimTemplate(originalClaimTemplateSuggestion.getName(), originalClaimTemplateSuggestion.getTemplateDescription(), this.getOurIdentity(), involvedParties, originalClaimTemplateSuggestion.getRule());
+                builder.addOutputState(output);
 
+                builder.addCommand(new ClaimTemplateSuggestionContract.Commands.AcceptClaimTemplateSuggestion(),
+                        involvedParties.stream().map(Party::getOwningKey).collect(Collectors.toList())
+                );
 
-            builder.addOutputState(output);
-            builder.addCommand(new ClaimTemplateSuggestionContract.Commands.AcceptClaimTemplateSuggestion(),
-                    involvedParties.stream().map(Party::getOwningKey).collect(Collectors.toList())
-            );
+                // Verify that the transaction is valid.
+                builder.verify(getServiceHub());
 
-            // Verify that the transaction is valid.
-            builder.verify(getServiceHub());
+                final SignedTransaction signedTransaction = getServiceHub().signInitialTransaction(builder);
 
-            final SignedTransaction signedTransaction = getServiceHub().signInitialTransaction(builder);
+                involvedParties.remove(getOurIdentity());
 
-            involvedParties.remove(getOurIdentity());
+                List<FlowSession> sessions = involvedParties.stream().map(this::initiateFlow).collect(Collectors.toList());
 
-            List<FlowSession> sessions = involvedParties.stream().map(this::initiateFlow).collect(Collectors.toList());
+                SignedTransaction stx = subFlow(new CollectSignaturesFlow(signedTransaction, sessions));
 
-            SignedTransaction stx = subFlow(new CollectSignaturesFlow(signedTransaction, sessions));
+                return subFlow(new FinalityFlow(stx, sessions));
 
-            return subFlow(new FinalityFlow(stx, sessions));
-            }
-
-            catch (IndexOutOfBoundsException e) {
+            } catch (IndexOutOfBoundsException e) {
                 throw new FlowException("ERROR: No ClaimTemplateSuggestion with provided ID found!");
             }
 
         }
     }
+
 
     @InitiatedBy(AcceptClaimTemplateSuggestion.AcceptClaimTemplateSuggestionInitiator.class)
     public static class AcceptClaimTemplateSuggestionResponder extends FlowLogic<Void> {
@@ -118,6 +125,4 @@ public class AcceptClaimTemplateSuggestion {
             return null;
         }
     }
-
-    
 }

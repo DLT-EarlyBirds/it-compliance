@@ -13,13 +13,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-// *********
-// * State *
-// *********
+
+/**
+ * A regulation issued by the supervisory authority that is referenced by multiple sub rules
+ */
 @BelongsToContract(RegulationContract.class)
 public class Regulation implements LinearState {
 
-    // Private variables
     // Linear ID is used to track the evolution of the state over multiple transactions
     @NotNull
     private final UniqueIdentifier linearId;
@@ -37,11 +37,13 @@ public class Regulation implements LinearState {
     private final Date releaseDate;
     // The issuer who submits the regulation
 
+    // A boolean value that is used to check if the regulation is deprecated or not.
     @NotNull
     private final boolean isDeprecated;
 
     @NotNull
     private final Party issuer;
+
     private final List<AbstractParty> participants;
 
 

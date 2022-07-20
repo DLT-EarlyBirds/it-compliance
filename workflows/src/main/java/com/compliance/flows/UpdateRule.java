@@ -19,6 +19,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * This flow is used to update a rule
+ */
 public class UpdateRule {
 
     @InitiatingFlow
@@ -138,5 +141,4 @@ public class UpdateRule {
             return null;
         }
     }
-
 }

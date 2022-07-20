@@ -1,125 +1,114 @@
-# it-compliance
-A repository containing the code implementation for DLT4PI practical course
+# Aud-IT
 
-## Running the network
-The compliance network for the prototype is based on five dockerized nodes that are communicating via a shared network.
-We are using docker compose to run the network and the client applications, as well as the CorDapps within. 
+A repository containing the code implementation for DLT4PI practical course for IT Compliance
 
-### Deploying the network
-To deploy the network you need to run the gradle task called `deployNodes`. The task creates the directory `/it-compliance/build`.
-Located inside this directory is a directory called `/it-compliance/build/nodes` containing all of the peer nodes of the prototype network, as well as the file `/it-compliance/build/nodes/docker-compose.yaml`.
+The goal of _Aud-IT_ is to make IT compliance easier for financial service providers. It optimizes the auditing processes for auditors and supervisory authorities.
 
-#### Run Network on Docker Compose
-To run the network based on docker compose you need to first start the docker deamon by starting Docker Desktop Community Edition. 
-Then you can simply run the command `docker compose up` in the directory `it-compliance/build/nodes`to deploy the network. 
+![logo](docs/media/logo.png "Logo")
 
-#### Interacting with the nodes
-You can interact with the nodes via a client or via the commandline. As we have not yet developed a client you can use the [Node Expolorer](https://docs.r3.com/en/platform/corda/4.6/open-source/node-explorer.html) as a client, or log into the node via ssh.
 
-##### Logging in via ssh
-To log in via ssh you need to run the following command in your preferred shell (assuming you have ssh installed):
+#### Current auditing process:
+
+- A supervisory authority issues a regulation and publishes it in text form on its website
+
+- Most financial service providers (FSPs) are required by law to be audited at least once a year. They then mandate an auditor to verify their compliance with all relevant regulations.
+
+- The FSP claims its compliance to the regulations and has to prove his claims to the auditor
+
+- If the auditor is not convinced by the proof provided by the FSP or considers the proven claims not sufficient to prove compliance, he can request examining terabytes of logs from all IT systems of the FSP. This process is long and very demanding.
+
+Due to lack of standardized claims and evidence generating algorithms on which both the auditor and the supervisory authority agree, the FSP often delivers not sufficient proven claims and the auditor ends up examining large log-files
+
+#### Our solution:
+
+With _Aud-IT_ we attempt to solve the problem of standardized claims on which the FSP, the auditor and the supervisory authority can agree. We leave the problem of standardized evidence generating algorithms and evidence representation for future work and contributions.
+
+Our proposed auditing process:
+
+- A supervisory authority issues references to regulations (including their content) to a DLT network in which auditors and FSPs participate as well.
+
+- FSPs and auditors suggest claim templates (ways to comply to a rule) for each rule of the newly issued regulation. These templates are examined by the supervisory authority and only claim templates, which would prove compliance when fulfilled, are accepted and broadcasted to all parties.
+
+- Each FSP has access to the regulation graph consisting of regulations, rules and claim templates. They then extend this graph with claims specific to their IT systems and logs (we call them specific claims), submit these with attachments containing the evidence to the network, and share it only with the respective supervisory authority and auditor.
+
+- When auditing the auditor doesn't need to check the FSP claims, since he and the supervisory authority already agreed on. He only needs to check the evidence representation attached to the specific claim.
+
+We believe that this approach reduces the probability that an auditor has to go through large amounts of data especially when the provided evidence representation displays a clear proof to the specific claim.
+
+The project consists of three main modules:
+
+![modules](docs/media/modules.png "Title")
+
+## Requirements
+
+_Aud-IT_ was tested on Windows 10 and Mac OS (Intel) with 64-Bit CPU. To be able to run it your system needs to have the following frameworks/tools installed:
+
+- Java 8
+- Docker Desktop >= 4.8.1
+- Docker Engine Version >= 20.10.14
+- Node.js: https://nodejs.org/en/
+
+## Quick Start
+#### Clone the repository:
+
+```console
+$ git clone https://github.com/DLT-EarlyBirds/it-compliance.git
 ```
-ssh -p <NODE_PORT> localhost -l user1
+
+#### Create deployment files for the nodes:
+
+Run this command in the repository root:
+
+```console
+$ .\gradlew.bat clean deployNodes
 ```
-Replace `<NODE_PORT>` with the port of the node you want to connect to. You can find the respective nodes in the `build.gradle` file located at `it-compliance/build.gradle`. 
-The username is already provided with `user1`, the respective password is `test`.
 
+### Run the Network with the CorDapp on Docker Compose
 
-# Issuing flows
+To run the network based on docker-compose you need to first start the docker deamon by starting [Docker Desktop Community Edition](https://docs.docker.com/get-docker/).
 
-## Create Regulation Flow
-`flow start CreateRegulation name: Regulation, description: Some Description, version: 0.1, releaseDate: 2022-03-22`
+Then you can simply run the command `docker compose up` in the directory `it-compliance/build/nodes`to deploy the network.
 
-`run vaultQuery contractStateType: com.compliance.states.Regulation`
+### Start the middleware application:
 
-## Deprecate Regulation Flow
-`flow start DeprecateRegulation linearId: <RegulationLinearId>`
+To start the middleware spring boot applications you have to get the RPC ports for each node's docker container and assign it to the variable `--config.rpc.port` in [clients/build.gradle](/clients/build.gradle).
 
-## Update Regulation Flow
-`flow start UpdateRegulation name: Regulation2, description: Some Description, version: 0.2, releaseDate: 2022-03-22, linearId: <RegulationLinearId>`
+An explanation why you need to do this can be found in the mentioned `build.gradle` file.
 
-## Create Rule Flow 
-`flow start CreateRule name: NewRule, ruleSpecification: new Description, parentRegulationLinearId: <RegulationLinearId>`
+Start the individual gradle tasks in [clients/build.gradle](/clients/build.gradle) for the servers you want to run. If you want to run multiple servers, please execute the task one after another, as the clients can crash if all build simultaneously. 
 
-`run vaultQuery contractStateType: com.compliance.states.Rule`
+### Start the web application:
+The web application is a showcase on how to use the client APIs: 
+#### Change the directory:
 
-## Update Rule Flow
+The webapp resides in the: [t-compliance/clients/src/main/webapp](/clients/src/main/webapp/) directory.
+You must change the directory to the webapp directory to run the application.
 
-`flow start UpdateRule name: NewRule2, ruleSpecification: new Description, parentRegulationLinearId: <RegulationLinearId>, linearId: <RuleLinearId>`
+#### Install dependencies
+Run the following command in the root directory of the webapp
+`npm i`
 
-## Deprecate Rule Flow
-`flow start DeprecateRule linearId: <RuleLinearId>`
+#### Run the app
+Start the webapp local development server:
+`npm run start`
 
-## ClaimTemplate Flow 
-`flow start CreateClaimTemplate name: NewClameTemplate, description: new Description, ruleLinearId: <RuleLinearId>`
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-`run vaultQuery contractStateType: com.compliance.states.ClaimTemplate`
+#### Connecting to different nodes
 
-## Claim Template Suggestion Flow
-`flow start CreateClaimTemplateSuggestion name: TemplateSuggestion, description: This is template suggestion, supervisoryAuthority: SupervisoryAuthority, ruleLinearId: <ruleId>`
+Inside the [services/axiosInstance.js](/clients/src/main/webapp/src/services/axiosInstance.tsx) all the clients that need to be connected are defined. These addresses are set in the clients `build.gradle`.
 
-`run vaultQuery contractStateType: com.compliance.states.ClaimTemplateSuggestion`
+Overall, there are four nodes: Financial Supervisory Authority, Brain Finance (Financial Service Provider), Capital Holding (Financial Service Provider) and the Auditor.
 
-## Accept Claim Template Suggestion Flow
-`flow start AcceptClaimTemplateSuggestion linearId: <claimTemplateSuggestionId>`
+After running the client app, on the top right of the header there is a button "Change Node" which enables the user to switch to different nodes.
 
-## SpecificClaim Flow 
+#### Create a test regulation:
+To automatically fill the network with content you can, press the bootstrap graph endpoint on the Regulation View. To run this bootstraper, please select the Supervisory Authority node.
 
-### Without referencing an attachment:
-`flow start CreateSpecificClaim name: SpecificClaim, supervisoryAuthority: Supervisory Authority, auditor: Auditor, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: []`
+## More Details:
 
-`run vaultQuery contractStateType: com.compliance.states.SpecificClaim`
+If you need more details about the individual components please refer to the respective documentation page:
 
-### With referencing an attachment:
-`flow start CreateSpecificClaim name: SpecificClaim, supervisoryAuthority: Supervisory Authority, auditor: Auditor, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: [], attachmentID: <attachmentID>`
-
-`run vaultQuery contractStateType: com.compliance.states.SpecificClaim`
-
-## UpdateSpecificClaim Flow
-
-### Without referencing an attachment:
-`flow start UpdateSpecificClaim specificClaimLinearId: <linearID>, name: SpecificClaim, supervisoryAuthority: Supervisory Authority, auditor: Auditor, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: []`
-
-### With referencing an attachment:
-`flow start UpdateSpecificClaim specificClaimLinearId: <linearID>, name: SpecificClaim, supervisoryAuthority: Supervisory Authority, auditor: Auditor, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: [], attachmentID: <attachmentID>`
-
-
-
-# Handling Attachments
-
-## Add an attachment to a node:
-`run uploadAttachment   jar: path\to\attachment.zip`
-
-`attachments trustInfo`
-
-## Add an attachment with meta data:
-`run uploadAttachmentWithMetadata   jar: path\to\attachment.zip, uploader: Peter, filename: test.zip`
-
-## Download an attachment:
-`run openAttachment id: <attachmentID>`
-
-`path\to\save\attachment.zip`
-
-## Copying files to a docker container from the host server:
-If the nodes are running in docker containers then you can't just copy files from the host server to the Corda attachments pool. The files must be copied to the container file system first:
-
-`docker cp path\on\host_server\attachment.zip node_container_id:path/in/container/attachment.zip`
-
-Then from there upload the attachment to Corda:
-
-`run uploadAttachment   jar: path/in/container/attachment.zip`
-
-
-## Copying files from a docker container to the host server:
-First download the attachment to the container file system:
-
-`run openAttachment id: <attachmentID>`
-
-`path/in/container/attachment.zip`
-
-Then copy it to the host server:
-
-`docker cp node_container_id:path/in/container/attachment.zip path\on\host_server\attachment.zip`
-
-
-
+- [CorDapp](docs/cordapp.md)
+- [Middleware](docs/middleware.md)
+- [Web Application](docs/webapp.md)

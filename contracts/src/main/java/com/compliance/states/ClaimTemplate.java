@@ -1,5 +1,6 @@
 package com.compliance.states;
 
+import com.compliance.contracts.ClaimTemplateContract;
 import com.compliance.contracts.RegulationContract;
 import net.corda.core.contracts.BelongsToContract;
 import net.corda.core.contracts.LinearPointer;
@@ -13,13 +14,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-// *********
-// * State *
-// *********
-@BelongsToContract(RegulationContract.class)
+
+/**
+ * A claim template is a description for how to comply to a rule that can be used to create a claim
+ */
+@BelongsToContract(ClaimTemplateContract.class)
 public class ClaimTemplate implements LinearState {
 
-    // Private variables
 
     // Linear ID is used to track the evolution of the state over multiple transactions
     @NotNull
@@ -33,8 +34,11 @@ public class ClaimTemplate implements LinearState {
     // The issuer who submits the claim template
     private final Party issuer;
 
+
+    // A list of parties that are involved in the claim template.
     private final List<Party> involvedParties;
 
+    // Participants that are used to sign and process the transaction
     private final List<AbstractParty> participants;
 
     // A reference to the rule that is fulfilled by a claim implementing this template.
@@ -70,7 +74,6 @@ public class ClaimTemplate implements LinearState {
     }
 
     // Getters
-
     @Override
     @NotNull
     public UniqueIdentifier getLinearId() {

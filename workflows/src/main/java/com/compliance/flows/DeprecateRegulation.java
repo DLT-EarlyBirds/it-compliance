@@ -16,6 +16,9 @@ import net.corda.core.transactions.TransactionBuilder;
 
 import java.util.*;
 
+/**
+ * This flow is used to deprecate a regulation
+ */
 public class DeprecateRegulation {
 
     @InitiatingFlow
@@ -87,5 +90,4 @@ public class DeprecateRegulation {
             return subFlow(new FinalityFlow(signedTransaction, Collections.emptyList()));
         }
     }
-
 }

@@ -23,8 +23,10 @@ import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+
 /**
- * Define your API endpoints here.
+ * This Spring Boot controller exposes endpoints for the creation of claim template suggestions and the retrieval
+ * of claim templates and claim template suggestions
  */
 @RestController
 @CrossOrigin(origins = "*")
@@ -33,10 +35,17 @@ public class ClaimTemplateController {
     private final CordaRPCOps proxy;
     private final static Logger logger = LoggerFactory.getLogger(ClaimTemplateController.class);
 
+    // It's a constructor that takes a NodeRPCConnection object as a parameter and assigns the proxy field to the proxy
+    // field of the NodeRPCConnection object. The proxy is used to interact with the Corda node
     public ClaimTemplateController(NodeRPCConnection rpc) {
         this.proxy = rpc.proxy;
     }
 
+    /**
+     * This endpoint returns a list of all the ClaimTemplate states in the vault
+     *
+     * @return A list of ClaimTemplate objects
+     */
     @GetMapping(value = "/", produces = APPLICATION_JSON_VALUE)
     private List<ClaimTemplate> getAll() {
         return proxy
@@ -49,6 +58,12 @@ public class ClaimTemplateController {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * This endpoint returns a claim template by its linear ID
+     *
+     * @param linearId The linearId of the ClaimTemplate to be retrieved.
+     * @return A ClaimTemplate object
+     */
     @GetMapping(value = "/{linearId}", produces = APPLICATION_JSON_VALUE)
     private ResponseEntity<ClaimTemplate> getByLinearId(@PathVariable String linearId) {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)), Vault.StateStatus.UNCONSUMED, Collections.singleton(ClaimTemplate.class));
@@ -65,6 +80,11 @@ public class ClaimTemplateController {
         else return ResponseEntity.status(HttpStatus.OK).body(claimTemplates.get(0));
     }
 
+    /**
+     * This endpoint returns a list of all the ClaimTemplateSuggestion states in the vault
+     *
+     * @return A list of ClaimTemplateSuggestion objects
+     */
     @GetMapping(value = "/suggestions/", produces = APPLICATION_JSON_VALUE)
     private List<ClaimTemplateSuggestion> getAllSuggestions() {
         return proxy
@@ -77,6 +97,12 @@ public class ClaimTemplateController {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * This endpoint returns a ClaimTemplateSuggestion object from the vault by its linearId
+     *
+     * @param linearId The linearId of the ClaimTemplateSuggestion to be retrieved.
+     * @return A ClaimTemplateSuggestion object
+     */
     @GetMapping(value = "/suggestions/{linearId}", produces = APPLICATION_JSON_VALUE)
     private ResponseEntity<ClaimTemplateSuggestion> getSuggestionByLinearId(@PathVariable String linearId) {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
@@ -97,6 +123,13 @@ public class ClaimTemplateController {
         else return ResponseEntity.status(HttpStatus.OK).body(claimTemplateSuggestions.get(0));
     }
 
+    /**
+     * This endpoint creates a claim template suggestion, and returns it
+     *
+     * @param claimTemplateSuggestionDTO The DTO object that contains the data that will be used to create the
+     * ClaimTemplateSuggestion.
+     * @return A ClaimTemplateSuggestion object
+     */
     @PostMapping("/suggestions/")
     private ResponseEntity<ClaimTemplateSuggestion> createSuggestion(@RequestBody ClaimTemplateSuggestionDTO claimTemplateSuggestionDTO) throws ExecutionException, InterruptedException {
         Set<Party> partySet = proxy.partiesFromName("Supervisory Authority", true);

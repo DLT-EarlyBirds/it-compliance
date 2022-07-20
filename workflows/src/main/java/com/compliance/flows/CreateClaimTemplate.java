@@ -15,23 +15,19 @@ import net.corda.core.transactions.TransactionBuilder;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//Initiate this flow:
-//flow start CreateRegulation description: "test_description", supervisoryAuthority: Supervisory Authority
 
-//Check if added to ledger:
-//run vaultQuery contractStateType: com.template.states.Regulation
-
+/**
+ * This Flow is used to create a claim template
+ */
 public class CreateClaimTemplate {
 
     @InitiatingFlow
     @StartableByRPC
     public static class CreateClaimTemplateInitiator extends FlowLogic<SignedTransaction> {
-        // Private variables
         private final String name;
         private final String templateDescription;
         private final UniqueIdentifier ruleLinearId;
 
-        //public constructor
         public CreateClaimTemplateInitiator(String name, String description, UniqueIdentifier ruleLinearId) {
             this.templateDescription = description;
             this.name = name;
@@ -91,10 +87,8 @@ public class CreateClaimTemplate {
 
     @InitiatedBy(CreateClaimTemplateInitiator.class)
     public static class CreateClaimTemplateResponder extends FlowLogic<Void> {
-        //private variable
         private final FlowSession counterpartySession;
 
-        //Constructor
         public CreateClaimTemplateResponder(FlowSession counterpartySession) {
             this.counterpartySession = counterpartySession;
         }
@@ -121,5 +115,4 @@ public class CreateClaimTemplate {
             return null;
         }
     }
-
 }

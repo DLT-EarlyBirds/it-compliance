@@ -21,17 +21,19 @@ public class SpecificClaimContract implements Contract {
     // This is used to identify our contract when building a transaction.
     public static final String ID = "com.template.contracts.SpecificClaimContract";
 
-    // A transaction is valid if the verify() function of the contract of all the transaction's input and output states
-    // does not throw an exception.
+
+    /**
+     * The verify function is called by the Corda node to check that the transaction is valid
+     * <p>
+     * A transaction is valid if the verify() function of the contract of all the transaction's input and output states
+     * does not throw an exception.
+     *
+     * @param tx The transaction that is being verified.
+     */
     @Override
     public void verify(LedgerTransaction tx) {
-
-        /* We can use the requireSingleCommand function to extract command data from transaction.
-         * However, it is possible to have multiple commands in a signle transaction.*/
-        //final CommandWithParties<Commands> command = requireSingleCommand(tx.getCommands(), Commands.class);
         final CommandData commandData = tx.getCommands().get(0).getValue();
 
-        // Retrieve the output state of the transaction
         SpecificClaim output = tx.outputsOfType(SpecificClaim.class).get(0);
 
         StateAndRef<ClaimTemplate> claimTemplate = output.getClaimTemplate().resolve(tx);
@@ -39,9 +41,7 @@ public class SpecificClaimContract implements Contract {
             List<StateAndRef<SpecificClaim>> supportingClaims = output.getSupportingClaims().stream().map(claimTemplateLinearPointer -> claimTemplateLinearPointer.resolve(tx)).collect(Collectors.toList());
         }
 
-
         if (commandData instanceof Commands.CreateClaim) {
-            // Using Corda DSL function requireThat to replicate conditions-checks
             requireThat(require -> {
                 require.using("The transaction should have exactly one Claim as output", tx.getOutputs().size() == 1);
                 require.using("The specific claim must have a name value", !output.getName().equals(""));
@@ -50,7 +50,6 @@ public class SpecificClaimContract implements Contract {
 
 
         } else if (commandData instanceof Commands.UpdateSpecificClaim) {
-            //Retrieve the output state of the transaction
             SpecificClaim input = tx.inputsOfType(SpecificClaim.class).get(0);
 
             requireThat(require -> {
@@ -66,6 +65,7 @@ public class SpecificClaimContract implements Contract {
         //In our hello-world app, We will only have one command.
         class CreateClaim implements Commands {
         }
+
         class UpdateSpecificClaim implements Commands {
         }
     }

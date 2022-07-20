@@ -1,0 +1,535 @@
+{
+	"info": {
+		"_postman_id": "e183b7c7-bee3-4ff4-8b15-658974b8e676",
+		"name": "Supervisory Authority",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Regulation API",
+			"item": [
+				{
+					"name": "Query Regulations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10050/regulations/",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"regulations",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Regulation by Linear ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10050/regulations/82135e7c-f21a-4c79-8146-58abd8d77eb9",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"regulations",
+								"82135e7c-f21a-4c79-8146-58abd8d77eb9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Regulation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"linearId\": \"\",\n    \"name\": \"Harald\",\n    \"description\": \"test\",\n    \"version\": \"test\",\n    \"releaseDate\": \"2022-01-01\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10050/regulations/",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"regulations",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Regulation",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"linearId\": \"82135e7c-f21a-4c79-8146-58abd8d77eb9\",\n    \"name\": \"Harald the Great\",\n    \"description\": \"test\",\n    \"version\": \"test\",\n    \"releaseDate\": \"2022-01-01\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10050/regulations/",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"regulations",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deprecate Regulation",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:10050/regulations/deprecate/82135e7c-f21a-4c79-8146-58abd8d77eb9",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"regulations",
+								"deprecate",
+								"82135e7c-f21a-4c79-8146-58abd8d77eb9"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rule API",
+			"item": [
+				{
+					"name": "Query Rules",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10050/rules/",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"rules",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Rule by Linear ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10050/rules/82135e7c-f21a-4c79-8146-58abd8d77eb9",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"rules",
+								"82135e7c-f21a-4c79-8146-58abd8d77eb9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Rule",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"linearId\": \"\",\n    \"name\": \"Harald the Ruler\",\n    \"ruleSpecification\": \"test\",\n    \"parentRegulation\": \"abc7c4de-3318-49e1-8dba-067db17b94ba\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10050/rules/",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"rules",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Rule",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"linearId\": \"valid linearId\",\n    \"name\": \"Harald\",\n    \"ruleSpecification\": \"test\",\n    \"parentRegulation\": \"test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10050/rules/",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"rules",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deprecate Rule",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:10050/rules/deprecate/<validLinearId>",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"rules",
+								"deprecate",
+								"<validLinearId>"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Claim Template API",
+			"item": [
+				{
+					"name": "Query Claim Templates",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10050/claimtemplates/",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"claimtemplates",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Claim Template by Linear ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10050/claimtemplates/<linearID>",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"claimtemplates",
+								"<linearID>"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Claim Template",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"linearId\": \"\",\n    \"name\": \"Claim Template X\",\n    \"templateDescription\": \"templateDescription\",\n    \"rule\": \"linearId\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10050/claimtemplates/",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"claimtemplates",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Claim Template",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"linearId\": \"valid linearId\",\n    \"name\": \"Claim Template X\",\n    \"templateDescription\": \"templateDescription\",\n    \"rule\": \"linearId\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10050/claimtemplates/",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"claimtemplates",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Claim Template Suggestions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10050/claimtemplates/suggestions/",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"claimtemplates",
+								"suggestions",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Claim Template Suggestion by Linear ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10050/claimtemplates/suggestions/<linearID>",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"claimtemplates",
+								"suggestions",
+								"<linearID>"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accept Claim Template Suggestion",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:10050/claimtemplates/suggestions/f791e3ed-c22e-4696-8e91-4f9388aa4649",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"claimtemplates",
+								"suggestions",
+								"f791e3ed-c22e-4696-8e91-4f9388aa4649"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reject Claim template Suggestion",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Specific Claim API",
+			"item": [
+				{
+					"name": "Query Specific Claims",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10050/claims/",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"claims",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Specific Claim by Linear ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10050/claims/<linearID>",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"claims",
+								"<linearID>"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Specific Claims for Organization",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10050/claims/<orgName>/",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"claims",
+								"<orgName>",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Specific Claim for Organization by Linear ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:10050/claims/<orgName>/<linearId>",
+							"host": [
+								"localhost"
+							],
+							"port": "10050",
+							"path": [
+								"claims",
+								"<orgName>",
+								"<linearId>"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bootstrap Graph",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:10050/network/bootstrapGraph",
+					"host": [
+						"localhost"
+					],
+					"port": "10050",
+					"path": [
+						"network",
+						"bootstrapGraph"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Peers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:10050/network/peers",
+					"host": [
+						"localhost"
+					],
+					"port": "10050",
+					"path": [
+						"network",
+						"peers"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
