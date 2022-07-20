@@ -43,7 +43,7 @@ _Aud-IT_ was tested on Windows 10 and Mac OS with 64-Bit CPU. To be able to run 
 - Java 8
 - Docker Desktop >= 4.8.1
 - Docker Engine Version >= 20.10.14
-- ...
+- Node.js: https://nodejs.org/en/
 
 ## Quick Start
 
@@ -61,24 +61,21 @@ Run this command in the repository root:
 $ .\gradlew.bat clean deployNodes
 ```
 
-#### Run the CorDapp on Docker Compose
+### Run the CorDapp on Docker Compose
 
 To run the network based on docker compose you need to first start the docker deamon by starting Docker Desktop Community Edition.
 Then you can simply run the command `docker compose up` in the directory `it-compliance/build/nodes`to deploy the network.
 
-#### Start the middleware application:
+### Start the middleware application:
 
 To start the middleware spring boot application you have to find out the RPC ports for each node's docker container and copy it to the variable `--config.rpc.port` in `clients/build.gradle`.
 
 After that start the gradle tasks in `clients/build.gradle` for the servers you want to run.
 
-## Start the web application:
+### Start the web application:
 
-#### Prerequisite:
 
-https://nodejs.org/en/
-
-#### Change the directory
+#### Change the directory:
 
 The webapp resides under the: `it-compliance/clients/src/main/webapp` directory
 
@@ -88,14 +85,14 @@ So, one must change the directory to the webapp directory
 
 `npm i`
 
-### Run the app
+#### Run the app
 
 `npm run start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-### Connecting to different nodes
+#### Connecting to different nodes
 
 Inside the `services/axiosInstance.js` all the nodes that need to be connected are defined. These addresses are retrieved from the gradle file of the client.
 
