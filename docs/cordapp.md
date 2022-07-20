@@ -21,83 +21,110 @@ ssh -p <NODE_PORT> localhost -l user1
 Replace `<NODE_PORT>` with the port of the node you want to connect to. You can find the respective nodes in the `build.gradle` file located at `it-compliance/build.gradle`.
 The username is already provided with `user1`, the respective password is `test`.
 
+# States:
+In the CorDapp there are five possible states with the following referencing hierarchy: 
 
-# Issuing flows
+![modules](media/states.png "Title")
 
-## Create Regulation Flow
+Together they build what we call a regulation graph. It is a DAG(Directed Acyclic Graph) that specifies the law regulations, their rules (sub-regulations) and the claims that need to be proven by a financial service provider to be compliant to the laws.
+
+The code that defines the states can be found here:
+
+`java/com/compliance/states`
+
+# Contracts:
+
+For each of the above-mentioned states we define a smart contract that checks for the validity of its allowed transactions. The contracts can be found here:
+
+`java/com/compliance/contracts`
+
+
+# Issuing flows:
+
+## Regulations
+
+### Create Regulation Flow
 `flow start CreateRegulation name: Regulation, description: Some Description, version: 0.1, releaseDate: 2022-03-22`
 
 `run vaultQuery contractStateType: com.compliance.states.Regulation`
 
-## Deprecate Regulation Flow
+### Deprecate Regulation Flow
 `flow start DeprecateRegulation linearId: <RegulationLinearId>`
 
-## Update Regulation Flow
+### Update Regulation Flow
 `flow start UpdateRegulation name: Regulation2, description: Some Description, version: 0.2, releaseDate: 2022-03-22, linearId: <RegulationLinearId>`
 
-## Create Rule Flow
+## Rules
+
+### Create Rule Flow
 `flow start CreateRule name: NewRule, ruleSpecification: new Description, parentRegulationLinearId: <RegulationLinearId>`
 
 `run vaultQuery contractStateType: com.compliance.states.Rule`
 
-## Update Rule Flow
+### Update Rule Flow
 
 `flow start UpdateRule name: NewRule2, ruleSpecification: new Description, parentRegulationLinearId: <RegulationLinearId>, linearId: <RuleLinearId>`
 
-## Deprecate Rule Flow
+### Deprecate Rule Flow
 `flow start DeprecateRule linearId: <RuleLinearId>`
 
-## ClaimTemplate Flow
+## Claim Templates
+
+### ClaimTemplate Flow
 `flow start CreateClaimTemplate name: NewClameTemplate, description: new Description, ruleLinearId: <RuleLinearId>`
 
 `run vaultQuery contractStateType: com.compliance.states.ClaimTemplate`
 
-## Claim Template Suggestion Flow
+## Claim Template Suggestions
+
+### Claim Template Suggestion Flow
 `flow start CreateClaimTemplateSuggestion name: TemplateSuggestion, description: This is template suggestion, supervisoryAuthority: SupervisoryAuthority, ruleLinearId: <ruleId>`
 
 `run vaultQuery contractStateType: com.compliance.states.ClaimTemplateSuggestion`
 
-## Accept Claim Template Suggestion Flow
+### Accept Claim Template Suggestion Flow
 `flow start AcceptClaimTemplateSuggestion linearId: <claimTemplateSuggestionId>`
 
-## SpecificClaim Flow
+## Specific Claims
 
-### Without referencing an attachment:
+### CreateSpecificClaim Flow
+
+#### Without referencing an attachment
 `flow start CreateSpecificClaim name: SpecificClaim, supervisoryAuthority: Supervisory Authority, auditor: Auditor, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: []`
 
 `run vaultQuery contractStateType: com.compliance.states.SpecificClaim`
 
-### With referencing an attachment:
+#### With referencing an attachment
 `flow start CreateSpecificClaim name: SpecificClaim, supervisoryAuthority: Supervisory Authority, auditor: Auditor, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: [], attachmentID: <attachmentID>`
 
 `run vaultQuery contractStateType: com.compliance.states.SpecificClaim`
 
-## UpdateSpecificClaim Flow
+### UpdateSpecificClaim Flow
 
-### Without referencing an attachment:
+#### Without referencing an attachment
 `flow start UpdateSpecificClaim specificClaimLinearId: <linearID>, name: SpecificClaim, supervisoryAuthority: Supervisory Authority, auditor: Auditor, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: []`
 
-### With referencing an attachment:
+#### With referencing an attachment
 `flow start UpdateSpecificClaim specificClaimLinearId: <linearID>, name: SpecificClaim, supervisoryAuthority: Supervisory Authority, auditor: Auditor, claimTemplateLinearId: <ClaimTemplateLinearId>, supportingClaimsLinearIds: [], attachmentID: <attachmentID>`
 
 
 
 # Handling Attachments
 
-## Add an attachment to a node:
+## Add an attachment to a node
 `run uploadAttachment   jar: path\to\attachment.zip`
 
 `attachments trustInfo`
 
-## Add an attachment with meta data:
+## Add an attachment with meta data
 `run uploadAttachmentWithMetadata   jar: path\to\attachment.zip, uploader: Peter, filename: test.zip`
 
-## Download an attachment:
+## Download an attachment
 `run openAttachment id: <attachmentID>`
 
 `path\to\save\attachment.zip`
 
-## Copying files to a docker container from the host server:
+## Copying files to a docker container from the host server
 If the nodes are running in docker containers then you can't just copy files from the host server to the Corda attachments pool. The files must be copied to the container file system first:
 
 `docker cp path\on\host_server\attachment.zip node_container_id:path/in/container/attachment.zip`
@@ -107,7 +134,7 @@ Then from there upload the attachment to Corda:
 `run uploadAttachment   jar: path/in/container/attachment.zip`
 
 
-## Copying files from a docker container to the host server:
+## Copying files from a docker container to the host server
 First download the attachment to the container file system:
 
 `run openAttachment id: <attachmentID>`
