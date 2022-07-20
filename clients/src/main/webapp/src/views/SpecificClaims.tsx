@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Table, Button, message, Upload } from "antd"
 import { useData } from "../contexts/DataContext"
-import {Regulation, SpecificClaim} from "models"
+import { Regulation, SpecificClaim } from "models"
 import { EditOutlined, DownloadOutlined, EyeOutlined } from "@ant-design/icons"
 import UpdateSpecificClaim from "components/UpdateSpecificClaim"
 import { UploadOutlined } from "@ant-design/icons"
@@ -12,7 +12,7 @@ import CreateSpecificClaim from "components/CreateSpecificClaim"
 import { insertIf } from "utils"
 import SpecificClaimService from "services/SpecificClaim.service"
 import { Link } from "react-router-dom"
-import {resolveX500Name} from "../services/resolveX500Name";
+import { resolveX500Name } from "../services/resolveX500Name"
 
 function SpecificClaims() {
     const { specificClaims } = useData()
@@ -34,9 +34,20 @@ function SpecificClaims() {
         {
             title: "Financial Service Provider",
             dataIndex: "financialServiceProvider",
-            render: (_:string, specificClaim1: SpecificClaim) => {
-                return resolveX500Name(specificClaim1.financialServiceProvider);
-            }
+            filters: [
+                {
+                    text: NodeEnum.BRAIN_FINANCE,
+                    value: NodeEnum.BRAIN_FINANCE,
+                },
+                {
+                    text: NodeEnum.CAPITALS_HOLDING,
+                    value: NodeEnum.CAPITALS_HOLDING,
+                },
+            ],
+            onFilter: (value: string, specificClaim: SpecificClaim) => resolveX500Name(specificClaim.financialServiceProvider) == value,
+            render: (_: string, specificClaim1: SpecificClaim) => {
+                return resolveX500Name(specificClaim1.financialServiceProvider)
+            },
         },
         {
             title: "Attachment",
