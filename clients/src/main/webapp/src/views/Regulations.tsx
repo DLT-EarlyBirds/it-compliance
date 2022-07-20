@@ -22,7 +22,6 @@ function Regulations() {
     const filter = regulations.map((regulation) => {
         return { text: regulation.name.split(" ")[0], value: regulation }
     })
-    console.log(filter)
 
     const columns = [
         {
@@ -62,7 +61,7 @@ function Regulations() {
     return (
         <div>
             {isSupervisoryAuthority && <CreateRegulation />}
-            <Table columns={columns} dataSource={regulations} />
+            <Table columns={columns} dataSource={regulations} pagination={{ pageSize: 10 }} />
             {isDrawerVisible && <UpdateRegulation regulation={regulation as Regulation} isVisible={isDrawerVisible} setIsVisible={setIsDrawerVisible} />}
         </div>
     )

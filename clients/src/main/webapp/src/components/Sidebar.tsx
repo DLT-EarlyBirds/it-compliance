@@ -26,8 +26,8 @@ const Sidebar = () => {
     return (
         <>
             <Menu mode="vertical" selectedKeys={[pathname]} defaultSelectedKeys={["home"]}>
-                <Menu.Item key="/graph-regulation" icon={<RadarChartOutlined />}>
-                    <Link to="/graph-regulation">Graph Regulation</Link>
+                <Menu.Item key="/" icon={<RadarChartOutlined />}>
+                    <Link to="/">Graph Regulation</Link>
                 </Menu.Item>
                 <Menu.Item key="/regulations" icon={<OneToOneOutlined />}>
                     <Link to="/regulations">Regulations</Link>

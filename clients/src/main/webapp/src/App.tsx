@@ -22,9 +22,9 @@ const App = () => {
             <DataProvider>
                 <Routes>
                     <Route path="/" element={<Home />}>
+                        <Route path="/" element={<GraphRegulation />} />
                         <Route path="/regulations" element={<Regulations />} />
                         <Route path="/rules" element={<Rules />} />
-                        <Route path="/graph-regulation" element={<GraphRegulation />} />
                         <Route path="/claim-templates" element={<ClaimTemplates />} />
                         <Route path="/specific-claims" element={<SpecificClaims />} />
                         <Route path="/regulations/:id" element={<Regulation />} />

@@ -114,7 +114,7 @@ function ClaimTemplates() {
             <h2>Claim Template Suggestions</h2>
             <Table columns={claimTemplateSuggestionsColumns} dataSource={claimTemplatesSuggestions} />
             <h2>Claim Templates </h2>
-            <Table columns={claimTemplateColumns} dataSource={claimTemplates} />
+            <Table columns={claimTemplateColumns} dataSource={claimTemplates} pagination={{ pageSize: 5 }} />
             {isDrawerVisible && <UpdateClaimTemplate claimTemplate={claimTemplate as ClaimTemplate} isVisible={isDrawerVisible} setIsVisible={setIsDrawerVisible} />}
         </div>
     )

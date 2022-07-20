@@ -95,8 +95,7 @@ public class ClaimTemplateController {
                 CreateClaimTemplate.CreateClaimTemplateInitiator.class,
                 claimTemplateDTO.getName(),
                 claimTemplateDTO.getTemplateDescription(),
-                UniqueIdentifier.Companion.fromString(claimTemplateDTO.getRule()),
-                new Date()
+                UniqueIdentifier.Companion.fromString(claimTemplateDTO.getRule())
         ).getReturnValue().get().getTx().getOutput(0);
         return ResponseEntity.status(HttpStatus.CREATED).body(claimTemplate);
     }

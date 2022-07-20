@@ -64,7 +64,7 @@ function Rules() {
     return (
         <div>
             {isSupervisoryAuthority && <CreateRule />}
-            <Table columns={columns} dataSource={rules} />
+            <Table columns={columns} dataSource={rules} pagination={{ pageSize: 5 }} />
             {isDrawerVisible && <UpdateRule rule={rule as Rule} isVisible={isDrawerVisible} setIsVisible={setIsDrawerVisible} />}
         </div>
     )
