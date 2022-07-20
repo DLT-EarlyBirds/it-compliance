@@ -30,8 +30,11 @@ $ git clone https://github.com/DLT-EarlyBirds/it-compliance.git
 To run the network based on docker compose you need to first start the docker deamon by starting Docker Desktop Community Edition.
 Then you can simply run the command `docker compose up` in the directory `it-compliance/build/nodes`to deploy the network.
 
+
 #### Start the middleware application:
-...
+ To start the middleware spring boot application you have to find out the RPC ports for each node's docker container and copy it to the variable `--config.rpc.port` in `clients/build.gradle`. 
+ 
+After that start the gradle tasks in `clients/build.gradle` for the servers you want to run. 
 
 #### Start the web application:
 ...
