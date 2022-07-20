@@ -56,6 +56,14 @@ _Aud-IT_ was tested on Windows 10 and Mac OS with 64-Bit CPU. To be able to run 
 $ git clone https://github.com/DLT-EarlyBirds/it-compliance.git
 ```
 
+#### Deploy the nodes:
+
+Run this command in the repository root:
+
+```console
+.\gradlew.bat clean deployNodes
+```
+
 #### Run the CorDapp on Docker Compose
 To run the network based on docker compose you need to first start the docker deamon by starting Docker Desktop Community Edition.
 Then you can simply run the command `docker compose up` in the directory `it-compliance/build/nodes`to deploy the network.
