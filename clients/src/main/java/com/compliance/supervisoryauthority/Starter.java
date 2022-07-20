@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import static org.springframework.boot.WebApplicationType.SERVLET;
 
 /**
- * Our Spring Boot application.
+ * Spring Boot entry point of the fsa client application.
  */
 @SpringBootApplication
 public class Starter {

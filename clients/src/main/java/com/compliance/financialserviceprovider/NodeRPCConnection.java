@@ -14,7 +14,7 @@ import javax.annotation.PreDestroy;
  * Wraps an RPC connection to a Corda node.
  *
  * The RPC connection is configured using command line arguments.
- *  * In our case this is handled by the preconfigured tasks in the build.gradle for the clients
+ * In our case this is handled by the preconfigured tasks in the build.gradle for the clients
  */
 @Component
 public class NodeRPCConnection implements AutoCloseable {

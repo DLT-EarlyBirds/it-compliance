@@ -57,7 +57,7 @@ public class SpecificClaimController {
     }
 
     /**
-     * REST endpoint finds a specific claim by its linearId
+     * REST endpoint that finds a specific claim by its linearId
      *
      * @param linearId The linearId of the claim you want to retrieve as a path variable.
      * @return A list of SpecificClaims

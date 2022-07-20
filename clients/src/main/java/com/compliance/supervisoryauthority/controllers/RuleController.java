@@ -23,8 +23,9 @@ import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+
 /**
- * Define your API endpoints here.
+ * Spring Boot controller that exposes a REST API for querying the vault for rules
  */
 @RestController
 @CrossOrigin(origins = "*")
@@ -38,6 +39,11 @@ public class RuleController {
     }
 
 
+    /**
+     * Endpoint that returns a list of all the rules in the vault
+     *
+     * @return A list of all the rules in the vault.
+     */
     @GetMapping(value = "/", produces = APPLICATION_JSON_VALUE)
     private List<Rule> getAll() {
         return proxy
@@ -50,6 +56,12 @@ public class RuleController {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Endpoint that queries the vault for a rule with the given linearId and returns it as a JSON object
+     *
+     * @param linearId The unique identifier of the rule.
+     * @return A Rule object
+     */
     @GetMapping(value = "/{linearId}", produces = APPLICATION_JSON_VALUE)
     private ResponseEntity<Rule> getByLinearId(@PathVariable String linearId) {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
@@ -72,6 +84,14 @@ public class RuleController {
         else return ResponseEntity.status(HttpStatus.OK).body(rules.get(0));
     }
 
+
+    /**
+     * Endpoint to update an existing rule:
+     * If a rule with the given linear ID exists, then call the update flow to update the rule
+     *
+     * @param ruleDTO The DTO object that contains the data that will be used to update the state.
+     * @return The updated Rule state.
+     */
     @PutMapping(value = "/")
     private ResponseEntity<Rule> update(@RequestBody RuleDTO ruleDTO) throws ExecutionException, InterruptedException {
         UniqueIdentifier id = UniqueIdentifier.Companion.fromString(ruleDTO.getLinearId());
@@ -96,6 +116,12 @@ public class RuleController {
     }
 
 
+    /**
+     * Endpoint that creates a new rule
+     *
+     * @param ruleDTO The DTO object that contains the data that will be used to create the rule.
+     * @return A ResponseEntity object with a status of CREATED and a body of the Rule object.
+     */
     @PostMapping("/")
     private ResponseEntity<Rule> create(@RequestBody RuleDTO ruleDTO) throws ExecutionException, InterruptedException {
         Rule rule = (Rule) proxy.startTrackedFlowDynamic(
@@ -107,6 +133,12 @@ public class RuleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(rule);
     }
 
+    /**
+     * Endpoint to deprecate a rule
+     *
+     * @param linearId The linearId of the rule to be deprecated.
+     * @return The Rule object that was depreciated.
+     */
     @PutMapping("/deprecate/{linearId}")
     private ResponseEntity<Rule> deprecatedRule(@PathVariable String linearId) throws ExecutionException, InterruptedException {
         Rule rule = (Rule) proxy.startTrackedFlowDynamic(

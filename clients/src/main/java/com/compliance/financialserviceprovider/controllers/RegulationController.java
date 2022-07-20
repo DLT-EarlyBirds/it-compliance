@@ -50,7 +50,7 @@ public class RegulationController {
     }
 
     /**
-     * Endpoint to gets a regulations by its linear ID (with status UNCONSUMED = the newest)
+     * Endpoint to get a regulations by its linear ID (with status UNCONSUMED = the newest)
      *
      * @param linearId The linear ID of the regulation you want to retrieve.
      * @return The regulation with the given linear ID and status UNCONSUMED.

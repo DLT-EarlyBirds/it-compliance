@@ -28,20 +28,25 @@ import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+
 /**
- * Define your API endpoints here.
+ * REST controller that handles HTTP requests for the `ClaimTemplate` and `ClaimTemplateSuggestion` states
  */
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/claimtemplates") // The paths for HTTP requests are relative to this base path.
 public class ClaimTemplateController {
     private final CordaRPCOps proxy;
-    private final static Logger logger = LoggerFactory.getLogger(ClaimTemplateController.class);
 
     public ClaimTemplateController(NodeRPCConnection rpc) {
         this.proxy = rpc.proxy;
     }
 
+    /**
+     * This endpoint returns a list of all the ClaimTemplate states in the vault
+     *
+     * @return A list of ClaimTemplate objects
+     */
     @GetMapping(value = "/", produces = APPLICATION_JSON_VALUE)
     private List<ClaimTemplate> getAll() {
         return proxy
@@ -54,6 +59,12 @@ public class ClaimTemplateController {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * This endpoint returns a claim template by its linear ID
+     *
+     * @param linearId The linearId of the ClaimTemplate to be retrieved.
+     * @return A ClaimTemplate object
+     */
     @GetMapping(value = "/{linearId}", produces = APPLICATION_JSON_VALUE)
     private ResponseEntity<ClaimTemplate> getByLinearId(@PathVariable String linearId) {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(UniqueIdentifier.Companion.fromString(linearId)), Vault.StateStatus.UNCONSUMED, Collections.singleton(ClaimTemplate.class));
@@ -70,6 +81,13 @@ public class ClaimTemplateController {
         else return ResponseEntity.status(HttpStatus.OK).body(claimTemplates.get(0));
     }
 
+    /**
+     * Endpoint to update a claim template.
+     * It first checks if the claim template exists in the vault. If it does, it calls the update flow
+     *
+     * @param claimTemplateDTO The DTO object that contains the updated claim template details.
+     * @return The updated claim template
+     */
     @PutMapping(value = "/")
     private ResponseEntity<ClaimTemplate> update(@RequestBody ClaimTemplateDTO claimTemplateDTO) throws ExecutionException, InterruptedException {
         UniqueIdentifier id = UniqueIdentifier.Companion.fromString(claimTemplateDTO.getLinearId());
@@ -88,7 +106,12 @@ public class ClaimTemplateController {
         } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-
+    /**
+     * Endpoint to directly instantiate a claim template without creating a suggestion.
+     *
+     * @param claimTemplateDTO The DTO object that contains the data that will be used to create the claim template.
+     * @return A ClaimTemplate object
+     */
     @PostMapping("/")
     private ResponseEntity<ClaimTemplate> create(@RequestBody ClaimTemplateDTO claimTemplateDTO) throws ExecutionException, InterruptedException {
         ClaimTemplate claimTemplate = (ClaimTemplate) proxy.startTrackedFlowDynamic(
@@ -100,6 +123,11 @@ public class ClaimTemplateController {
         return ResponseEntity.status(HttpStatus.CREATED).body(claimTemplate);
     }
 
+    /**
+     * Endpoint that returns a list of all the ClaimTemplateSuggestion states in the vault
+     *
+     * @return A list of ClaimTemplateSuggestion objects
+     */
     @GetMapping(value = "/suggestions/", produces = APPLICATION_JSON_VALUE)
     private List<ClaimTemplateSuggestion> getAllSuggestions() {
         return proxy
@@ -112,6 +140,12 @@ public class ClaimTemplateController {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Endpoint that returns a ClaimTemplateSuggestion object from the vault by its linearId
+     *
+     * @param linearId The linearId of the ClaimTemplateSuggestion to be retrieved.
+     * @return A ClaimTemplateSuggestion object
+     */
     @GetMapping(value = "/suggestions/{linearId}", produces = APPLICATION_JSON_VALUE)
     private ResponseEntity<ClaimTemplateSuggestion> getSuggestionByLinearId(@PathVariable String linearId) {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
@@ -132,6 +166,14 @@ public class ClaimTemplateController {
         else return ResponseEntity.status(HttpStatus.OK).body(claimTemplateSuggestions.get(0));
     }
 
+    /**
+     * Endpoint that is used to accept a claim template suggestion:
+     * It queries the vault for a claim template suggestion with the given linear ID, and if it finds one, it starts a flow
+     * to accept the suggestion
+     *
+     * @param linearId The linearId of the ClaimTemplateSuggestion to be accepted.
+     * @return A ClaimTemplate object
+     */
     @PostMapping("/suggestions/{linearId}")
     private ResponseEntity<ClaimTemplate> acceptSuggestion(@PathVariable String linearId) throws ExecutionException, InterruptedException {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(
@@ -160,6 +202,12 @@ public class ClaimTemplateController {
         } else return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
+    /**
+     * Endpoint to reject a claim template suggestion:
+     * We query the vault for the suggestion with the given linearId, and if it exists, we start the flow to reject it
+     *
+     * @param linearId The linearId of the ClaimTemplateSuggestion to be rejected.
+     */
     @DeleteMapping("/suggestions/{linearId}")
     private void rejectSuggestion(@PathVariable String linearId) throws ExecutionException, InterruptedException {
         QueryCriteria queryCriteria = new QueryCriteria.LinearStateQueryCriteria(

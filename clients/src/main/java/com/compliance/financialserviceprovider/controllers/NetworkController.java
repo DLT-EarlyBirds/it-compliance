@@ -148,11 +148,8 @@ public class NetworkController {
         return proxy.notaryIdentities().toString();
     }
 
+
     /**
-     * Endpoint that returns information about this node.
-     *
-     * @return A HashMap with a single key-value pair.
-     */    /**
      * Endpoint that returns a string representation of the registered flows
      *
      * @return A list of all the flows that have been registered with the proxy.
